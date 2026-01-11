@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Техническое задание - Платформа для покупки недвижимости в Испании
 
-## Getting Started
+Веб-приложение для публикации и совместного обсуждения технического задания на разработку платформы для покупки недвижимости в Испании.
 
-First, run the development server:
+## Технологии
+
+- **Next.js 16** (React, TypeScript)
+- **Tailwind CSS** для стилизации
+- **Giscus** для комментариев (GitHub Discussions)
+
+## Локальная разработка
 
 ```bash
+# Установка зависимостей
+npm install
+
+# Запуск dev-сервера
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Настройка комментариев (Giscus)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Для работы системы комментариев необходимо настроить Giscus:
 
-## Learn More
+1. **Создайте публичный репозиторий на GitHub** (если еще нет)
 
-To learn more about Next.js, take a look at the following resources:
+2. **Установите Giscus на репозиторий:**
+   - Перейдите на [giscus.app](https://giscus.app)
+   - Введите URL вашего репозитория (например: `username/espana-best`)
+   - Выберите категорию для обсуждений или создайте новую (рекомендуется "Announcements")
+   - Настройте параметры:
+     - **Page ↔ Discussion Mapping:** `pathname` (используется путь страницы)
+     - **Discussion Category:** выберите категорию (например, "Announcements")
+     - **Features:** оставьте значения по умолчанию
+   - Скопируйте полученные значения:
+     - `data-repo` (например: `username/espana-best`)
+     - `data-repo-id` (например: `R_kgDOLikeqc`)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Настройте переменные окружения:**
+   
+   Для локальной разработки создайте файл `.env.local` в корне проекта:
+   ```env
+   NEXT_PUBLIC_GISCUS_REPO=your-username/your-repo
+   NEXT_PUBLIC_GISCUS_REPO_ID=your-repo-id
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   **Для Vercel:**
+   - Перейдите в настройки проекта на [Vercel Dashboard](https://vercel.com/dashboard)
+   - Откройте вкладку **Settings → Environment Variables**
+   - Добавьте переменные окружения:
+     - `NEXT_PUBLIC_GISCUS_REPO` = `your-username/your-repo`
+     - `NEXT_PUBLIC_GISCUS_REPO_ID` = `your-repo-id`
+   - Выберите окружения (Production, Preview, Development)
+   - Сохраните и передеплойте проект
 
-## Deploy on Vercel
+4. **Перезапустите dev-сервер** после добавления переменных окружения:
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Как работают комментарии
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Каждый раздел имеет свою секцию комментариев** - в конце каждого раздела технического задания отображается отдельная секция комментариев
+- **Отдельные обсуждения** - каждый раздел создает отдельное обсуждение в GitHub Discussions с уникальным идентификатором
+- **Прямое комментирование** - заказчик может оставлять комментарии, вопросы и предложения непосредственно под каждым разделом
+- **Синхронизация с GitHub** - все комментарии синхронизируются с GitHub Discussions и сохраняются в репозитории
+- **Глобальная секция** - в конце документа также есть общая секция комментариев для общих вопросов и обсуждений
+
+### Альтернатива: без Giscus
+
+Если вы не хотите использовать Giscus, комментарии просто не будут отображаться. Все остальные функции будут работать.
+
+## Деплой на Vercel
+
+1. **Подключите репозиторий к Vercel:**
+   - Загрузите код в GitHub/GitLab
+   - Подключите репозиторий в [Vercel Dashboard](https://vercel.com/new)
+
+2. **Настройте переменные окружения** (если используете Giscus)
+
+3. **Деплой:**
+   - Vercel автоматически задеплоит проект
+   - Или используйте: `vercel --prod`
+
+## Структура проекта
+
+```
+espana-best/
+├── app/
+│   ├── page.tsx          # Главная страница с ТЗ
+│   ├── layout.tsx        # Layout приложения
+│   └── globals.css       # Глобальные стили
+├── components/
+│   ├── CommentSection.tsx    # Компонент для глобальных комментариев
+│   └── SectionComment.tsx    # Компонент для комментариев к разделам
+└── README.md
+```
+
+## Кастомизация
+
+Техническое задание находится в файле `app/page.tsx`. Вы можете:
+- Редактировать содержимое разделов
+- Добавлять новые разделы
+- Изменять структуру и стили
+
+Стили можно изменять через Tailwind CSS классы или в `app/globals.css`.
+
+## Лицензия
+
+Проект создан для внутреннего использования.
