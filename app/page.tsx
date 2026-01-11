@@ -602,8 +602,7 @@ export default function Home() {
           <CommentSection 
             repo={repo}
             repoId={repoId}
-            mapping="title"
-            term="Welcome to espana-best Discussions!"
+            mapping="pathname"
             category="Announcements"
             categoryId={categoryId}
           />
