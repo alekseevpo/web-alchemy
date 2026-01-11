@@ -7,8 +7,9 @@ interface CommentSectionProps {
   repoId: string;
   category?: string;
   categoryId?: string;
-  mapping?: 'pathname' | 'url' | 'title' | 'og:title';
+  mapping?: 'pathname' | 'url' | 'title' | 'og:title' | 'specific';
   term?: string;
+  discussionNumber?: number;
   theme?: 'light' | 'dark' | 'preferred_color_scheme';
   lang?: string;
 }
@@ -20,6 +21,7 @@ export default function CommentSection({
   categoryId,
   mapping = 'pathname',
   term = 'Welcome to Giscus!',
+  discussionNumber,
   theme = 'preferred_color_scheme',
   lang = 'ru',
 }: CommentSectionProps) {
@@ -37,7 +39,11 @@ export default function CommentSection({
       script.setAttribute('data-category-id', categoryId);
     }
     script.setAttribute('data-mapping', mapping);
-    script.setAttribute('data-term', term);
+    if (mapping === 'specific' && discussionNumber) {
+      script.setAttribute('data-number', discussionNumber.toString());
+    } else if (term) {
+      script.setAttribute('data-term', term);
+    }
     script.setAttribute('data-strict', '0');
     script.setAttribute('data-reactions-enabled', '1');
     script.setAttribute('data-emit-metadata', '0');
@@ -55,7 +61,7 @@ export default function CommentSection({
         containerRef.current.removeChild(script);
       }
     };
-  }, [repo, repoId, category, categoryId, mapping, term, theme, lang]);
+  }, [repo, repoId, category, categoryId, mapping, term, discussionNumber, theme, lang]);
 
   return (
     <div className="mt-16 pt-16 border-t border-gray-200 dark:border-gray-800">

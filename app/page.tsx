@@ -602,8 +602,8 @@ export default function Home() {
           <CommentSection 
             repo={repo}
             repoId={repoId}
-            mapping="title"
-            term="index"
+            mapping="specific"
+            discussionNumber={1}
             category="Announcements"
             categoryId={categoryId}
           />
