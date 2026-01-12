@@ -610,7 +610,7 @@ export default function Home() {
             repo={giscusConfig.repo}
             repoId={giscusConfig.repoId}
             mapping="specific"
-            discussionNumber={1}
+            discussionNumber={12}
             category="Announcements"
             categoryId={giscusConfig.categoryId}
           />
