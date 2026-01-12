@@ -1,11 +1,10 @@
 import CommentSection from '@/components/CommentSection';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Footer } from '@/components/Footer';
+import { getGiscusConfig } from '@/lib/env';
 
 export default function Home() {
-  const repo = process.env.NEXT_PUBLIC_GISCUS_REPO || '';
-  const repoId = process.env.NEXT_PUBLIC_GISCUS_REPO_ID || '';
-  const categoryId = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID;
+  const giscusConfig = getGiscusConfig();
 
   return (
     <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
@@ -588,7 +587,7 @@ export default function Home() {
       </main>
 
       {/* Глобальная секция комментариев в конце документа */}
-      {repo && repoId && (
+      {giscusConfig && (
         <div id="comments" className="max-w-4xl mx-auto px-6 md:px-8 lg:px-12 pb-16">
           <div className="mb-8">
             <h2 className="text-3xl font-light text-gray-900 dark:text-gray-100 mb-4">
@@ -597,15 +596,15 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-400">
               Оставьте комментарии или вопросы по любому разделу технического задания. 
               Вы можете ссылаться на конкретные разделы, используя их названия или номера.
-          </p>
-        </div>
+            </p>
+          </div>
           <CommentSection 
-            repo={repo}
-            repoId={repoId}
+            repo={giscusConfig.repo}
+            repoId={giscusConfig.repoId}
             mapping="specific"
             discussionNumber={1}
             category="Announcements"
-            categoryId={categoryId}
+            categoryId={giscusConfig.categoryId}
           />
         </div>
       )}
