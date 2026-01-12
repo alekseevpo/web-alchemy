@@ -3,12 +3,12 @@
 @variant dark (&:is(.dark, .dark *));
 
 :root {
-  --background: #fafafa;
+  --background: #fefbf6;
   --foreground: #1a1a1a;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
+  --gray-50: #fefbf6;
+  --gray-100: #faf8f3;
+  --gray-200: #f5f2eb;
+  --gray-300: #e8e3d9;
   --gray-400: #9ca3af;
   --gray-500: #6b7280;
   --gray-600: #4b5563;
