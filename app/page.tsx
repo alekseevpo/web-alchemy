@@ -13,13 +13,14 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-300">
       <TableOfContents />
       <ScrollToTop />
+      {/* Переключатель темы - фиксирован вверху справа */}
+      <div className="fixed top-4 right-4 z-50 lg:right-6">
+        <ThemeToggle />
+      </div>
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:px-8 lg:px-12 lg:pt-24 lg:ml-64">
         {/* Header */}
-        <header className="mb-12 sm:mb-16 relative">
-          <div className="absolute top-0 right-0">
-            <ThemeToggle />
-          </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 pr-12 sm:pr-14">
+        <header className="mb-12 sm:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">
             Техническое задание
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400">
