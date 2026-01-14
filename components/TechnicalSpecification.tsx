@@ -852,9 +852,6 @@ export function TechnicalSpecification() {
                   <li>{t('section10.costStage1')} <strong>{t('section10.costStage1Price')}</strong></li>
                   <li>{t('section10.costStage2')} <strong>{t('section10.costStage2Price')}</strong></li>
                   <li>{t('section10.costStage3')} <strong>{t('section10.costStage3Price')}</strong></li>
-                  <li>{t('section10.costStage4')} <strong>{t('section10.costStage4Price')}</strong></li>
-                  <li>{t('section10.costStage5')} <strong>{t('section10.costStage5Price')}</strong></li>
-                  <li>{t('section10.costStage6')} <strong>{t('section10.costStage6Price')}</strong></li>
                 </ul>
               </div>
               <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
