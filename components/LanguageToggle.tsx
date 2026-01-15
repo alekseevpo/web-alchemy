@@ -31,13 +31,13 @@ export function LanguageToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300"
+        className="h-10 px-3 rounded-lg bg-white/60 dark:bg-gray-900/60 backdrop-blur-[3px] border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors flex items-center justify-center gap-1.5"
         aria-label={t('nav.selectLanguage')}
         aria-expanded={isOpen}
       >
-        <span>{currentLang.label}</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{currentLang.label}</span>
         <svg 
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
@@ -47,7 +47,9 @@ export function LanguageToggle() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-32 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-lg shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden z-50">
+        <div 
+          className="dropdown-menu absolute right-0 mt-2 w-32 bg-white/60 dark:bg-gray-900/60 backdrop-blur-[3px] rounded-lg shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden z-50"
+        >
           {languages.map((lang) => (
             <button
               key={lang.code}

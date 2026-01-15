@@ -16,7 +16,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 flex items-center justify-center"
+        className="w-10 h-10 rounded-lg bg-white/60 dark:bg-gray-900/60 backdrop-blur-[3px] border border-gray-200/50 dark:border-gray-700/50 flex items-center justify-center hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors"
         aria-label={t('nav.toggleTheme')}
       >
         <svg
@@ -39,7 +39,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
+      className="w-10 h-10 rounded-lg bg-white/60 dark:bg-gray-900/60 backdrop-blur-[3px] border border-gray-200/50 dark:border-gray-700/50 flex items-center justify-center hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors"
       aria-label={t('nav.toggleTheme')}
     >
       {theme === 'dark' ? (

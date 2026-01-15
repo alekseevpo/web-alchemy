@@ -80,7 +80,7 @@ export function TableOfContents() {
       {/* Мобильная кнопка */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-20 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+        className="lg:hidden fixed bottom-20 right-6 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-[3px] border border-gray-200/50 dark:border-gray-700/50 text-gray-700 dark:text-gray-300 rounded-full p-4 shadow-lg transition-all duration-200 hover:bg-white dark:hover:bg-gray-800 hover:scale-105 active:scale-95"
         aria-label={t('nav.showNavigation')}
         aria-expanded={isOpen}
       >
@@ -168,7 +168,7 @@ export function TableOfContents() {
         )}
         {/* Десктопная версия - фиксированная слева */}
         {!isOpen && (
-          <div className="lg:bg-white dark:lg:bg-gray-900 lg:border-r lg:border-gray-200 dark:lg:border-gray-800 lg:h-full lg:overflow-y-auto lg:p-6 lg:pt-24">
+          <div className="lg:bg-white/80 dark:lg:bg-gray-900/80 lg:backdrop-blur-[3px] lg:border-r lg:border-gray-200/50 dark:lg:border-gray-700/50 lg:h-full lg:overflow-y-auto lg:p-6 lg:pt-24">
             <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 text-xs uppercase tracking-wider">
               {t('toc.title')}
             </h3>
