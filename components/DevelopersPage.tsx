@@ -87,10 +87,17 @@ const teamByRole: Record<TeamRole['key'], TeamMember[]> = {
       name: { ru: 'Joel Grevo', en: 'Joel Grevo', es: 'Joel Grevo' },
       title: { ru: 'UX/UI дизайн', en: 'UX/UI Design', es: 'Diseño UX/UI' },
       meta: {
-        ru: '35 лет • Ижевск',
-        en: '35 years • Izhevsk',
-        es: '35 años • Izhevsk',
+        ru: '35 лет • Нижний Новгород — Мадрид',
+        en: '35 years • Nizhny Novgorod — Madrid',
+        es: '35 años • Nizhny Novgorod — Madrid',
       },
+      education: {
+        ru: 'Московский технический институт',
+        en: 'Moscow Technical Institute',
+        es: 'Instituto Técnico de Moscú',
+      },
+      // Put Joel photo here: public/team/joel-grevo.jpeg
+      photoSrc: '/team/joel-grevo.jpeg',
       bullets: {
         ru: ['Прототипы и user flows', 'Макеты под мобайл/десктоп', 'Компоненты дизайн‑системы'],
         en: ['Prototypes and user flows', 'Mobile/desktop layouts', 'Design system components'],
@@ -103,9 +110,9 @@ const teamByRole: Record<TeamRole['key'], TeamMember[]> = {
       name: { ru: 'Daryna Postolaki', en: 'Daryna Postolaki', es: 'Daryna Postolaki' },
       title: { ru: 'UI и визуал', en: 'UI & Visual', es: 'UI y Visual' },
       meta: {
-        ru: '27 лет • Ужгород',
-        en: '27 years • Uzhhorod',
-        es: '27 años • Uzhhorod',
+        ru: '27 лет • Ужгород — Мадрид',
+        en: '27 years • Uzhhorod — Madrid',
+        es: '27 años • Uzhhorod — Madrid',
       },
       education: {
         ru: 'Ужгородский Национальный Университет',
@@ -183,6 +190,8 @@ const teamByRole: Record<TeamRole['key'], TeamMember[]> = {
         en: 'Uzhhorod Trade and Economic Institute',
         es: 'Instituto de Comercio y Economía de Uzhhorod',
       },
+      // Put Otto photo here: public/team/otto-harahonych.jpeg
+      photoSrc: '/team/otto-harahonych.jpeg',
       bullets: {
         ru: ['Тест‑планы и чек‑листы', 'Регресс', 'Приёмка фич'],
         en: ['Test plans and checklists', 'Regression', 'Feature acceptance'],
