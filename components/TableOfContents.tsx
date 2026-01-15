@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface TocItem {
@@ -80,7 +81,7 @@ export function TableOfContents() {
       {/* Мобильная кнопка */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-20 right-6 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-[3px] border border-gray-200/50 dark:border-gray-700/50 text-gray-700 dark:text-gray-300 rounded-full p-4 shadow-lg transition-all duration-200 hover:bg-white dark:hover:bg-gray-800 hover:scale-105 active:scale-95"
+        className="lg:hidden fixed bottom-20 right-6 z-50 ui-glass-btn rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
         aria-label={t('nav.showNavigation')}
         aria-expanded={isOpen}
       >
@@ -142,6 +143,15 @@ export function TableOfContents() {
                     </svg>
                   </button>
                 </div>
+
+                <Link
+                  href="/developers"
+                  className="ui-glass-btn w-full rounded-lg px-3 py-2 text-sm font-medium flex items-center justify-center mb-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {t('nav.developers')}
+                </Link>
+
                 <ul className="space-y-1">
                   {sections.map((section) => (
                     <li key={section.id}>
@@ -172,6 +182,14 @@ export function TableOfContents() {
             <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 text-xs uppercase tracking-wider">
               {t('toc.title')}
             </h3>
+
+            <Link
+              href="/developers"
+              className="ui-glass-btn w-full rounded-lg px-3 py-2 text-sm font-medium flex items-center justify-center mb-3"
+            >
+              {t('nav.developers')}
+            </Link>
+
             <ul className="space-y-1">
               {sections.map((section) => (
                 <li key={section.id}>

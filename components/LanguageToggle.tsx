@@ -31,7 +31,7 @@ export function LanguageToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="h-10 px-3 rounded-lg bg-white/60 dark:bg-gray-900/60 backdrop-blur-[3px] border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors flex items-center justify-center gap-1.5"
+        className="ui-glass-btn h-10 px-3 rounded-lg flex items-center justify-center gap-1.5"
         aria-label={t('nav.selectLanguage')}
         aria-expanded={isOpen}
       >
@@ -48,7 +48,7 @@ export function LanguageToggle() {
 
       {isOpen && (
         <div 
-          className="dropdown-menu absolute right-0 mt-2 w-32 bg-white/60 dark:bg-gray-900/60 backdrop-blur-[3px] rounded-lg shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden z-50"
+          className="dropdown-menu ui-glass-menu absolute right-0 mt-2 w-32 rounded-lg overflow-hidden z-50"
         >
           {languages.map((lang) => (
             <button

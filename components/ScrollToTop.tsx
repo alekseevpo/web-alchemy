@@ -32,12 +32,10 @@ export function ScrollToTop() {
       onClick={scrollToTop}
       className={`
         fixed bottom-6 right-6 z-50
-        bg-white/80 dark:bg-gray-900/80 backdrop-blur-[3px]
-        border border-gray-200/50 dark:border-gray-700/50
-        text-gray-700 dark:text-gray-300 rounded-full p-3 shadow-lg
+        ui-glass-btn rounded-full p-3 shadow-lg
         transition-all duration-300 ease-in-out
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}
-        hover:bg-white dark:hover:bg-gray-800 hover:scale-110 active:scale-95
+        hover:scale-110 active:scale-95
       `}
       aria-label={t('nav.scrollToTop')}
     >

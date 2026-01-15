@@ -2,6 +2,23 @@
 
 @variant dark (&:is(.dark, .dark *));
 
+@layer components {
+  /* Unified "glass button" style used across the UI */
+  .ui-glass-btn {
+    @apply bg-white/55 dark:bg-gray-900/55 backdrop-blur-[3px]
+      border border-gray-200/50 dark:border-gray-700/50
+      text-gray-700 dark:text-gray-300
+      hover:bg-white/75 dark:hover:bg-gray-800/75
+      transition-colors;
+  }
+
+  .ui-glass-menu {
+    @apply bg-white/55 dark:bg-gray-900/55 backdrop-blur-[3px]
+      border border-gray-200/50 dark:border-gray-700/50
+      shadow-lg;
+  }
+}
+
 :root {
   --background: #fefbf6;
   --foreground: #1a1a1a;
