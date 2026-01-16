@@ -10,6 +10,7 @@ export function BackButton() {
     <Link
       href="/"
       className="ui-glass-btn h-10 px-3 rounded-lg flex items-center justify-center text-sm font-medium"
+      aria-label={t('nav.back')}
     >
       ← {t('nav.back')}
     </Link>

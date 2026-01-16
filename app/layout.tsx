@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Web Alchemy | Разработка веб-проектов любой сложности под ключ",
+  title: "Web-Alchemy - Разработка Веб-приложений и сайтов любой сложности",
   description: "Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От идеи до запуска — быстро, качественно, профессионально.",
 };
 

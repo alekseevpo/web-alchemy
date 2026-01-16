@@ -83,7 +83,7 @@ export function DevelopersToc() {
 
       <nav
         className={`
-          ${isOpen ? 'fixed inset-0 z-40' : 'hidden lg:block lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:z-30'}
+          ${isOpen ? 'fixed inset-0 z-40' : 'hidden'}
         `}
         aria-label={t('nav.sectionNavigation')}
       >
@@ -123,30 +123,6 @@ export function DevelopersToc() {
               </div>
             </div>
           </>
-        )}
-
-        {!isOpen && (
-          <div className="lg:bg-white/80 dark:lg:bg-gray-900/80 lg:backdrop-blur-[3px] lg:border-r lg:border-gray-200/50 dark:lg:border-gray-700/50 lg:h-full lg:overflow-y-auto lg:p-6 lg:pt-24">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 text-xs uppercase tracking-wider">
-              {title}
-            </h3>
-            <ul className="space-y-1">
-              {devSections.map((s) => (
-                <li key={s.id}>
-                  <button
-                    onClick={() => scrollToSection(s.id)}
-                    className={`
-                      w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors
-                      hover:bg-gray-100 dark:hover:bg-gray-800
-                      ${activeId === s.id ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium' : 'text-gray-700 dark:text-gray-300'}
-                    `}
-                  >
-                    {s.title[language]}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
         )}
       </nav>
     </>

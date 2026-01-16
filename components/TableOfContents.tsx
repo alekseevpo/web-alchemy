@@ -69,11 +69,11 @@ export function TableOfContents() {
 
   return (
     <>
-      {/* Мобильная кнопка */}
+      {/* Мобильная кнопка для секций */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-20 right-6 z-50 ui-glass-btn rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
-        aria-label={t('nav.showNavigation')}
+        className="lg:hidden fixed bottom-20 right-6 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-full p-4 shadow-xl border-2 border-gray-200 dark:border-gray-700 transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-2xl"
+        aria-label={t('nav.showSections') || 'Показать секции'}
         aria-expanded={isOpen}
       >
         <svg
@@ -100,12 +100,12 @@ export function TableOfContents() {
         </svg>
       </button>
 
-      {/* Навигация */}
+      {/* Навигация - только для мобильных устройств */}
       <nav
         className={`
           ${isOpen 
             ? 'fixed inset-0 z-40' 
-            : 'hidden lg:block lg:fixed lg:left-0 lg:top-0 lg:h-screen lg:w-64 lg:z-30'
+            : 'hidden'
           }
         `}
         aria-label={t('nav.sectionNavigation')}
@@ -158,34 +158,6 @@ export function TableOfContents() {
               </div>
             </div>
           </>
-        )}
-        {/* Десктопная версия - фиксированная слева */}
-        {!isOpen && (
-          <div className="lg:bg-white/80 dark:lg:bg-gray-900/80 lg:backdrop-blur-[3px] lg:border-r lg:border-gray-200/50 dark:lg:border-gray-700/50 lg:h-full lg:overflow-y-auto lg:p-6 lg:pt-24">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 text-xs uppercase tracking-wider">
-              {t('toc.title')}
-            </h3>
-            <ul className="space-y-1">
-              {sections.map((section) => (
-                <li key={section.id}>
-                  <button
-                    onClick={() => scrollToSection(section.id)}
-                    className={`
-                      w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors
-                      hover:bg-gray-100 dark:hover:bg-gray-800
-                      ${
-                        activeId === section.id
-                          ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium'
-                          : 'text-gray-700 dark:text-gray-300'
-                      }
-                    `}
-                  >
-                    {t(section.titleKey)}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
         )}
       </nav>
     </>

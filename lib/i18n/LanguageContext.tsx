@@ -1,8 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { detectLanguage, detectLanguageSync, Language } from './detectLanguage';
 
-export type Language = 'ru' | 'en' | 'es';
+export type { Language };
 
 interface LanguageContextType {
   language: Language;
@@ -31,20 +32,30 @@ export function LanguageProvider({ children, translations }: LanguageProviderPro
 
   useEffect(() => {
     setMounted(true);
-    // Получаем язык из localStorage или определяем по браузеру
-    const savedLang = localStorage.getItem('language') as Language | null;
-    if (savedLang && ['ru', 'en', 'es'].includes(savedLang)) {
-      setLanguageState(savedLang);
-    } else {
-      // Определяем язык браузера
-      const browserLang = navigator.language.slice(0, 2);
-      if (browserLang === 'es') {
-        setLanguageState('es');
-      } else if (browserLang === 'en') {
-        setLanguageState('en');
-      } else {
-        setLanguageState('ru');
-      }
+    
+    // Сначала определяем язык синхронно (без задержки)
+    // Приоритет: сохраненный язык > язык браузера > по умолчанию
+    const savedLang = typeof window !== 'undefined' 
+      ? (localStorage.getItem('language') as Language | null)
+      : null;
+    
+    const initialDetection = detectLanguageSync(savedLang);
+    setLanguageState(initialDetection.language);
+    
+    // Затем пытаемся улучшить определение через геолокацию (асинхронно)
+    // Только если нет сохраненного языка И язык браузера не определен
+    // Логика: язык браузера имеет приоритет над геолокацией
+    // (если пользователь из Испании, но браузер на русском - выбираем русский)
+    if (!savedLang && initialDetection.source === 'default') {
+      detectLanguage(savedLang).then((result) => {
+        // Используем результат геолокации только если язык браузера не был определен
+        // И геолокация дала другой язык (не русский по умолчанию)
+        if (result.language !== initialDetection.language) {
+          setLanguageState(result.language);
+        }
+      }).catch(() => {
+        // Игнорируем ошибки геолокации
+      });
     }
   }, []);
 

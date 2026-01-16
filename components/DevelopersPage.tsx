@@ -444,8 +444,8 @@ export function DevelopersPage() {
   const teamIntro = useMemo(() => {
     if (language === 'ru') {
       return {
-        title: 'Разработчики проекта',
-        subtitle: 'Команда, которая проектирует, разрабатывает и поддерживает продукт.',
+        title: 'Наша команда',
+        subtitle: 'МЫ команда, которая проектирует, разрабатывает и поддерживает продукты. Мы открытые и нам доверяют. Мы говорим на языке клиента и нас понимают.',
         note: 'Роли, подход и команда — в одном месте.',
         howWeWorkTitle: 'Как мы работаем',
         howWeWorkText:
@@ -454,8 +454,8 @@ export function DevelopersPage() {
     }
     if (language === 'es') {
       return {
-        title: 'Desarrolladores del proyecto',
-        subtitle: 'El equipo que diseña, desarrolla y mantiene el producto.',
+        title: 'Nuestro equipo',
+        subtitle: 'SOMOS un equipo que diseña, desarrolla y mantiene productos. Somos abiertos y confían en nosotros. Hablamos el idioma del cliente y nos entienden.',
         note: 'Roles, enfoque y equipo — en un solo lugar.',
         howWeWorkTitle: 'Cómo trabajamos',
         howWeWorkText:
@@ -463,8 +463,8 @@ export function DevelopersPage() {
       };
     }
     return {
-      title: 'Project developers',
-      subtitle: 'The team that designs, builds, and maintains the product.',
+      title: 'Our team',
+      subtitle: 'WE are a team that designs, develops, and maintains products. We are open and trusted. We speak the client\'s language and are understood.',
       note: 'Roles, approach, and team — in one place.',
       howWeWorkTitle: 'How we work',
       howWeWorkText:
@@ -489,9 +489,9 @@ export function DevelopersPage() {
   const note = teamIntro.note;
 
   return (
-    <div className="min-h-screen bg-[#fefbf6] dark:bg-black transition-colors duration-300">
-      <div className="lg:pl-96">
-        <main className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:pr-8">
+    <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300">
+      <div>
+        <main className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-8">
           <header className="mb-10">
             <h1 className="text-3xl sm:text-4xl font-light text-gray-900 dark:text-gray-100">
               {title}

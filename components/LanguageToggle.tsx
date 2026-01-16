@@ -3,10 +3,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage, Language } from '@/lib/i18n/LanguageContext';
 
-const languages: { code: Language; label: string }[] = [
-  { code: 'ru', label: 'RU' },
-  { code: 'en', label: 'EN' },
-  { code: 'es', label: 'ES' },
+const languages: { code: Language; label: string; fullName: { ru: string; en: string; es: string } }[] = [
+  { code: 'ru', label: 'RU', fullName: { ru: 'Русский', en: 'Russian', es: 'Ruso' } },
+  { code: 'en', label: 'EN', fullName: { ru: 'Английский', en: 'English', es: 'Inglés' } },
+  { code: 'es', label: 'ES', fullName: { ru: 'Испанский', en: 'Spanish', es: 'Español' } },
 ];
 
 export function LanguageToggle() {
@@ -48,7 +48,7 @@ export function LanguageToggle() {
 
       {isOpen && (
         <div 
-          className="dropdown-menu ui-glass-menu absolute right-0 mt-2 w-32 rounded-lg overflow-hidden z-50"
+          className="dropdown-menu ui-glass-menu absolute right-0 mt-2 w-40 rounded-lg overflow-hidden z-50"
         >
           {languages.map((lang) => (
             <button
@@ -64,8 +64,9 @@ export function LanguageToggle() {
               }`}
             >
               <span className="font-medium">{lang.label}</span>
+              <span className="flex-1 text-left text-gray-600 dark:text-gray-400">{lang.fullName[language]}</span>
               {language === lang.code && (
-                <svg className="w-4 h-4 ml-auto text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               )}

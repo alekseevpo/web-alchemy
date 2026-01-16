@@ -4,6 +4,8 @@ import { ReactNode } from 'react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { translations } from '@/lib/i18n/translations';
+import { LanguageSetter } from './LanguageSetter';
+import { CookieConsent } from './CookieConsent';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -19,7 +21,9 @@ export function Providers({ children }: ProvidersProps) {
       storageKey="theme"
     >
       <LanguageProvider translations={translations}>
+        <LanguageSetter />
         {children}
+        <CookieConsent />
       </LanguageProvider>
     </NextThemesProvider>
   );
