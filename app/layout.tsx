@@ -16,9 +16,81 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://web-alchemy-seven.vercel.app';
+const siteName = 'Web-Alchemy';
+
 export const metadata: Metadata = {
-  title: "Web-Alchemy - Разработка Веб-приложений и сайтов любой сложности",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Web-Alchemy - Разработка Веб-приложений и сайтов любой сложности",
+    template: "%s | Web-Alchemy",
+  },
   description: "Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От идеи до запуска — быстро, качественно, профессионально.",
+  keywords: [
+    'веб-разработка',
+    'web development',
+    'Next.js',
+    'TypeScript',
+    'Vue.js',
+    'Django',
+    'веб-приложения',
+    'web applications',
+    'сайты под ключ',
+    'разработка сайтов',
+    'B2B проекты',
+    'B2C проекты',
+    'landing pages',
+    'корпоративные сайты',
+  ],
+  authors: [{ name: 'Web-Alchemy' }],
+  creator: 'Web-Alchemy',
+  publisher: 'Web-Alchemy',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ru_RU',
+    url: siteUrl,
+    siteName: siteName,
+    title: 'Web-Alchemy - Разработка Веб-приложений и сайтов любой сложности',
+    description: 'Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От идеи до запуска — быстро, качественно, профессионально.',
+    images: [
+      {
+        url: '/og-image.jpg', // Нужно будет добавить изображение
+        width: 1200,
+        height: 630,
+        alt: 'Web-Alchemy - Разработка веб-приложений',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Web-Alchemy - Разработка Веб-приложений и сайтов любой сложности',
+    description: 'Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django.',
+    images: ['/og-image.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: siteUrl,
+    languages: {
+      'ru-RU': siteUrl,
+      'en-US': `${siteUrl}/en`,
+      'es-ES': `${siteUrl}/es`,
+    },
+  },
 };
 
 export const viewport: Viewport = {

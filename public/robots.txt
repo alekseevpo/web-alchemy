@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://web-alchemy-seven.vercel.app/sitemap.xml
+
+# Disallow admin and private pages if any
+Disallow: /api/
+Disallow: /_next/
+
+# Allow all pages for indexing
+Allow: /
+Allow: /projects
+Allow: /services
+Allow: /support
+Allow: /feedback
+Allow: /faq
+Allow: /developers
+Allow: /privacy
+Allow: /terms
+Allow: /cookies

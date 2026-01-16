@@ -6,6 +6,7 @@ import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { translations } from '@/lib/i18n/translations';
 import { LanguageSetter } from './LanguageSetter';
 import { CookieConsent } from './CookieConsent';
+import { StructuredData } from './StructuredData';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ export function Providers({ children }: ProvidersProps) {
     >
       <LanguageProvider translations={translations}>
         <LanguageSetter />
+        <StructuredData />
         {children}
         <CookieConsent />
       </LanguageProvider>
