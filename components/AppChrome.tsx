@@ -135,39 +135,38 @@ export function AppChrome() {
       <div className="fixed top-4 right-4 z-50 lg:right-6 flex items-center gap-2">
         <ThemeToggle />
         <LanguageToggle />
-      </div>
-
-      {/* Mobile Main Navigation Button */}
-      <button
-        onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-        className="lg:hidden fixed bottom-52 right-6 z-50 ui-glass-btn rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-xl"
-        aria-label={t('nav.showNavigation') || 'Показать навигацию'}
-        aria-expanded={isMobileNavOpen}
-      >
-        <svg
-          className="w-6 h-6 text-gray-700 dark:text-gray-300"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2.5}
-          viewBox="0 0 24 24"
+        {/* Mobile Main Navigation Button */}
+        <button
+          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+          className="lg:hidden ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center"
+          aria-label={t('nav.showNavigation') || 'Показать навигацию'}
+          aria-expanded={isMobileNavOpen}
         >
-          {isMobileNavOpen ? (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          ) : (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          )}
-        </svg>
-      </button>
+          <svg
+            className="w-5 h-5 text-gray-700 dark:text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.5}
+            viewBox="0 0 24 24"
+          >
+            {isMobileNavOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
+          </svg>
+        </button>
+      </div>
 
       {/* Mobile Main Navigation Menu */}
       {isMobileNavOpen && (
