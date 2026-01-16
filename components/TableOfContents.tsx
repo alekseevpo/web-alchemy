@@ -10,17 +10,9 @@ interface TocItem {
 }
 
 const sections: TocItem[] = [
-  { id: 'overview', titleKey: 'toc.section1', level: 1 },
-  { id: 'tech-stack', titleKey: 'toc.section2', level: 1 },
-  { id: 'b2b-platform', titleKey: 'toc.section3', level: 1 },
-  { id: 'b2c-site', titleKey: 'toc.section4', level: 1 },
-  { id: 'multilanguage', titleKey: 'toc.section5', level: 1 },
-  { id: 'security', titleKey: 'toc.section6', level: 1 },
-  { id: 'monetization', titleKey: 'toc.section7', level: 1 },
-  { id: 'development-stages', titleKey: 'toc.section8', level: 1 },
-  { id: 'additional', titleKey: 'toc.section9', level: 1 },
-  { id: 'estimation', titleKey: 'toc.section10', level: 1 },
-  { id: 'glossary', titleKey: 'toc.section11', level: 1 },
+  { id: 'services', titleKey: 'toc.services', level: 1 },
+  { id: 'about', titleKey: 'toc.about', level: 1 },
+  { id: 'contact', titleKey: 'toc.contact', level: 1 },
 ];
 
 export function TableOfContents() {

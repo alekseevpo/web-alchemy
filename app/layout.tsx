@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Техническое задание | Платформа для покупки/продажи недвижимости в Испании",
-  description: "Техническое задание на разработку B2B и B2C платформы для рынка недвижимости в Испании",
+  title: "Web Alchemy | Разработка веб-проектов любой сложности под ключ",
+  description: "Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От идеи до запуска — быстро, качественно, профессионально.",
 };
 
 export default function RootLayout({
