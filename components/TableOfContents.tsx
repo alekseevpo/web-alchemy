@@ -72,7 +72,7 @@ export function TableOfContents() {
       {/* Мобильная кнопка для секций */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-20 right-6 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-full p-4 shadow-xl border-2 border-gray-200 dark:border-gray-700 transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-2xl"
+        className="lg:hidden fixed bottom-24 left-6 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-full p-4 shadow-xl border-2 border-gray-200 dark:border-gray-700 transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-2xl min-w-[44px] min-h-[44px] flex items-center justify-center"
         aria-label={t('nav.showSections') || 'Показать секции'}
         aria-expanded={isOpen}
       >

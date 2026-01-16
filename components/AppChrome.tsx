@@ -140,7 +140,7 @@ export function AppChrome() {
       {/* Mobile Main Navigation Button */}
       <button
         onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-        className="lg:hidden fixed bottom-24 right-6 z-50 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full p-4 shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-3xl border-2 border-gray-700 dark:border-gray-300"
+        className="lg:hidden fixed bottom-24 right-6 z-50 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full p-4 shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-3xl border-2 border-gray-700 dark:border-gray-300 min-w-[44px] min-h-[44px] flex items-center justify-center pb-safe"
         aria-label={t('nav.showNavigation') || 'Показать навигацию'}
         aria-expanded={isMobileNavOpen}
       >

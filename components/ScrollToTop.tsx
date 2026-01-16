@@ -36,6 +36,8 @@ export function ScrollToTop() {
         transition-all duration-300 ease-in-out
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}
         hover:scale-110 active:scale-95
+        min-w-[44px] min-h-[44px] flex items-center justify-center
+        pb-safe
       `}
       aria-label={t('nav.scrollToTop')}
     >

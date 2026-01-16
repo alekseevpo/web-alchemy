@@ -11,7 +11,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.companyName': 'Web-Alchemy',
     'hero.title': 'Разработка Веб-приложений и сайтов',
     'hero.titleHighlight': 'любой сложности',
-    'hero.subtitle': 'Сайты-визитки, landing-страницы для мероприятий. Быстро, качественно с применением современных технологий.',
+    'hero.subtitle': 'Сайты-визитки, landing-страницы для мероприятий, корпоративные проекты В2B и B2C. Для бизнеса и для клиентов. Быстро, качественно с применением современных технологий и богатого практического опыта в разработке сильных, поддерживаемых и масштабируемых проектов.',
     'hero.cta.primary': 'Обсудить проект',
     'hero.cta.secondary': 'Наши услуги',
     
@@ -235,7 +235,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.companyName': 'Web-Alchemy',
     'hero.title': 'Web App and Website Development',
     'hero.titleHighlight': 'of any complexity',
-    'hero.subtitle': 'Business card websites, landing pages for events. Fast, high-quality using modern technologies.',
+    'hero.subtitle': 'Business card websites, landing pages for events, corporate B2B and B2C projects. For business and for clients. Fast, high-quality using modern technologies and rich practical experience in developing strong, maintainable, and scalable projects.',
     'hero.cta.primary': 'Discuss project',
     'hero.cta.secondary': 'Our services',
     
@@ -459,7 +459,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.companyName': 'Web-Alchemy',
     'hero.title': 'Desarrollo de Aplicaciones Web y Sitios',
     'hero.titleHighlight': 'de cualquier complejidad',
-    'hero.subtitle': 'Sitios web de tarjetas de presentación, páginas de destino para eventos. Rápido, de calidad utilizando tecnologías modernas.',
+    'hero.subtitle': 'Sitios web de tarjetas de presentación, páginas de destino para eventos, proyectos corporativos B2B y B2C. Para empresas y para clientes. Rápido, de calidad utilizando tecnologías modernas y rica experiencia práctica en el desarrollo de proyectos sólidos, mantenibles y escalables.',
     'hero.cta.primary': 'Discutir proyecto',
     'hero.cta.secondary': 'Nuestros servicios',
     
