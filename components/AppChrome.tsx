@@ -140,14 +140,15 @@ export function AppChrome() {
       {/* Mobile Main Navigation Button */}
       <button
         onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-        className="lg:hidden fixed bottom-24 right-6 z-50 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full p-4 shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-3xl border-2 border-gray-700 dark:border-gray-300 min-w-[44px] min-h-[44px] flex items-center justify-center pb-safe"
+        className="lg:hidden fixed bottom-52 right-6 z-50 ui-glass-btn rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-xl"
         aria-label={t('nav.showNavigation') || 'Показать навигацию'}
         aria-expanded={isMobileNavOpen}
       >
         <svg
-          className="w-6 h-6"
+          className="w-6 h-6 text-gray-700 dark:text-gray-300"
           fill="none"
           stroke="currentColor"
+          strokeWidth={2.5}
           viewBox="0 0 24 24"
         >
           {isMobileNavOpen ? (
@@ -183,19 +184,10 @@ export function AppChrome() {
           {/* Menu Panel */}
           <div className="relative z-50 h-full overflow-y-auto p-4 animate-[slideInRight_0.3s_ease-out]">
             <div className="max-w-sm mx-auto mt-20 bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-200 dark:border-gray-800">
-              <div className="flex items-center justify-between mb-6">
+              <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   {t('nav.menu') || 'Меню'}
                 </h3>
-                <button
-                  onClick={() => setIsMobileNavOpen(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-2"
-                  aria-label={t('nav.closeNavigation') || 'Закрыть навигацию'}
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
               </div>
 
               <ul className="space-y-2">

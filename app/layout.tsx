@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/components/Providers";
 import { AppChrome } from "@/components/AppChrome";
 import "./globals.css";
@@ -18,12 +19,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Web-Alchemy - Разработка Веб-приложений и сайтов любой сложности",
   description: "Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От идеи до запуска — быстро, качественно, профессионально.",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    viewportFit: 'cover', // Для поддержки safe area на iOS
-  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover', // Для поддержки safe area на iOS
 };
 
 export default function RootLayout({
@@ -32,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -41,6 +43,7 @@ export default function RootLayout({
           {children}
         </Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
