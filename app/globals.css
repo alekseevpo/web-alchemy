@@ -144,7 +144,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  filter: blur(10px) brightness(0.3);
+  filter: blur(10px) brightness(0.6);
   z-index: -1;
   will-change: transform;
   transform: translateZ(0);
