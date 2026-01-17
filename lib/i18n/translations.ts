@@ -16,13 +16,17 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.cta.secondary': 'Наши услуги',
     
     // Services Section
-    'services.title': 'Что мы делаем',
+    'services.title': 'Наши проекты',
     'services.webapp.title': 'Веб-приложения любой сложности',
     'services.webapp.desc': 'Современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От простых интерфейсов до сложных корпоративных систем.',
     'services.businesscard.title': 'Сайты-визитки',
     'services.businesscard.desc': 'Элегантные одностраничные сайты для презентации вашего бизнеса. Быстро, стильно, эффективно.',
     'services.landing.title': 'Landing-страницы',
     'services.landing.desc': 'Landing-страницы для мероприятий, продуктов и кампаний. Высокая конверсия, современный дизайн, быстрая загрузка.',
+    'services.corporate.title': 'Корпоративные сайты',
+    'services.corporate.desc': 'Многостраничные корпоративные сайты для B2B и B2C компаний. Полный функционал, интеграции, админ-панель.',
+    'services.support.title': 'Техническая поддержка',
+    'services.support.desc': 'Поддержка и обслуживание существующих проектов. Обновления, исправления, оптимизация производительности.',
     
     // About Section
     'about.title': 'О компании',
@@ -242,13 +246,17 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.cta.secondary': 'Our services',
     
     // Services Section
-    'services.title': 'What we do',
+    'services.title': 'Our Projects',
     'services.webapp.title': 'WebApp of any complexity',
     'services.webapp.desc': 'Modern web applications turnkey using TypeScript, Vue.js and Django. From simple interfaces to complex enterprise systems.',
     'services.businesscard.title': 'Business card websites',
     'services.businesscard.desc': 'Elegant single-page websites to present your business. Fast, stylish, effective.',
     'services.landing.title': 'Landing pages',
     'services.landing.desc': 'Landing pages for events, products and campaigns. High conversion, modern design, fast loading.',
+    'services.corporate.title': 'Corporate websites',
+    'services.corporate.desc': 'Multi-page corporate websites for B2B and B2C companies. Full functionality, integrations, admin panel.',
+    'services.support.title': 'Technical support',
+    'services.support.desc': 'Support and maintenance of existing projects. Updates, bug fixes, performance optimization.',
     
     // About Section
     'about.title': 'About us',
@@ -468,13 +476,17 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.cta.secondary': 'Nuestros servicios',
     
     // Services Section
-    'services.title': 'Qué hacemos',
+    'services.title': 'Nuestros Proyectos',
     'services.webapp.title': 'WebApp de cualquier complejidad',
     'services.webapp.desc': 'Aplicaciones web modernas llave en mano usando TypeScript, Vue.js y Django. Desde interfaces simples hasta sistemas empresariales complejos.',
     'services.businesscard.title': 'Sitios web de presentación',
     'services.businesscard.desc': 'Sitios web elegantes de una sola página para presentar su negocio. Rápido, elegante, efectivo.',
     'services.landing.title': 'Páginas de destino',
     'services.landing.desc': 'Páginas de destino para eventos, productos y campañas. Alta conversión, diseño moderno, carga rápida.',
+    'services.corporate.title': 'Sitios web corporativos',
+    'services.corporate.desc': 'Sitios web corporativos multipágina para empresas B2B y B2C. Funcionalidad completa, integraciones, panel de administración.',
+    'services.support.title': 'Soporte técnico',
+    'services.support.desc': 'Soporte y mantenimiento de proyectos existentes. Actualizaciones, correcciones de errores, optimización del rendimiento.',
     
     // About Section
     'about.title': 'Sobre nosotros',
