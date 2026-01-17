@@ -114,6 +114,7 @@ export function ContactPage() {
                     type="text" 
                     id="contact-name"
                     name="name"
+                    autoComplete="name"
                     required
                     disabled={status === 'loading'}
                     className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
@@ -139,6 +140,7 @@ export function ContactPage() {
                     type="email" 
                     id="contact-email"
                     name="email"
+                    autoComplete="email"
                     required
                     disabled={status === 'loading'}
                     className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
@@ -163,6 +165,7 @@ export function ContactPage() {
                   <textarea 
                     id="contact-message"
                     name="message"
+                    autoComplete="off"
                     rows={6}
                     required
                     disabled={status === 'loading'}

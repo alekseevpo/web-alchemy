@@ -143,6 +143,7 @@ export function SupportPage() {
                     type="text" 
                     id="support-name"
                     name="name"
+                    autoComplete="name"
                     required
                     disabled={status === 'loading'}
                     className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
@@ -168,6 +169,7 @@ export function SupportPage() {
                     type="email" 
                     id="support-email"
                     name="email"
+                    autoComplete="email"
                     required
                     disabled={status === 'loading'}
                     className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
@@ -193,6 +195,7 @@ export function SupportPage() {
                     type="text" 
                     id="support-subject"
                     name="subject"
+                    autoComplete="off"
                     required
                     disabled={status === 'loading'}
                     className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
@@ -217,6 +220,7 @@ export function SupportPage() {
                   <textarea 
                     id="support-message"
                     name="message"
+                    autoComplete="off"
                     rows={6}
                     required
                     disabled={status === 'loading'}
