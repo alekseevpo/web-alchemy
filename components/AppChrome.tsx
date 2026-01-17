@@ -17,13 +17,12 @@ const mainNavLinks = [
   { href: '/projects', key: 'nav.projects' },
   { href: '/services', key: 'nav.services' },
   { href: '/support', key: 'nav.support' },
-  { href: '/feedback', key: 'nav.feedback' },
-  { href: '/faq', key: 'nav.faq' },
 ];
 
 export function AppChrome() {
   const pathname = usePathname();
   const isDevelopers = pathname === '/developers';
+  const isServicePage = pathname.startsWith('/services/') && pathname !== '/services';
   const { t } = useLanguage();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
@@ -43,8 +42,8 @@ export function AppChrome() {
     <>
       {/* Left top actions */}
       <div className="fixed top-4 left-4 z-50 lg:left-6 flex items-center gap-2">
-        {isDevelopers && <BackButton />}
-        {!isDevelopers && <DevelopersButton />}
+        {(isDevelopers || isServicePage) && <BackButton />}
+        {!isDevelopers && !isServicePage && <DevelopersButton />}
       </div>
 
       {/* Center navigation - Desktop only */}
@@ -102,43 +101,17 @@ export function AppChrome() {
               pathname === '/support' ? 'h-0.5 w-3/4' : 'h-px w-0 group-hover:w-3/4'
             }`}></span>
           </Link>
-          <Link
-            href="/feedback"
-            className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-lg group ${
-              pathname === '/feedback'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
-            }`}
-          >
-            {t('nav.feedback')}
-            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-gray-100 transition-all duration-300 ease-out ${
-              pathname === '/feedback' ? 'h-0.5 w-3/4' : 'h-px w-0 group-hover:w-3/4'
-            }`}></span>
-          </Link>
-          <Link
-            href="/faq"
-            className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-lg group ${
-              pathname === '/faq'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
-            }`}
-          >
-            {t('nav.faq')}
-            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-gray-100 transition-all duration-300 ease-out ${
-              pathname === '/faq' ? 'h-0.5 w-3/4' : 'h-px w-0 group-hover:w-3/4'
-            }`}></span>
-          </Link>
         </div>
       </nav>
 
       {/* Right top actions */}
-      <div className="fixed top-4 right-4 z-50 lg:right-6 flex items-center gap-2">
+      <div className="fixed top-4 right-4 z-[100] lg:right-6 flex items-center gap-2">
         <ThemeToggle />
         <LanguageToggle />
         {/* Mobile Main Navigation Button */}
         <button
           onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-          className="lg:hidden ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center"
+          className="lg:hidden ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center relative"
           aria-label={t('nav.showNavigation') || 'Показать навигацию'}
           aria-expanded={isMobileNavOpen}
         >

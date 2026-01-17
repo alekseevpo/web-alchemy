@@ -17,7 +17,7 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Services Section
     'services.title': 'Наши проекты',
-    'services.webapp.title': 'Веб-приложения любой сложности',
+    'services.webapp.title': 'Веб-приложения',
     'services.webapp.desc': 'Современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От простых интерфейсов до сложных корпоративных систем.',
     'services.businesscard.title': 'Сайты-визитки',
     'services.businesscard.desc': 'Элегантные одностраничные сайты для презентации вашего бизнеса. Быстро, стильно, эффективно.',
@@ -27,6 +27,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'services.corporate.desc': 'Многостраничные корпоративные сайты для B2B и B2C компаний. Полный функционал, интеграции, админ-панель.',
     'services.support.title': 'Техническая поддержка',
     'services.support.desc': 'Поддержка и обслуживание существующих проектов. Обновления, исправления, оптимизация производительности.',
+    'services.specification.title': 'Разработка технического задания',
+    'services.specification.desc': 'Детальное техническое задание для вашего проекта. Структура, функционал, требования, архитектура, сроки и бюджет.',
+    'services.onlineStore.title': 'Онлайн магазин',
+    'services.onlineStore.desc': 'Полнофункциональные интернет-магазины с корзиной, оплатой, управлением товарами и заказами. Интеграция с платежными системами и доставкой.',
+    'services.bot.title': 'Разработка ботов',
+    'services.bot.desc': 'Telegram, WhatsApp и другие боты для автоматизации коммуникаций, обработки заказов, уведомлений и поддержки клиентов. Интеграция с CRM и другими системами.',
     
     // About Section
     'about.title': 'О компании',
@@ -103,10 +109,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'cookieConsent.decline': 'Отклонить',
     
     // Services Page
-    'services.subtitle': 'Полный спектр услуг по разработке веб-приложений',
+    'servicesPage.title': 'Наши услуги',
+    'servicesPage.subtitle': 'Полный спектр услуг по разработке веб-приложений и сайтов любой сложности',
     'services.webapp.price': 'От 500€',
     'services.businesscard.price': 'От 300€',
     'services.landing.price': 'От 400€',
+    'services.corporate.price': 'От 800€',
+    'services.support.price': 'От 50€/мес',
+    'services.specification.price': 'От 200€',
+    'services.onlineStore.price': 'От 1000€',
+    'services.bot.price': 'От 300€',
     'services.cta.title': 'Готовы начать проект?',
     'services.cta.desc': 'Свяжитесь с нами для обсуждения вашего проекта и получения персонального предложения',
     'services.cta.button': 'Обсудить проект',
@@ -247,7 +259,7 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Services Section
     'services.title': 'Our Projects',
-    'services.webapp.title': 'WebApp of any complexity',
+    'services.webapp.title': 'Web Applications',
     'services.webapp.desc': 'Modern web applications turnkey using TypeScript, Vue.js and Django. From simple interfaces to complex enterprise systems.',
     'services.businesscard.title': 'Business card websites',
     'services.businesscard.desc': 'Elegant single-page websites to present your business. Fast, stylish, effective.',
@@ -257,6 +269,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'services.corporate.desc': 'Multi-page corporate websites for B2B and B2C companies. Full functionality, integrations, admin panel.',
     'services.support.title': 'Technical support',
     'services.support.desc': 'Support and maintenance of existing projects. Updates, bug fixes, performance optimization.',
+    'services.onlineStore.title': 'Online Store',
+    'services.onlineStore.desc': 'Full-featured e-commerce stores with shopping cart, payment processing, product and order management. Integration with payment systems and delivery services.',
+    'services.bot.title': 'Bot Development',
+    'services.bot.desc': 'Telegram, WhatsApp and other bots for communication automation, order processing, notifications and customer support. Integration with CRM and other systems.',
+    'services.specification.title': 'Technical Specification Development',
+    'services.specification.desc': 'Detailed technical specification for your project. Structure, functionality, requirements, architecture, timeline and budget.',
     
     // About Section
     'about.title': 'About us',
@@ -333,10 +351,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'cookieConsent.decline': 'Decline',
     
     // Services Page
-    'services.subtitle': 'Full range of web application development services',
+    'servicesPage.title': 'Our Services',
+    'servicesPage.subtitle': 'Full range of web application and website development services of any complexity',
     'services.webapp.price': 'From €500',
     'services.businesscard.price': 'From €300',
     'services.landing.price': 'From €400',
+    'services.corporate.price': 'From €800',
+    'services.support.price': 'From €50/month',
+    'services.specification.price': 'From €200',
+    'services.onlineStore.price': 'From €1000',
+    'services.bot.price': 'From €300',
     'services.cta.title': 'Ready to start your project?',
     'services.cta.desc': 'Contact us to discuss your project and get a personal proposal',
     'services.cta.button': 'Discuss project',
@@ -477,7 +501,7 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Services Section
     'services.title': 'Nuestros Proyectos',
-    'services.webapp.title': 'WebApp de cualquier complejidad',
+    'services.webapp.title': 'Aplicaciones Web',
     'services.webapp.desc': 'Aplicaciones web modernas llave en mano usando TypeScript, Vue.js y Django. Desde interfaces simples hasta sistemas empresariales complejos.',
     'services.businesscard.title': 'Sitios web de presentación',
     'services.businesscard.desc': 'Sitios web elegantes de una sola página para presentar su negocio. Rápido, elegante, efectivo.',
@@ -487,6 +511,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'services.corporate.desc': 'Sitios web corporativos multipágina para empresas B2B y B2C. Funcionalidad completa, integraciones, panel de administración.',
     'services.support.title': 'Soporte técnico',
     'services.support.desc': 'Soporte y mantenimiento de proyectos existentes. Actualizaciones, correcciones de errores, optimización del rendimiento.',
+    'services.specification.title': 'Desarrollo de Especificaciones Técnicas',
+    'services.specification.desc': 'Especificación técnica detallada para su proyecto. Estructura, funcionalidad, requisitos, arquitectura, cronograma y presupuesto.',
+    'services.onlineStore.title': 'Tienda Online',
+    'services.onlineStore.desc': 'Tiendas electrónicas completamente funcionales con carrito de compras, procesamiento de pagos, gestión de productos y pedidos. Integración con sistemas de pago y servicios de entrega.',
+    'services.bot.title': 'Desarrollo de Bots',
+    'services.bot.desc': 'Bots de Telegram, WhatsApp y otros para automatización de comunicaciones, procesamiento de pedidos, notificaciones y atención al cliente. Integración con CRM y otros sistemas.',
     
     // About Section
     'about.title': 'Sobre nosotros',
@@ -563,10 +593,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'cookieConsent.decline': 'Rechazar',
     
     // Services Page
-    'services.subtitle': 'Gama completa de servicios de desarrollo de aplicaciones web',
+    'servicesPage.title': 'Nuestros Servicios',
+    'servicesPage.subtitle': 'Gama completa de servicios de desarrollo de aplicaciones web y sitios de cualquier complejidad',
     'services.webapp.price': 'Desde 500€',
     'services.businesscard.price': 'Desde 300€',
     'services.landing.price': 'Desde 400€',
+    'services.corporate.price': 'Desde 800€',
+    'services.support.price': 'Desde 50€/mes',
+    'services.specification.price': 'Desde 200€',
+    'services.onlineStore.price': 'Desde 1000€',
+    'services.bot.price': 'Desde 300€',
     'services.cta.title': '¿Listo para comenzar su proyecto?',
     'services.cta.desc': 'Contáctenos para discutir su proyecto y obtener una propuesta personal',
     'services.cta.button': 'Discutir proyecto',

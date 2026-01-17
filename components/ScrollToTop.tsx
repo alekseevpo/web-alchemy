@@ -31,7 +31,7 @@ export function ScrollToTop() {
     <button
       onClick={scrollToTop}
       className={`
-        fixed bottom-36 right-6 z-50
+        fixed bottom-24 right-4 z-50
         ui-glass-btn rounded-full w-12 h-12 flex items-center justify-center shadow-lg
         transition-all duration-300 ease-in-out
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}

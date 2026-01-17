@@ -12,6 +12,13 @@
       transition-colors
       focus-visible:outline-2 focus-visible:outline-blue-500 dark:focus-visible:outline-blue-400 focus-visible:outline-offset-2;
   }
+  
+  /* Улучшенная видимость на мобильных устройствах */
+  @media (max-width: 1023px) {
+    .ui-glass-btn {
+      @apply bg-white/85 dark:bg-gray-900/85 shadow-lg;
+    }
+  }
 
   .ui-glass-menu {
     @apply bg-white/55 dark:bg-gray-900/55 backdrop-blur-[3px]
@@ -120,45 +127,10 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Фоновое изображение для тёмной темы */
+/* Тёмная тема - простой фон */
 .dark body {
-  background-image: url('/dark-background.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-color: #0a0a0a; /* Fallback цвет на случай, если изображение не загрузится */
+  background-color: #0a0a0a;
   position: relative;
-}
-
-/* Затемнение и размытие фонового изображения */
-.dark body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/dark-background.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  filter: blur(15px) brightness(0.6);
-  z-index: -1;
-  will-change: transform;
-  transform: translateZ(0);
-  animation: backgroundZoom 20s ease-in-out infinite;
-}
-
-/* Анимация плавного увеличения и уменьшения фона */
-@keyframes backgroundZoom {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
 }
 
 /* Оптимизация производительности анимаций */

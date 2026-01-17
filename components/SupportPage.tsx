@@ -6,10 +6,29 @@ import { Footer } from '@/components/Footer';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
+interface FAQItem {
+  questionKey: string;
+  answerKey: string;
+}
+
+const faqItems: FAQItem[] = [
+  { questionKey: 'faq.q1', answerKey: 'faq.a1' },
+  { questionKey: 'faq.q2', answerKey: 'faq.a2' },
+  { questionKey: 'faq.q3', answerKey: 'faq.a3' },
+  { questionKey: 'faq.q4', answerKey: 'faq.a4' },
+  { questionKey: 'faq.q5', answerKey: 'faq.a5' },
+  { questionKey: 'faq.q6', answerKey: 'faq.a6' },
+];
+
 export function SupportPage() {
   const { t } = useLanguage();
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  const toggleFaqItem = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
 
   const validateForm = (formData: FormData): Record<string, string> => {
     const newErrors: Record<string, string> = {};
@@ -283,6 +302,53 @@ export function SupportPage() {
                   {t('support.info.available.desc') || 'Поддержка доступна в любое время'}
                 </p>
               </div>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="max-w-4xl mx-auto mb-16 sm:mb-20 lg:mb-24" id="faq">
+            <header className="mb-12 text-center">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-4">
+                {t('faq.title') || 'Часто задаваемые вопросы'}
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-400">
+                {t('faq.subtitle') || 'Ответы на самые популярные вопросы о наших услугах'}
+              </p>
+            </header>
+
+            <div className="space-y-4">
+              {faqItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-800 overflow-hidden transition-all duration-300 hover:shadow-lg"
+                >
+                  <button
+                    onClick={() => toggleFaqItem(index)}
+                    className="w-full px-6 sm:px-8 py-5 sm:py-6 text-left flex items-center justify-between group"
+                  >
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 pr-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {t(item.questionKey)}
+                    </h3>
+                    <svg
+                      className={`w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0 transition-transform duration-300 ${
+                        openFaqIndex === index ? 'rotate-180' : ''
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {openFaqIndex === index && (
+                    <div className="px-6 sm:px-8 pb-5 sm:pb-6">
+                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                        {t(item.answerKey)}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </section>
         </main>
