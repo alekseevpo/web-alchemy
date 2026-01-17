@@ -9,17 +9,6 @@ export function CompanyContent() {
   const { t } = useLanguage();
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [currentSlide, setCurrentSlide] = useState(2); // Начинаем с середины (2 из 5 слайдов)
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // md breakpoint
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const validateForm = (formData: FormData): Record<string, string> => {
     const newErrors: Record<string, string> = {};
@@ -107,223 +96,13 @@ export function CompanyContent() {
             {t('hero.cta.primary')}
           </a>
           <a 
-            href="#services" 
+            href="/services" 
             className="inline-flex items-center justify-center px-6 sm:px-8 py-3.5 min-w-[180px] min-h-[44px] border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:border-gray-900 dark:hover:border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-200 font-medium hover:scale-[1.02] active:scale-[0.98]"
           >
             {t('hero.cta.secondary')}
           </a>
         </div>
       </header>
-
-      {/* Services Section */}
-      <section id="services" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-12 sm:mb-16 text-center">
-          {t('services.title')}
-        </h2>
-        
-        {/* Slider Container - 3D Carousel */}
-        <div className="relative">
-          {/* Slides Wrapper with 3D perspective */}
-          <div 
-            className="relative overflow-visible rounded-3xl"
-            style={{ 
-              perspective: '1500px',
-              perspectiveOrigin: 'center center',
-              height: '600px'
-            }}
-          >
-            <div 
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{ 
-                transform: `translateX(-${currentSlide * 100}%)`,
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              {/* WebApp Card */}
-              <div 
-                className="min-w-full px-2 sm:px-4 transition-all duration-700 ease-in-out"
-                style={{
-                  transform: `translateZ(${currentSlide === 0 ? 100 : -200}px) rotateY(${(currentSlide - 0) * 35}deg) scale(${currentSlide === 0 ? 1 : 0.85})`,
-                  opacity: currentSlide === 0 ? 1 : Math.max(0.5, 1 - Math.abs(currentSlide - 0) * 0.25),
-                  filter: currentSlide === 0 ? 'blur(0px)' : `blur(${Math.abs(currentSlide - 0) * 2}px)`
-                }}
-              >
-                <div className="group relative bg-white dark:bg-gray-900 p-8 sm:p-10 rounded-3xl shadow-lg transition-all duration-500 border-2 border-gray-200/50 dark:border-gray-800 hover:border-blue-400 dark:hover:border-blue-600 overflow-hidden md:h-[524px] md:flex md:flex-col">
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 via-blue-50/0 to-blue-50/0 dark:from-blue-900/0 dark:via-blue-900/0 dark:to-blue-900/0 group-hover:from-blue-50/30 group-hover:via-blue-50/20 group-hover:to-blue-50/10 dark:group-hover:from-blue-900/20 dark:group-hover:via-blue-900/10 dark:group-hover:to-blue-900/5 transition-all duration-500 rounded-3xl pointer-events-none"></div>
-            
-            {/* Icon container with background */}
-            <div className="relative mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-blue-500/50">
-                <span className="text-3xl">🚀</span>
-              </div>
-            </div>
-            
-            <h3 className="relative text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-              {t('services.webapp.title')}
-            </h3>
-                  <p className="relative text-gray-600 dark:text-gray-300 leading-relaxed text-base">
-                    {t('services.webapp.desc')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Business Card Website */}
-              <div 
-                className="min-w-full px-2 sm:px-4 transition-all duration-700 ease-in-out"
-                style={{
-                  transform: `translateZ(${currentSlide === 1 ? 100 : -200}px) rotateY(${(currentSlide - 1) * 35}deg) scale(${currentSlide === 1 ? 1 : 0.85})`,
-                  opacity: currentSlide === 1 ? 1 : Math.max(0.5, 1 - Math.abs(currentSlide - 1) * 0.25),
-                  filter: currentSlide === 1 ? 'blur(0px)' : `blur(${Math.abs(currentSlide - 1) * 2}px)`
-                }}
-              >
-                <div className="group relative bg-white dark:bg-gray-900 p-8 sm:p-10 rounded-3xl shadow-lg transition-all duration-500 border-2 border-gray-200/50 dark:border-gray-800 hover:border-purple-400 dark:hover:border-purple-600 overflow-hidden md:h-[524px] md:flex md:flex-col">
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-50/0 via-purple-50/0 to-purple-50/0 dark:from-purple-900/0 dark:via-purple-900/0 dark:to-purple-900/0 group-hover:from-purple-50/30 group-hover:via-purple-50/20 group-hover:to-purple-50/10 dark:group-hover:from-purple-900/20 dark:group-hover:via-purple-900/10 dark:group-hover:to-purple-900/5 transition-all duration-500 rounded-3xl pointer-events-none"></div>
-            
-            {/* Icon container with background */}
-            <div className="relative mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-400 dark:to-purple-500 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-purple-500/50">
-                <span className="text-3xl">💼</span>
-              </div>
-            </div>
-            
-            <h3 className="relative text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300">
-              {t('services.businesscard.title')}
-            </h3>
-                  <p className="relative text-gray-600 dark:text-gray-300 leading-relaxed text-base">
-                    {t('services.businesscard.desc')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Landing Pages Card */}
-              <div 
-                className="min-w-full px-2 sm:px-4 transition-all duration-700 ease-in-out"
-                style={{
-                  transform: `translateZ(${currentSlide === 2 ? 100 : -200}px) rotateY(${(currentSlide - 2) * 35}deg) scale(${currentSlide === 2 ? 1 : 0.85})`,
-                  opacity: currentSlide === 2 ? 1 : Math.max(0.5, 1 - Math.abs(currentSlide - 2) * 0.25),
-                  filter: currentSlide === 2 ? 'blur(0px)' : `blur(${Math.abs(currentSlide - 2) * 2}px)`
-                }}
-              >
-                <div className="group relative bg-white dark:bg-gray-900 p-8 sm:p-10 rounded-3xl shadow-lg transition-all duration-500 border-2 border-gray-200/50 dark:border-gray-800 hover:border-emerald-400 dark:hover:border-emerald-600 overflow-hidden md:h-[524px] md:flex md:flex-col">
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/0 via-emerald-50/0 to-emerald-50/0 dark:from-emerald-900/0 dark:via-emerald-900/0 dark:to-emerald-900/0 group-hover:from-emerald-50/30 group-hover:via-emerald-50/20 group-hover:to-emerald-50/10 dark:group-hover:from-emerald-900/20 dark:group-hover:via-emerald-900/10 dark:group-hover:to-emerald-900/5 transition-all duration-500 rounded-3xl pointer-events-none"></div>
-            
-            {/* Icon container with background */}
-            <div className="relative mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-500 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-emerald-500/50">
-                <span className="text-3xl">📄</span>
-              </div>
-            </div>
-            
-            <h3 className="relative text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
-              {t('services.landing.title')}
-            </h3>
-                  <p className="relative text-gray-600 dark:text-gray-300 leading-relaxed text-base">
-                    {t('services.landing.desc')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Corporate Websites Card */}
-              <div 
-                className="min-w-full px-2 sm:px-4 transition-all duration-700 ease-in-out"
-                style={{
-                  transform: `translateZ(${currentSlide === 3 ? 100 : -200}px) rotateY(${(currentSlide - 3) * 35}deg) scale(${currentSlide === 3 ? 1 : 0.85})`,
-                  opacity: currentSlide === 3 ? 1 : Math.max(0.5, 1 - Math.abs(currentSlide - 3) * 0.25),
-                  filter: currentSlide === 3 ? 'blur(0px)' : `blur(${Math.abs(currentSlide - 3) * 2}px)`
-                }}
-              >
-                <div className="group relative bg-white dark:bg-gray-900 p-8 sm:p-10 rounded-3xl shadow-lg transition-all duration-500 border-2 border-gray-200/50 dark:border-gray-800 hover:border-orange-400 dark:hover:border-orange-600 overflow-hidden md:h-[524px] md:flex md:flex-col">
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 via-orange-50/0 to-orange-50/0 dark:from-orange-900/0 dark:via-orange-900/0 dark:to-orange-900/0 group-hover:from-orange-50/30 group-hover:via-orange-50/20 group-hover:to-orange-50/10 dark:group-hover:from-orange-900/20 dark:group-hover:via-orange-900/10 dark:group-hover:to-orange-900/5 transition-all duration-500 rounded-3xl pointer-events-none"></div>
-            
-            {/* Icon container with background */}
-            <div className="relative mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 dark:from-orange-400 dark:to-orange-500 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-orange-500/50">
-                <span className="text-3xl">🏢</span>
-              </div>
-            </div>
-            
-            <h3 className="relative text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-300">
-              {t('services.corporate.title')}
-            </h3>
-                  <p className="relative text-gray-600 dark:text-gray-300 leading-relaxed text-base">
-                    {t('services.corporate.desc')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Technical Support Card */}
-              <div 
-                className="min-w-full px-2 sm:px-4 transition-all duration-700 ease-in-out"
-                style={{
-                  transform: `translateZ(${currentSlide === 4 ? 100 : -200}px) rotateY(${(currentSlide - 4) * 35}deg) scale(${currentSlide === 4 ? 1 : 0.85})`,
-                  opacity: currentSlide === 4 ? 1 : Math.max(0.5, 1 - Math.abs(currentSlide - 4) * 0.25),
-                  filter: currentSlide === 4 ? 'blur(0px)' : `blur(${Math.abs(currentSlide - 4) * 2}px)`
-                }}
-              >
-                <div className="group relative bg-white dark:bg-gray-900 p-8 sm:p-10 rounded-3xl shadow-lg transition-all duration-500 border-2 border-gray-200/50 dark:border-gray-800 hover:border-indigo-400 dark:hover:border-indigo-600 overflow-hidden md:h-[524px] md:flex md:flex-col">
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 via-indigo-50/0 to-indigo-50/0 dark:from-indigo-900/0 dark:via-indigo-900/0 dark:to-indigo-900/0 group-hover:from-indigo-50/30 group-hover:via-indigo-50/20 group-hover:to-indigo-50/10 dark:group-hover:from-indigo-900/20 dark:group-hover:via-indigo-900/10 dark:group-hover:to-indigo-900/5 transition-all duration-500 rounded-3xl pointer-events-none"></div>
-            
-            {/* Icon container with background */}
-            <div className="relative mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 dark:from-indigo-400 dark:to-indigo-500 flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-indigo-500/50">
-                <span className="text-3xl">🔧</span>
-              </div>
-            </div>
-            
-            <h3 className="relative text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
-              {t('services.support.title')}
-            </h3>
-                  <p className="relative text-gray-600 dark:text-gray-300 leading-relaxed text-base">
-                    {t('services.support.desc')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigation Buttons */}
-          <button
-            onClick={() => setCurrentSlide((prev) => (prev - 1 + 5) % 5)}
-            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
-            aria-label="Предыдущий слайд"
-          >
-            <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={() => setCurrentSlide((prev) => (prev + 1) % 5)}
-            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
-            aria-label="Следующий слайд"
-          >
-            <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center gap-2 mt-8">
-            {[0, 1, 2, 3, 4].map((index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  currentSlide === index
-                    ? 'bg-gray-900 dark:bg-gray-100 w-8'
-                    : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600'
-                }`}
-                aria-label={`Перейти к слайду ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-      </section>
 
       {/* About Section */}
       <section id="about" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
@@ -470,12 +249,12 @@ export function CompanyContent() {
                   name="name"
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
                     errors.name
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  placeholder={t('contact.form.name') || 'Введите ваше имя'}
+                  placeholder={t('contact.form.namePlaceholder') || 'Введите ваше имя'}
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? 'contact-name-error' : undefined}
                 />
@@ -495,12 +274,12 @@ export function CompanyContent() {
                   name="email"
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
                     errors.email
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  placeholder={t('contact.form.email') || 'Введите ваш email'}
+                  placeholder={t('contact.form.emailPlaceholder') || 'your@email.com'}
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? 'contact-email-error' : undefined}
                 />
@@ -517,15 +296,15 @@ export function CompanyContent() {
                 <textarea 
                   id="contact-message"
                   name="message"
+                  rows={6}
                   required
                   disabled={status === 'loading'}
-                  rows={5}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none ${
                     errors.message
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  placeholder={t('contact.form.message') || 'Расскажите нам о вашем проекте'}
+                  placeholder={t('contact.form.messagePlaceholder') || 'Опишите ваш проект или задайте вопрос...'}
                   aria-invalid={!!errors.message}
                   aria-describedby={errors.message ? 'contact-message-error' : undefined}
                 ></textarea>
@@ -538,8 +317,10 @@ export function CompanyContent() {
               <button 
                 type="submit"
                 disabled={status === 'loading'}
-                className={`w-full px-8 py-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] min-h-[48px] ${
-                  status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''
+                className={`w-full sm:w-auto px-8 py-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl ${
+                  status === 'loading'
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:bg-gray-800 dark:hover:bg-gray-200 hover:scale-[1.02] active:scale-[0.98]'
                 }`}
               >
                 {status === 'loading' ? (
@@ -548,16 +329,13 @@ export function CompanyContent() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    {t('form.loading') || 'Отправка...'}
+                    {t('form.submitting') || 'Отправка...'}
                   </span>
                 ) : (
-                  t('contact.form.submit')
+                  t('contact.form.submit') || 'Отправить сообщение'
                 )}
               </button>
             </form>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-8">
-              {t('contact.form.or')}
-            </p>
           </div>
         </div>
       </section>

@@ -79,6 +79,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.projects': 'Проекты',
     'nav.services': 'Услуги',
     'nav.support': 'Поддержка',
+    'nav.contact': 'Контакты',
     'nav.feedback': 'Обратная связь и отзывы',
     'nav.faq': 'FAQ',
     
@@ -321,6 +322,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.projects': 'Projects',
     'nav.services': 'Services',
     'nav.support': 'Support',
+    'nav.contact': 'Contact',
     'nav.feedback': 'Feedback & Reviews',
     'nav.faq': 'FAQ',
     
@@ -563,6 +565,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.projects': 'Proyectos',
     'nav.services': 'Servicios',
     'nav.support': 'Soporte',
+    'nav.contact': 'Contacto',
     'nav.feedback': 'Comentarios y reseñas',
     'nav.faq': 'Preguntas frecuentes',
     
