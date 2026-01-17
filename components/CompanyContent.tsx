@@ -286,7 +286,16 @@ export function CompanyContent() {
             </div>
           </div>
 
-          {/* Navigation Button - Only Forward (Infinite Loop) */}
+          {/* Navigation Buttons */}
+          <button
+            onClick={() => setCurrentSlide((prev) => (prev - 1 + 5) % 5)}
+            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+            aria-label="Предыдущий слайд"
+          >
+            <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
           <button
             onClick={() => setCurrentSlide((prev) => (prev + 1) % 5)}
             className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
