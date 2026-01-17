@@ -3,8 +3,6 @@
  * Приоритет: язык браузера > геолокация
  */
 
-import { headers } from 'next/headers';
-
 export type Language = 'ru' | 'en' | 'es';
 
 interface LanguageDetectionResult {
@@ -168,37 +166,4 @@ export function detectLanguageSync(savedLanguage?: Language | null): LanguageDet
   
   // 3. По умолчанию
   return { language: 'ru', source: 'default' };
-}
-
-/**
- * Извлекает язык из заголовков запроса (серверная функция)
- * Используется в generateMetadata и других server components
- */
-export function getLanguageFromHeaders(): Language {
-  try {
-    const headersList = headers();
-    const acceptLanguage = headersList.get('accept-language');
-    
-    if (acceptLanguage) {
-      // Парсим Accept-Language заголовок
-      // Формат: "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
-      const languages = acceptLanguage
-        .split(',')
-        .map(lang => lang.split(';')[0].trim().toLowerCase());
-      
-      // Ищем первый поддерживаемый язык
-      for (const lang of languages) {
-        const langCode = lang.slice(0, 2);
-        if (langCode === 'ru' || langCode === 'en' || langCode === 'es') {
-          return langCode as Language;
-        }
-      }
-    }
-  } catch (error) {
-    // Если заголовки недоступны, возвращаем значение по умолчанию
-    console.debug('Failed to read headers:', error);
-  }
-  
-  // По умолчанию - русский
-  return 'ru';
 }

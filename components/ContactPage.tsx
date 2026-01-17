@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Footer } from '@/components/Footer';
+import { ContactButtons } from '@/components/ContactButtons';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -202,6 +203,9 @@ export function ContactPage() {
                   )}
                 </button>
               </form>
+              
+              {/* Direct Contact Buttons */}
+              <ContactButtons />
             </div>
           </section>
         </main>
