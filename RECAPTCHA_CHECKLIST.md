@@ -68,8 +68,8 @@ cat .env.local
 
 Должно быть:
 ```
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6Lcdl04sAAAAAKvUfYaHE55nbqc6Oq2rqzaix4e2
-RECAPTCHA_SECRET_KEY=6Lcdl04sAAAAAHSHsEh6HtAwwYDTj7Zj98cAfDZs
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_site_key_here
+RECAPTCHA_SECRET_KEY=your_secret_key_here
 ```
 
 ---
