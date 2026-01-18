@@ -189,7 +189,7 @@ export function CompanyContent() {
           />
         </div>
         <div className="mist-effect relative w-full">
-          <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 leading-[0.7] sm:leading-[0.6] text-center mx-auto relative z-10 break-words">
+          <h2 className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 text-center mx-auto relative z-10 break-words whitespace-nowrap">
           <span className="inline-flex flex-wrap justify-center perspective-1000 relative z-10 gap-0 sm:gap-0">
             {t('hero.companyName').split('').map((char, index) => (
               <span

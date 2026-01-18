@@ -20,11 +20,25 @@
     }
   }
 
-  .ui-glass-menu {
-    @apply bg-white/55 dark:bg-gray-900/55 backdrop-blur-[3px]
-      border border-gray-200/50 dark:border-gray-700/50
-      shadow-lg;
+.ui-glass-menu {
+  @apply bg-white/55 dark:bg-gray-900/55 backdrop-blur-[3px]
+    border border-gray-200/50 dark:border-gray-700/50
+    shadow-lg;
+}
+
+/* Адаптивный размер заголовка Web-Alchemy */
+.hero-title-responsive {
+  font-size: clamp(3rem, 8vw, 10rem);
+  line-height: 0.6;
+  letter-spacing: -0.02em;
+}
+
+/* Для очень маленьких экранов немного уменьшаем */
+@media (max-width: 375px) {
+  .hero-title-responsive {
+    font-size: clamp(2.5rem, 7vw, 3rem);
   }
+}
 }
 
 :root {
