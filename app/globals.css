@@ -468,18 +468,18 @@ main {
   }
 }
 
-/* Светлая тема - серый туман (по умолчанию) */
+/* Светлая тема - фиолетовый туман (по умолчанию) */
 .mist-effect::before {
-  background: radial-gradient(circle, rgba(75, 85, 99, 0.5) 0%, rgba(107, 114, 128, 0.4) 30%, rgba(156, 163, 175, 0.2) 60%, transparent 80%);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(139, 92, 246, 0.2) 30%, rgba(192, 132, 252, 0.15) 60%, transparent 80%);
   animation: mist1-light 12s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .mist-effect::after {
-  background: radial-gradient(circle, rgba(107, 114, 128, 0.45) 0%, rgba(75, 85, 99, 0.35) 40%, rgba(107, 114, 128, 0.2) 65%, transparent 85%);
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.22) 0%, rgba(168, 85, 247, 0.18) 40%, rgba(139, 92, 246, 0.12) 65%, transparent 85%);
   animation: mist2-light 14s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   animation-delay: 3s;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 /* Темная тема - синие/фиолетовые тона */
@@ -595,4 +595,23 @@ main {
 /* Пауза анимации при наведении */
 .tech-logos-scroll:hover {
   animation-play-state: paused;
+}
+
+/* Анимация появления блоков Technology Stack при скролле */
+.tech-card {
+  opacity: 0;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.tech-card.animate-left {
+  transform: translateX(-50px);
+}
+
+.tech-card.animate-right {
+  transform: translateX(50px);
+}
+
+.tech-card.visible {
+  opacity: 1;
+  transform: translateX(0);
 }

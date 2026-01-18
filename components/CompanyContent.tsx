@@ -11,30 +11,41 @@ export function CompanyContent() {
   const { t } = useLanguage();
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState<boolean>(false);
   const [selectedService, setSelectedService] = useState<string>('');
+  const [openApproachIndex, setOpenApproachIndex] = useState<number | null>(null);
+  const [visibleTechCards, setVisibleTechCards] = useState<Set<number>>(new Set());
   const { isReady, isAvailable, executeRecaptcha } = useRecaptcha();
   const serviceDropdownRef = useRef<HTMLDivElement>(null);
-  
-  // Закрываем выпадающее меню при клике вне его
+  const techCardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  const toggleApproachItem = (index: number) => {
+    setOpenApproachIndex(openApproachIndex === index ? null : index);
+  };
+
+  // Intersection Observer для анимации блоков Technology Stack
   useEffect(() => {
-    if (!isDropdownOpen) return;
-    
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      const dropdown = document.querySelector('.contact-dropdown');
-      if (dropdown && !dropdown.contains(target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    
+    const observers = techCardsRef.current
+      .filter((ref): ref is HTMLDivElement => ref !== null)
+      .map((element, index) => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                setVisibleTechCards((prev) => new Set([...prev, index]));
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+        observer.observe(element);
+        return observer;
+      });
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      observers.forEach((observer) => observer.disconnect());
     };
-  }, [isDropdownOpen]);
+  }, []);
 
   // Закрываем выпадающее меню услуг при клике вне его
   useEffect(() => {
@@ -112,40 +123,29 @@ export function CompanyContent() {
     setStatus('loading');
 
     try {
-      // Проверка reCAPTCHA v3 (если доступна)
-      let recaptchaVerified = true;
-      if (isAvailable && isReady) {
-        const recaptchaToken = await executeRecaptcha('contact');
-        
-        if (recaptchaToken) {
-          // Отправляем токен на сервер для проверки
-          const verifyResponse = await fetch('/api/verify-recaptcha', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ token: recaptchaToken }),
-          });
+      // Получаем токен reCAPTCHA (если доступна)
+      const recaptchaToken = isAvailable && isReady ? await executeRecaptcha('contact') : null;
 
-          const verifyData = await verifyResponse.json();
-          recaptchaVerified = verifyData.success;
+      // Отправка данных на сервер
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          service: selectedService || formData.get('service'),
+          message: formData.get('message'),
+          recaptchaToken: recaptchaToken || null,
+        }),
+      });
 
-          if (!recaptchaVerified) {
-            setErrors({
-              general: t('form.error.recaptchaFailed') || 'Проверка reCAPTCHA не пройдена. Попробуйте еще раз.',
-            });
-            setStatus('idle');
-            return;
-          }
-        } else {
-          // Если reCAPTCHA не настроена, продолжаем без проверки
-          console.warn('reCAPTCHA токен не получен, продолжаем без проверки');
-        }
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Ошибка отправки сообщения');
       }
-
-      // Здесь будет реальная отправка данных
-      // Пока имитируем отправку
-      await new Promise(resolve => setTimeout(resolve, 1500));
       
       setStatus('success');
       (e.target as HTMLFormElement).reset();
@@ -215,7 +215,7 @@ export function CompanyContent() {
         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif">
           {t('hero.subtitle')}
         </p>
-        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 px-2 tagline-text">
+        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 mt-4 sm:mt-6 md:mt-8 px-2 tagline-text">
           {t('header.tagline')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -236,7 +236,7 @@ export function CompanyContent() {
       </header>
 
       {/* About Section */}
-      <section id="about" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
+      <section id="about" className="-mt-40 sm:-mt-32 md:-mt-16 lg:mt-0 mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-12 sm:mb-16 text-center">
           {t('about.title')}
         </h2>
@@ -434,106 +434,93 @@ export function CompanyContent() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.python')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.django')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.fastapi')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.typescript')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.vue')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.tailwind')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.vite')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.nextjs')}
-                </p>
-              </div>
+              {[
+                { key: 'python', index: 0 },
+                { key: 'django', index: 1 },
+                { key: 'fastapi', index: 2 },
+                { key: 'typescript', index: 3 },
+                { key: 'vue', index: 4 },
+                { key: 'tailwind', index: 5 },
+                { key: 'vite', index: 6 },
+                { key: 'nextjs', index: 7 },
+              ].map(({ key, index }) => {
+                const isVisible = visibleTechCards.has(index);
+                const isLeft = index % 2 === 0;
+                
+                return (
+                  <div
+                    key={key}
+                    ref={(el) => {
+                      techCardsRef.current[index] = el;
+                    }}
+                    className={`tech-card bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800 ${
+                      isVisible ? 'visible' : isLeft ? 'animate-left' : 'animate-right'
+                    }`}
+                    style={{ transitionDelay: `${index * 0.1}s` }}
+                  >
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {t(`about.tech.${key}`)}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           {/* Our Approach Section */}
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-gray-100 mb-4 text-center">
+          <div className="max-w-4xl mx-auto -mt-8 sm:-mt-6 md:mt-0">
+            <h3 className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-gray-100 mb-2 text-center">
               {t('about.approach.title')}
             </h3>
-            <p className="text-center text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-3 max-w-2xl mx-auto">
               {t('about.approach.desc')}
             </p>
-            <div className="space-y-4">
-              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('about.approach.clean')}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                  {t('about.approach.cleanDesc')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('about.approach.fast')}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                  {t('about.approach.fastDesc')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('about.approach.modern')}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                  {t('about.approach.modernDesc')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('about.approach.detail')}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                  {t('about.approach.detailDesc')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('about.approach.market')}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                  {t('about.approach.marketDesc')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('about.approach.handcrafted')}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                  {t('about.approach.handcraftedDesc')}
-                </p>
-              </div>
+            <div className="space-y-3">
+              {[
+                { title: 'about.approach.clean', desc: 'about.approach.cleanDesc' },
+                { title: 'about.approach.fast', desc: 'about.approach.fastDesc' },
+                { title: 'about.approach.modern', desc: 'about.approach.modernDesc' },
+                { title: 'about.approach.detail', desc: 'about.approach.detailDesc' },
+                { title: 'about.approach.market', desc: 'about.approach.marketDesc' },
+                { title: 'about.approach.handcrafted', desc: 'about.approach.handcraftedDesc' },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-800 overflow-hidden transition-all duration-300 hover:shadow-lg"
+                >
+                  <button
+                    onClick={() => toggleApproachItem(index)}
+                    className="w-full px-4 sm:px-6 py-2 sm:py-2.5 text-left flex items-center justify-between group min-h-[3rem] sm:min-h-[3.5rem]"
+                  >
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pr-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {t(item.title)}
+                    </h4>
+                    <svg
+                      className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      {openApproachIndex === index ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                      ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      )}
+                    </svg>
+                  </button>
+                  <div
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                      openApproachIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="px-4 sm:px-6 pb-2 sm:pb-3">
+                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
+                        {t(item.desc)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -771,64 +758,6 @@ export function CompanyContent() {
                   </>
                 )}
               </button>
-              <div className="relative mt-4 contact-dropdown">
-                <button
-                  type="button"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full sm:w-auto px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl transition-all duration-200 font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                  {t('contact.form.write') || 'Написать'}
-                  <svg 
-                    className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-full sm:w-auto bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden z-50">
-                    <a
-                      href="https://wa.me/34624682795"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-6 py-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                      </svg>
-                      {t('contact.whatsapp') || 'WhatsApp'}
-                    </a>
-                    <a
-                      href="https://t.me/ppmtrue"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-6 py-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                      </svg>
-                      {t('contact.telegram') || 'Telegram'}
-                    </a>
-                    <a
-                      href="mailto:alekseevpo@gmail.com"
-                      className="flex items-center gap-3 px-6 py-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      {t('contact.email') || 'Email'}
-                    </a>
-                  </div>
-                )}
-              </div>
             </form>
           </div>
         </div>
