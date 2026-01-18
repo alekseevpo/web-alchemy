@@ -36,12 +36,14 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // About Section
     'about.title': 'О компании',
-    'about.desc': 'Web Alchemy — команда веб-разработчиков, специализирующаяся на создании современных веб-приложений. Сотрудники — профессионалы с практическим опытом в разработке более 20 лет. Работаем с TypeScript, Vue.js и Django — технологиями, которые позволяют создавать быстрые, масштабируемые и надежные решения.',
-    'about.tech.title': 'Наш стек',
+    'about.desc': 'Web Alchemy — команда веб-разработчиков, специализирующаяся на создании современных веб-приложений. Сотрудники — профессионалы с практическим опытом в разработке более 20 лет. Мы создаём качественные цифровые решения, которые помогают бизнесу достигать своих целей. Наш подход основан на глубоком понимании потребностей клиентов, использовании передовых технологий и постоянном совершенствовании процессов разработки и собственных навыков.',
+    'about.tech.title': 'Стек технологий',
     'about.tech.desc': 'Используем проверенные технологии для создания высококачественных веб-приложений:',
+    'about.tech.python': 'Python — высокоуровневый язык программирования для эффективной разработки backend-решений и автоматизации',
+    'about.tech.django': 'Django / Django REST Framework — мощный Python фреймворк для быстрой разработки backend',
+    'about.tech.fastapi': 'FastAPI — современный высокопроизводительный фреймворк для создания API на Python с автоматической документацией',
     'about.tech.typescript': 'TypeScript — типизированный JavaScript для надежного и масштабируемого кода',
     'about.tech.vue': 'Vue.js 3 — современный прогрессивный фреймворк для создания интерактивных интерфейсов',
-    'about.tech.django': 'Django / Django REST Framework — мощный Python фреймворк для быстрой разработки backend',
     'about.tech.tailwind': 'Tailwind CSS — utility-first CSS фреймворк для быстрого создания современного дизайна',
     'about.tech.vite': 'Vite — быстрый сборщик для современной фронтенд-разработки',
     'about.tech.nextjs': 'Next.js — React фреймворк для production-ready приложений с SSR и SSG',
@@ -57,6 +59,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'about.approach.detailDesc': 'Тщательно прорабатываем каждую деталь: UX/UI, производительность, доступность, SEO-оптимизация, кроссбраузерность.',
     'about.approach.market': 'Отличное знание рынка',
     'about.approach.marketDesc': 'Понимаем тренды веб-разработки, требования бизнеса и ожидания пользователей. Создаем решения, которые работают и приносят результат.',
+    'about.approach.handcrafted': 'Разработка без шаблонов',
+    'about.approach.handcraftedDesc': 'Мы не используем CMS, сайты-шаблоны и конструкторы (WordPress, Tilda и их аналоги). Мы пишем реальный код собственными руками, и это крайне важно, потому что это даёт возможность создавать по-настоящему уникальные проекты.',
     
     // Contact Section
     'contact.title': 'Давайте обсудим ваш проект',
@@ -286,12 +290,14 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // About Section
     'about.title': 'About us',
-    'about.desc': 'Web Alchemy is a team of web developers specializing in creating modern web applications. Our team members are professionals with over 20 years of practical development experience. We work with TypeScript, Vue.js and Django — technologies that allow us to create fast, scalable and reliable solutions.',
-    'about.tech.title': 'Our stack',
+    'about.desc': 'Web Alchemy is a team of web developers specializing in creating modern web applications. Our team members are professionals with over 20 years of practical development experience. We create high-quality digital solutions that help businesses achieve their goals. Our approach is based on a deep understanding of client needs, the use of cutting-edge technologies, and continuous improvement of development processes.',
+    'about.tech.title': 'Technology Stack',
     'about.tech.desc': 'We use proven technologies to create high-quality web applications:',
+    'about.tech.python': 'Python — high-level programming language for efficient backend development and automation',
+    'about.tech.django': 'Django / Django REST Framework — powerful Python framework for rapid backend development',
+    'about.tech.fastapi': 'FastAPI — modern high-performance framework for building APIs with Python and automatic documentation',
     'about.tech.typescript': 'TypeScript — typed JavaScript for reliable and scalable code',
     'about.tech.vue': 'Vue.js 3 — modern progressive framework for creating interactive interfaces',
-    'about.tech.django': 'Django / Django REST Framework — powerful Python framework for rapid backend development',
     'about.tech.tailwind': 'Tailwind CSS — utility-first CSS framework for quickly creating modern design',
     'about.tech.vite': 'Vite — fast build tool for modern frontend development',
     'about.tech.nextjs': 'Next.js — React framework for production-ready applications with SSR and SSG',
@@ -307,6 +313,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'about.approach.detailDesc': 'We carefully work through every detail: UX/UI, performance, accessibility, SEO optimization, cross-browser compatibility.',
     'about.approach.market': 'Excellent market knowledge',
     'about.approach.marketDesc': 'We understand web development trends, business requirements and user expectations. We create solutions that work and deliver results.',
+    'about.approach.handcrafted': 'Development without templates',
+    'about.approach.handcraftedDesc': 'We do not use CMS, website templates, or builders (WordPress, Tilda, and their analogues). We write real code with our own hands, and this is extremely important because it allows us to create truly unique projects.',
     
     // Contact Section
     'contact.title': 'Let\'s discuss your project',
@@ -536,12 +544,14 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // About Section
     'about.title': 'Sobre nosotros',
-    'about.desc': 'Web Alchemy es un equipo de desarrolladores web especializado en crear aplicaciones web modernas. Los miembros de nuestro equipo son profesionales con más de 20 años de experiencia práctica en desarrollo. Trabajamos con TypeScript, Vue.js y Django — tecnologías que nos permiten crear soluciones rápidas, escalables y confiables.',
-    'about.tech.title': 'Nuestro stack',
+    'about.desc': 'Web Alchemy es un equipo de desarrolladores web especializado en crear aplicaciones web modernas. Los miembros de nuestro equipo son profesionales con más de 20 años de experiencia práctica en desarrollo. Creamos soluciones digitales de alta calidad que ayudan a las empresas a alcanzar sus objetivos. Nuestro enfoque se basa en una comprensión profunda de las necesidades del cliente, el uso de tecnologías de vanguardia y la mejora continua de los procesos de desarrollo.',
+    'about.tech.title': 'Stack de Tecnologías',
     'about.tech.desc': 'Utilizamos tecnologías probadas para crear aplicaciones web de alta calidad:',
+    'about.tech.python': 'Python — lenguaje de programación de alto nivel para desarrollo eficiente de backend y automatización',
+    'about.tech.django': 'Django / Django REST Framework — framework Python potente para desarrollo rápido de backend',
+    'about.tech.fastapi': 'FastAPI — framework moderno de alto rendimiento para crear APIs con Python y documentación automática',
     'about.tech.typescript': 'TypeScript — JavaScript tipado para código confiable y escalable',
     'about.tech.vue': 'Vue.js 3 — framework progresivo moderno para crear interfaces interactivas',
-    'about.tech.django': 'Django / Django REST Framework — framework Python potente para desarrollo rápido de backend',
     'about.tech.tailwind': 'Tailwind CSS — framework CSS utility-first para crear rápidamente diseño moderno',
     'about.tech.vite': 'Vite — herramienta de construcción rápida para desarrollo frontend moderno',
     'about.tech.nextjs': 'Next.js — framework React para aplicaciones listas para producción con SSR y SSG',
@@ -557,6 +567,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'about.approach.detailDesc': 'Trabajamos cuidadosamente cada detalle: UX/UI, rendimiento, accesibilidad, optimización SEO, compatibilidad multiplataforma.',
     'about.approach.market': 'Excelente conocimiento del mercado',
     'about.approach.marketDesc': 'Entendemos las tendencias de desarrollo web, los requisitos del negocio y las expectativas del usuario. Creamos soluciones que funcionan y generan resultados.',
+    'about.approach.handcrafted': 'Desarrollo sin plantillas',
+    'about.approach.handcraftedDesc': 'No utilizamos CMS, plantillas de sitios web ni constructores (WordPress, Tilda y sus análogos). Escribimos código real con nuestras propias manos, y esto es extremadamente importante porque permite crear proyectos verdaderamente únicos.',
     
     // Contact Section
     'contact.title': 'Discutamos su proyecto',

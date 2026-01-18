@@ -28,12 +28,13 @@ export function LanguageToggle() {
   }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative flex-shrink-0" ref={dropdownRef} style={{ contain: 'layout style' }}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="ui-glass-btn h-10 px-3 rounded-lg flex items-center justify-center gap-1.5"
+        className="ui-glass-btn h-10 px-3 rounded-lg flex items-center justify-center gap-1.5 whitespace-nowrap"
         aria-label={t('nav.selectLanguage')}
         aria-expanded={isOpen}
+        style={{ position: 'relative' }}
       >
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{currentLang.label}</span>
         <svg 
@@ -48,7 +49,11 @@ export function LanguageToggle() {
 
       {isOpen && (
         <div 
-          className="dropdown-menu ui-glass-menu absolute right-0 mt-2 w-40 rounded-lg overflow-hidden z-50"
+          className="dropdown-menu ui-glass-menu absolute right-0 mt-2 w-40 rounded-lg overflow-hidden z-[110]"
+          style={{ 
+            right: '0',
+            maxWidth: 'calc(100vw - 3rem)'
+          }}
         >
           {languages.map((lang) => (
             <button

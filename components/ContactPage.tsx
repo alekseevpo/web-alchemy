@@ -85,8 +85,8 @@ export function ContactPage() {
           </header>
 
           {/* Contact Form Section */}
-          <section className="max-w-3xl mx-auto mb-16 sm:mb-20 lg:mb-24">
-            <div className="bg-white dark:bg-gray-900 p-8 sm:p-12 rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-800">
+          <section className="max-w-4xl mx-auto mb-16 sm:mb-20 lg:mb-24">
+            <div className="bg-white dark:bg-gray-900 p-8 sm:p-12 lg:p-16 rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-800">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Success Message */}
                 {status === 'success' && (

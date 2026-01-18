@@ -119,9 +119,19 @@ export function AppChrome() {
       </nav>
 
       {/* Right top actions */}
-      <div className="fixed top-4 right-4 z-[100] lg:right-6 flex items-center gap-2">
-        <ThemeToggle />
-        <LanguageToggle />
+      <div 
+        className="fixed top-4 right-3 sm:right-4 z-[100] lg:right-6 flex items-center gap-2 min-w-0 overflow-visible"
+        style={{ 
+          contain: 'layout',
+          right: 'max(0.75rem, env(safe-area-inset-right, 0.75rem))'
+        }}
+      >
+        <div className="flex-shrink-0 relative" style={{ contain: 'layout style' }}>
+          <ThemeToggle />
+        </div>
+        <div className="flex-shrink-0 relative" style={{ contain: 'layout style' }}>
+          <LanguageToggle />
+        </div>
         {/* Mobile Main Navigation Button */}
         <button
           onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
@@ -169,7 +179,7 @@ export function AppChrome() {
           
           {/* Menu Panel */}
           <div className="relative z-50 h-full overflow-y-auto p-4 animate-[slideInRight_0.3s_ease-out]">
-            <div className="max-w-sm mx-auto mt-20 bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-200 dark:border-gray-800">
+            <div className="max-w-sm mx-auto mt-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-gray-200/50 dark:border-gray-800/50">
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   {t('nav.menu') || 'Меню'}

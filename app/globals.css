@@ -65,6 +65,11 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /* Safe Area поддержка для iOS */
@@ -201,7 +206,10 @@ body {
 }
 
 .dropdown-menu {
+  position: absolute;
+  isolation: isolate;
   animation: dropdownFadeIn 0.2s ease-out;
+  contain: layout style paint;
 }
 
 main {
@@ -273,4 +281,271 @@ main {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+/* 3D анимация разворота букв */
+.perspective-1000 {
+  perspective: 1000px;
+  display: inline-block;
+}
+
+.letter-3d {
+  display: inline-block;
+  transform-style: preserve-3d;
+  animation: letterFlip 1s ease-in-out forwards;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Отключаем анимацию букв на мобильных устройствах */
+@media (max-width: 1023px) {
+  .letter-3d {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .perspective-1000 {
+    perspective: none;
+  }
+}
+
+@keyframes letterFlip {
+  0% {
+    opacity: 0;
+    transform: rotateY(-90deg) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+  }
+}
+
+/* Анимация появления подзаголовка после основного заголовка */
+.subtitle-fade-in {
+  opacity: 0;
+  animation: subtitleFadeIn 1s ease-out forwards;
+  animation-delay: 2.2s;
+  will-change: opacity, transform;
+}
+
+/* Тень для подзаголовка */
+.subtitle-shadow {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dark .subtitle-shadow {
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.1), 0 4px 16px rgba(255, 255, 255, 0.05);
+}
+
+/* Улучшенная читаемость для описания */
+.description-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.01em;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.dark .description-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Улучшенная читаемость для слогана */
+.tagline-text {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.dark .tagline-text {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
+  font-weight: 400;
+}
+
+/* Оптимизация для мобильных устройств */
+@media (max-width: 640px) {
+  .subtitle-fade-in {
+    animation-delay: 1.5s;
+    animation-duration: 0.8s;
+  }
+}
+
+@keyframes subtitleFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Прозрачный фон для логотипа - размытие только по краям */
+.logo-transparent {
+  display: none !important;
+}
+
+/* Эффект рассеивающегося тумана */
+.mist-effect {
+  position: relative;
+}
+
+.mist-effect::before,
+.mist-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 150%;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(60px);
+  will-change: opacity, transform;
+}
+
+/* Скрываем туман на мобильных устройствах */
+@media (max-width: 1023px) {
+  .mist-effect::before,
+  .mist-effect::after {
+    display: none;
+  }
+}
+
+/* Светлая тема - серый туман (по умолчанию) */
+.mist-effect::before {
+  background: radial-gradient(circle, rgba(75, 85, 99, 0.5) 0%, rgba(107, 114, 128, 0.4) 30%, rgba(156, 163, 175, 0.2) 60%, transparent 80%);
+  animation: mist1-light 12s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  opacity: 0.6;
+}
+
+.mist-effect::after {
+  background: radial-gradient(circle, rgba(107, 114, 128, 0.45) 0%, rgba(75, 85, 99, 0.35) 40%, rgba(107, 114, 128, 0.2) 65%, transparent 85%);
+  animation: mist2-light 14s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 3s;
+  opacity: 0.5;
+}
+
+/* Темная тема - синие/фиолетовые тона */
+.dark .mist-effect::before {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(99, 102, 241, 0.2) 30%, transparent 70%);
+  animation: mist1 12s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dark .mist-effect::after {
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(59, 130, 246, 0.15) 40%, transparent 70%);
+  animation: mist2 14s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes mist1 {
+  0% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+  }
+  25% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1) rotate(45deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.2) rotate(90deg);
+  }
+  75% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1) rotate(135deg);
+  }
+  100% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(0.8) rotate(180deg);
+  }
+}
+
+@keyframes mist1-light {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+  }
+  25% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1) rotate(45deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.2) rotate(90deg);
+  }
+  75% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1) rotate(135deg);
+  }
+}
+
+@keyframes mist2 {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.3) rotate(-45deg);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1.4) rotate(-90deg);
+  }
+  75% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.2) rotate(-135deg);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1) rotate(-180deg);
+  }
+}
+
+@keyframes mist2-light {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.3) rotate(-45deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.4) rotate(-90deg);
+  }
+  75% {
+    opacity: 0.65;
+    transform: translate(-50%, -50%) scale(1.2) rotate(-135deg);
+  }
+}
+
+/* Анимация бесконечной прокрутки логотипов технологий */
+.tech-logos-scroll {
+  animation: scrollLogos 30s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scrollLogos {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Пауза анимации при наведении */
+.tech-logos-scroll:hover {
+  animation-play-state: paused;
 }

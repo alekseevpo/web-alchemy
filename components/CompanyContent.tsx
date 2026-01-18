@@ -72,20 +72,52 @@ export function CompanyContent() {
   return (
     <>
       {/* Hero Section */}
-      <header className="mb-16 sm:mb-20 lg:mb-24 max-w-6xl mx-auto text-center">
-        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 leading-[1.1]">
-          {t('hero.companyName')}
+      <header className="min-h-screen flex items-start justify-center max-w-6xl mx-auto text-center pt-8 sm:pt-12 md:pt-16 lg:pt-20 px-4 relative">
+        {/* Background Logo - вынесен из h2 для правильной загрузки */}
+        <img 
+          src="/logo.png" 
+          alt="Web-Alchemy Logo" 
+          className="fixed inset-0 w-full h-full z-0 pointer-events-none object-cover logo-transparent"
+          style={{ backgroundColor: 'transparent' }}
+          loading="eager"
+          fetchPriority="high"
+          onLoad={(e) => {
+            // Плавно показываем логотип после загрузки
+            e.currentTarget.classList.add('loaded');
+          }}
+          onError={(e) => {
+            // Скрываем изображение при ошибке загрузки
+            e.currentTarget.style.display = 'none';
+          }}
+        />
+        <div className="mist-effect relative w-full">
+          <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 leading-[0.7] sm:leading-[0.6] text-center mx-auto relative z-10 break-words">
+          <span className="inline-flex flex-wrap justify-center perspective-1000 relative z-10 gap-0 sm:gap-0">
+            {t('hero.companyName').split('').map((char, index) => (
+              <span
+                key={index}
+                className="inline-block letter-3d"
+                style={{
+                  animationDelay: `${index * 0.1}s`,
+                  transformStyle: 'preserve-3d'
+                }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </span>
+            ))}
+          </span>
         </h2>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-4 sm:mb-6 leading-[1.1]">
-          {t('hero.title')}{' '}
-          <span className="block bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-gray-100 dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent mt-2">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 md:mb-6 leading-[1.2] sm:leading-[1.1] subtitle-fade-in px-2 subtitle-shadow">
+          {t('hero.title').split(' и сайтов')[0]}<br />
+          {'и сайтов '}
+          <span className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-gray-100 dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent">
             {t('hero.titleHighlight')}
           </span>
         </h1>
-        <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-4 leading-relaxed max-w-3xl mx-auto">
+        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif">
           {t('hero.subtitle')}
         </p>
-        <p className="text-base sm:text-lg text-gray-500 dark:text-gray-500 mb-10">
+        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 px-2 tagline-text">
           {t('header.tagline')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -101,6 +133,7 @@ export function CompanyContent() {
           >
             {t('hero.cta.secondary')}
           </a>
+        </div>
         </div>
       </header>
 
@@ -122,7 +155,202 @@ export function CompanyContent() {
             <p className="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
               {t('about.tech.desc')}
             </p>
+            
+            {/* Technology Logos - Infinite Scroll Animation */}
+            <div className="relative overflow-hidden mb-12 px-4 w-full">
+              <div className="flex items-center gap-6 sm:gap-8 tech-logos-scroll w-fit">
+                {/* First set of logos */}
+                {/* Python */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" 
+                  alt="Python" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Python"
+                />
+                {/* Django */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" 
+                  alt="Django" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Django"
+                />
+                {/* Django REST Framework */}
+                <img 
+                  src="/logo-rest.png" 
+                  alt="Django REST Framework" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:brightness-150 dark:contrast-125 flex-shrink-0"
+                  title="Django REST Framework"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    if (!img.dataset.fallbackUsed) {
+                      img.dataset.fallbackUsed = 'true';
+                      img.src = '/logo-rest.svg';
+                    } else if (!img.dataset.fallback2Used) {
+                      img.dataset.fallback2Used = 'true';
+                      img.src = '/logo-rest.jpg';
+                    }
+                  }}
+                />
+                {/* FastAPI */}
+                <img 
+                  src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" 
+                  alt="FastAPI" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="FastAPI"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    if (!img.dataset.fallbackUsed) {
+                      img.dataset.fallbackUsed = 'true';
+                      img.src = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg';
+                    }
+                  }}
+                />
+                {/* TypeScript */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" 
+                  alt="TypeScript" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="TypeScript"
+                />
+                {/* Tailwind CSS */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" 
+                  alt="Tailwind CSS" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Tailwind CSS"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    img.src = 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg';
+                  }}
+                />
+                {/* Next.js */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" 
+                  alt="Next.js" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
+                  title="Next.js"
+                />
+                {/* Vue.js */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" 
+                  alt="Vue.js" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Vue.js"
+                />
+                {/* Vite */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" 
+                  alt="Vite" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Vite"
+                />
+                
+                {/* Duplicate set for seamless loop */}
+                {/* Python */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" 
+                  alt="Python" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Python"
+                  aria-hidden="true"
+                />
+                {/* Django */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" 
+                  alt="Django" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Django"
+                  aria-hidden="true"
+                />
+                {/* Django REST Framework */}
+                <img 
+                  src="/logo-rest.png" 
+                  alt="Django REST Framework" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:brightness-150 dark:contrast-125 flex-shrink-0"
+                  title="Django REST Framework"
+                  aria-hidden="true"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    if (!img.dataset.fallbackUsed) {
+                      img.dataset.fallbackUsed = 'true';
+                      img.src = '/logo-rest.svg';
+                    }
+                  }}
+                />
+                {/* FastAPI */}
+                <img 
+                  src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" 
+                  alt="FastAPI" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="FastAPI"
+                  aria-hidden="true"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    if (!img.dataset.fallbackUsed) {
+                      img.dataset.fallbackUsed = 'true';
+                      img.src = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg';
+                    }
+                  }}
+                />
+                {/* TypeScript */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" 
+                  alt="TypeScript" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="TypeScript"
+                  aria-hidden="true"
+                />
+                {/* Tailwind CSS */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" 
+                  alt="Tailwind CSS" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Tailwind CSS"
+                  aria-hidden="true"
+                />
+                {/* Next.js */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" 
+                  alt="Next.js" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
+                  title="Next.js"
+                  aria-hidden="true"
+                />
+                {/* Vue.js */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" 
+                  alt="Vue.js" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Vue.js"
+                  aria-hidden="true"
+                />
+                {/* Vite */}
+                <img 
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" 
+                  alt="Vite" 
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  title="Vite"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+
             <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {t('about.tech.python')}
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {t('about.tech.django')}
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {t('about.tech.fastapi')}
+                </p>
+              </div>
               <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                   {t('about.tech.typescript')}
@@ -131,11 +359,6 @@ export function CompanyContent() {
               <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                   {t('about.tech.vue')}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {t('about.tech.django')}
                 </p>
               </div>
               <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800">
@@ -161,48 +384,56 @@ export function CompanyContent() {
             <h3 className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-gray-100 mb-4 text-center">
               {t('about.approach.title')}
             </h3>
-            <p className="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
               {t('about.approach.desc')}
             </p>
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <div className="space-y-4">
+              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {t('about.approach.clean')}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
                   {t('about.approach.cleanDesc')}
                 </p>
               </div>
-              <div className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {t('about.approach.fast')}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
                   {t('about.approach.fastDesc')}
                 </p>
               </div>
-              <div className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {t('about.approach.modern')}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
                   {t('about.approach.modernDesc')}
                 </p>
               </div>
-              <div className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {t('about.approach.detail')}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
                   {t('about.approach.detailDesc')}
                 </p>
               </div>
-              <div className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-200/50 dark:border-gray-800">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {t('about.approach.market')}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
                   {t('about.approach.marketDesc')}
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-900 py-3 sm:py-4 px-4 sm:px-5 rounded-2xl border border-gray-200/50 dark:border-gray-800">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  {t('about.approach.handcrafted')}
+                </h4>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
+                  {t('about.approach.handcraftedDesc')}
                 </p>
               </div>
             </div>
@@ -211,7 +442,7 @@ export function CompanyContent() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-900/50 dark:to-gray-800/30 rounded-3xl p-8 sm:p-12 lg:p-16">
+      <section id="contact" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">
             {t('contact.title')}
