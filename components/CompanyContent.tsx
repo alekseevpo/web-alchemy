@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -10,31 +11,11 @@ export function CompanyContent() {
   const { t } = useLanguage();
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [captchaAnswer, setCaptchaAnswer] = useState<number>(0);
-  const [captchaInput, setCaptchaInput] = useState<string>('');
-  const [captchaNum1, setCaptchaNum1] = useState<number>(0);
-  const [captchaNum2, setCaptchaNum2] = useState<number>(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  
-  // Генерируем простую математическую каптчу
-  const generateCaptcha = () => {
-    const num1 = Math.floor(Math.random() * 10) + 1;
-    const num2 = Math.floor(Math.random() * 10) + 1;
-    setCaptchaNum1(num1);
-    setCaptchaNum2(num2);
-    setCaptchaAnswer(num1 + num2);
-    setCaptchaInput('');
-  };
-  
-  useEffect(() => {
-    generateCaptcha();
-  }, []);
-  
-  useEffect(() => {
-    if (status === 'success') {
-      generateCaptcha();
-    }
-  }, [status]);
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState<boolean>(false);
+  const [selectedService, setSelectedService] = useState<string>('');
+  const { isReady, isAvailable, executeRecaptcha } = useRecaptcha();
+  const serviceDropdownRef = useRef<HTMLDivElement>(null);
   
   // Закрываем выпадающее меню при клике вне его
   useEffect(() => {
@@ -55,13 +36,44 @@ export function CompanyContent() {
     };
   }, [isDropdownOpen]);
 
+  // Закрываем выпадающее меню услуг при клике вне его
+  useEffect(() => {
+    if (!isServiceDropdownOpen) return;
+    
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (serviceDropdownRef.current && !serviceDropdownRef.current.contains(target)) {
+        setIsServiceDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isServiceDropdownOpen]);
+
+  const services = [
+    { value: '', label: t('contact.form.servicePlaceholder') || 'Выберите услугу' },
+    { value: 'webapp', label: t('services.webapp.title') || 'Веб-приложения' },
+    { value: 'businesscard', label: t('services.businesscard.title') || 'Сайты-визитки' },
+    { value: 'landing', label: t('services.landing.title') || 'Landing-страницы' },
+    { value: 'corporate', label: t('services.corporate.title') || 'Корпоративные сайты' },
+    { value: 'support', label: t('services.support.title') || 'Техническая поддержка' },
+    { value: 'specification', label: t('services.specification.title') || 'Разработка технического задания' },
+    { value: 'onlineStore', label: t('services.onlineStore.title') || 'Онлайн магазин' },
+    { value: 'bot', label: t('services.bot.title') || 'Разработка ботов' },
+    { value: 'other', label: t('contact.form.serviceOther') || 'Другое' },
+  ];
+
   const validateForm = (formData: FormData): Record<string, string> => {
     const newErrors: Record<string, string> = {};
     
     const name = formData.get('name')?.toString().trim() || '';
     const email = formData.get('email')?.toString().trim() || '';
     const message = formData.get('message')?.toString().trim() || '';
-    const captchaValue = parseInt(captchaInput, 10);
+    const service = selectedService || formData.get('service')?.toString().trim() || '';
 
     if (!name) {
       newErrors.name = t('form.error.nameRequired') || 'Имя обязательно для заполнения';
@@ -79,8 +91,8 @@ export function CompanyContent() {
       newErrors.message = t('form.error.messageMinLength') || 'Сообщение должно содержать минимум 10 символов';
     }
 
-    if (captchaValue !== captchaAnswer) {
-      newErrors.captcha = t('contact.form.captchaError') || 'Неверный ответ на проверку';
+    if (!service) {
+      newErrors.service = t('form.error.serviceRequired') || 'Выберите услугу';
     }
 
     return newErrors;
@@ -100,19 +112,51 @@ export function CompanyContent() {
     setStatus('loading');
 
     try {
+      // Проверка reCAPTCHA v3 (если доступна)
+      let recaptchaVerified = true;
+      if (isAvailable && isReady) {
+        const recaptchaToken = await executeRecaptcha('contact');
+        
+        if (recaptchaToken) {
+          // Отправляем токен на сервер для проверки
+          const verifyResponse = await fetch('/api/verify-recaptcha', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: recaptchaToken }),
+          });
+
+          const verifyData = await verifyResponse.json();
+          recaptchaVerified = verifyData.success;
+
+          if (!recaptchaVerified) {
+            setErrors({
+              general: t('form.error.recaptchaFailed') || 'Проверка reCAPTCHA не пройдена. Попробуйте еще раз.',
+            });
+            setStatus('idle');
+            return;
+          }
+        } else {
+          // Если reCAPTCHA не настроена, продолжаем без проверки
+          console.warn('reCAPTCHA токен не получен, продолжаем без проверки');
+        }
+      }
+
       // Здесь будет реальная отправка данных
       // Пока имитируем отправку
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       setStatus('success');
       (e.target as HTMLFormElement).reset();
-      setCaptchaInput('');
+      setSelectedService('');
       
       // Сбрасываем статус через 5 секунд
       setTimeout(() => {
         setStatus('idle');
       }, 5000);
     } catch (error) {
+      console.error('Ошибка отправки формы:', error);
       setStatus('error');
       setTimeout(() => {
         setStatus('idle');
@@ -162,8 +206,8 @@ export function CompanyContent() {
           </span>
         </h2>
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 md:mb-6 leading-[1.2] sm:leading-[1.1] subtitle-fade-in px-2 subtitle-shadow">
-          {t('hero.title').split(' и сайтов')[0]}<br />
-          {'и сайтов '}
+          {t('hero.titlePart1')}<br />
+          {t('hero.titlePart2')}{' '}
           <span className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-gray-100 dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent">
             {t('hero.titleHighlight')}
           </span>
@@ -588,37 +632,68 @@ export function CompanyContent() {
                   </p>
                 )}
               </div>
-              <div>
+              <div className="relative service-dropdown" ref={serviceDropdownRef}>
                 <label htmlFor="contact-service" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   {t('contact.form.service') || 'Услуга'}
                 </label>
-                <select 
-                  id="contact-service"
-                  name="service"
-                  required
+                <button
+                  type="button"
+                  onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-left bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-base text-gray-900 dark:text-gray-100 flex items-center justify-between ${
                     errors.service
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
-                  } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                   aria-invalid={!!errors.service}
                   aria-describedby={errors.service ? 'contact-service-error' : undefined}
+                  aria-expanded={isServiceDropdownOpen}
                 >
-                  <option value="">{t('contact.form.servicePlaceholder') || 'Выберите услугу'}</option>
-                  <option value="webapp">{t('services.webapp.title') || 'Веб-приложения'}</option>
-                  <option value="businesscard">{t('services.businesscard.title') || 'Сайты-визитки'}</option>
-                  <option value="landing">{t('services.landing.title') || 'Landing-страницы'}</option>
-                  <option value="corporate">{t('services.corporate.title') || 'Корпоративные сайты'}</option>
-                  <option value="support">{t('services.support.title') || 'Техническая поддержка'}</option>
-                  <option value="specification">{t('services.specification.title') || 'Разработка технического задания'}</option>
-                  <option value="onlineStore">{t('services.onlineStore.title') || 'Онлайн магазин'}</option>
-                  <option value="bot">{t('services.bot.title') || 'Разработка ботов'}</option>
-                  <option value="other">{t('contact.form.serviceOther') || 'Другое'}</option>
-                </select>
+                  <span className={selectedService ? '' : 'text-gray-400 dark:text-gray-500'}>
+                    {selectedService ? services.find(s => s.value === selectedService)?.label : (t('contact.form.servicePlaceholder') || 'Выберите услугу')}
+                  </span>
+                  <svg 
+                    className={`w-5 h-5 transition-transform duration-200 ${isServiceDropdownOpen ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {/* Скрытое поле для формы */}
+                <input type="hidden" name="service" value={selectedService} required />
+                {isServiceDropdownOpen && (
+                  <div className="dropdown-menu ui-glass-menu absolute left-0 right-0 mt-2 rounded-xl overflow-hidden z-50 shadow-xl max-h-[300px] overflow-y-auto">
+                    {services.map((service) => (
+                      <button
+                        key={service.value}
+                        type="button"
+                        onClick={() => {
+                          setSelectedService(service.value);
+                          setIsServiceDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-2 px-5 py-3.5 text-base transition-colors ${
+                          selectedService === service.value
+                            ? 'bg-blue-500/10 text-blue-700 dark:text-blue-300 font-medium'
+                            : service.value === ''
+                            ? 'text-gray-400 dark:text-gray-500 hover:bg-black/5 dark:hover:bg-white/10'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10'
+                        }`}
+                      >
+                        <span className="flex-1 text-left">{service.label}</span>
+                        {selectedService === service.value && service.value !== '' && (
+                          <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {errors.service && (
                   <p id="contact-service-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1" role="alert">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -660,39 +735,16 @@ export function CompanyContent() {
                   </p>
                 )}
               </div>
-              <div>
-                <label htmlFor="contact-captcha" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  {t('contact.form.captcha') || 'Проверка:'} <span className="font-mono font-bold text-gray-900 dark:text-gray-100">{captchaNum1} + {captchaNum2} = ?</span>
-                </label>
-                <input 
-                  type="number" 
-                  id="contact-captcha"
-                  name="captcha"
-                  value={captchaInput}
-                  onChange={(e) => setCaptchaInput(e.target.value)}
-                  required
-                  disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
-                    errors.captcha
-                      ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
-                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
-                  } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  placeholder={t('contact.form.captchaPlaceholder') || 'Введите ответ'}
-                  aria-invalid={!!errors.captcha}
-                  aria-describedby={errors.captcha ? 'contact-captcha-error' : undefined}
-                />
-                {errors.captcha && (
-                  <p id="contact-captcha-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1" role="alert">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              {errors.general && (
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-xl">
+                  <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-2" role="alert">
+                    <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                     </svg>
-                    {errors.captcha}
+                    {errors.general}
                   </p>
-                )}
-              </div>
+                </div>
+              )}
               <button 
                 type="submit"
                 disabled={status === 'loading'}

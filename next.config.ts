@@ -63,6 +63,18 @@ const nextConfig: NextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
           },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://giscus.app https://vercel.live https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://vercel-scripts.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https: blob:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://giscus.app https://vitals.vercel-insights.com https://www.google.com https://va.vercel-scripts.com",
+              "frame-src 'self' https://www.google.com https://www.gstatic.com",
+            ].join('; ')
+          },
         ],
       },
     ];
