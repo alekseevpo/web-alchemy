@@ -42,7 +42,8 @@ export function DevelopersToc() {
       }
     };
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
+    // Отложенный вызов, чтобы избежать проблем с прокруткой при загрузке
+    setTimeout(() => handleScroll(), 100);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -65,22 +66,6 @@ export function DevelopersToc() {
 
   return (
     <>
-      {/* Mobile toggle */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-20 right-6 z-50 ui-glass-btn rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
-        aria-label={t('nav.showNavigation')}
-        aria-expanded={isOpen}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
-
       <nav
         className={`
           ${isOpen ? 'fixed inset-0 z-40' : 'hidden'}
@@ -90,7 +75,7 @@ export function DevelopersToc() {
         {isOpen && (
           <>
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-            <div className="relative z-50 h-full overflow-y-auto p-4">
+            <div className="relative z-50 h-full overflow-y-auto p-4" style={{ overflowX: 'hidden' }}>
               <div className="max-w-md mx-auto mt-20 ui-glass-menu rounded-xl p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>

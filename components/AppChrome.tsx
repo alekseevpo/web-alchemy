@@ -26,9 +26,10 @@ export function AppChrome() {
   const isServicePage = pathname.startsWith('/services/') && pathname !== '/services';
   const { t } = useLanguage();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
-    if (isMobileNavOpen) {
+    if (isMobileNavOpen && !isClosing) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -37,10 +38,27 @@ export function AppChrome() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isMobileNavOpen]);
+  }, [isMobileNavOpen, isClosing]);
+
+  const handleCloseMenu = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsMobileNavOpen(false);
+      setIsClosing(false);
+    }, 300); // Длительность анимации закрытия
+  };
 
   return (
     <>
+      {/* Skip to main content link для доступности */}
+      <a
+        href="#main-content"
+        className="skip-to-main"
+        aria-label={t('nav.skipToMain') || 'Перейти к основному контенту'}
+      >
+        {t('nav.skipToMain') || 'Перейти к основному контенту'}
+      </a>
+      
       {/* Left top actions */}
       <div className="fixed top-4 left-4 z-50 lg:left-6 flex items-center gap-2">
         {(isDevelopers || isServicePage) && <BackButton />}
@@ -134,7 +152,13 @@ export function AppChrome() {
         </div>
         {/* Mobile Main Navigation Button */}
         <button
-          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+          onClick={() => {
+            if (isMobileNavOpen) {
+              handleCloseMenu();
+            } else {
+              setIsMobileNavOpen(true);
+            }
+          }}
           className="lg:hidden ui-glass-btn w-10 h-10 rounded-lg flex items-center justify-center relative"
           aria-label={t('nav.showNavigation') || 'Показать навигацию'}
           aria-expanded={isMobileNavOpen}
@@ -166,20 +190,20 @@ export function AppChrome() {
       </div>
 
       {/* Mobile Main Navigation Menu */}
-      {isMobileNavOpen && (
+      {(isMobileNavOpen || isClosing) && (
         <nav
           className="lg:hidden fixed inset-0 z-40"
           aria-label={t('nav.mainNavigation') || 'Главная навигация'}
         >
           {/* Overlay */}
           <div 
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]"
-            onClick={() => setIsMobileNavOpen(false)}
+            className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}
+            onClick={handleCloseMenu}
           />
           
           {/* Menu Panel */}
-          <div className="relative z-50 h-full overflow-y-auto p-4 animate-[slideInRight_0.3s_ease-out]">
-            <div className="max-w-sm mx-auto mt-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-gray-200/50 dark:border-gray-800/50">
+          <div className={`relative z-50 h-full overflow-y-auto p-4 ${isClosing ? 'animate-[slideOutRight_0.3s_ease-out]' : 'animate-[slideInRight_0.3s_ease-out]'}`}>
+            <div className="max-w-sm mx-auto mt-20 ui-glass-menu rounded-2xl p-6">
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   {t('nav.menu') || 'Меню'}
@@ -191,7 +215,7 @@ export function AppChrome() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      onClick={() => setIsMobileNavOpen(false)}
+                      onClick={handleCloseMenu}
                       className={`block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
                         pathname === link.href
                           ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-lg'

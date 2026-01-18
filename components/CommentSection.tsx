@@ -41,7 +41,8 @@ export default function CommentSection({
     }
 
     // Очищаем контейнер
-    containerRef.current.innerHTML = '';
+    // Используем replaceChildren() вместо innerHTML для безопасности
+    containerRef.current.replaceChildren();
 
     // Создаем новый скрипт
     const script = document.createElement('script');

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, FormEvent, useEffect } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -9,6 +10,50 @@ export function CompanyContent() {
   const { t } = useLanguage();
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [captchaAnswer, setCaptchaAnswer] = useState<number>(0);
+  const [captchaInput, setCaptchaInput] = useState<string>('');
+  const [captchaNum1, setCaptchaNum1] = useState<number>(0);
+  const [captchaNum2, setCaptchaNum2] = useState<number>(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  
+  // Генерируем простую математическую каптчу
+  const generateCaptcha = () => {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    setCaptchaNum1(num1);
+    setCaptchaNum2(num2);
+    setCaptchaAnswer(num1 + num2);
+    setCaptchaInput('');
+  };
+  
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
+  
+  useEffect(() => {
+    if (status === 'success') {
+      generateCaptcha();
+    }
+  }, [status]);
+  
+  // Закрываем выпадающее меню при клике вне его
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+    
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const dropdown = document.querySelector('.contact-dropdown');
+      if (dropdown && !dropdown.contains(target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const validateForm = (formData: FormData): Record<string, string> => {
     const newErrors: Record<string, string> = {};
@@ -16,6 +61,7 @@ export function CompanyContent() {
     const name = formData.get('name')?.toString().trim() || '';
     const email = formData.get('email')?.toString().trim() || '';
     const message = formData.get('message')?.toString().trim() || '';
+    const captchaValue = parseInt(captchaInput, 10);
 
     if (!name) {
       newErrors.name = t('form.error.nameRequired') || 'Имя обязательно для заполнения';
@@ -31,6 +77,10 @@ export function CompanyContent() {
       newErrors.message = t('form.error.messageRequired') || 'Сообщение обязательно для заполнения';
     } else if (message.length < 10) {
       newErrors.message = t('form.error.messageMinLength') || 'Сообщение должно содержать минимум 10 символов';
+    }
+
+    if (captchaValue !== captchaAnswer) {
+      newErrors.captcha = t('contact.form.captchaError') || 'Неверный ответ на проверку';
     }
 
     return newErrors;
@@ -56,6 +106,7 @@ export function CompanyContent() {
       
       setStatus('success');
       (e.target as HTMLFormElement).reset();
+      setCaptchaInput('');
       
       // Сбрасываем статус через 5 секунд
       setTimeout(() => {
@@ -74,22 +125,25 @@ export function CompanyContent() {
       {/* Hero Section */}
       <header className="min-h-screen flex items-start justify-center max-w-6xl mx-auto text-center pt-8 sm:pt-12 md:pt-16 lg:pt-20 px-4 relative">
         {/* Background Logo - вынесен из h2 для правильной загрузки */}
-        <img 
-          src="/logo.png" 
-          alt="Web-Alchemy Logo" 
-          className="fixed inset-0 w-full h-full z-0 pointer-events-none object-cover logo-transparent"
-          style={{ backgroundColor: 'transparent' }}
-          loading="eager"
-          fetchPriority="high"
-          onLoad={(e) => {
-            // Плавно показываем логотип после загрузки
-            e.currentTarget.classList.add('loaded');
-          }}
-          onError={(e) => {
-            // Скрываем изображение при ошибке загрузки
-            e.currentTarget.style.display = 'none';
-          }}
-        />
+        <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+          <Image
+            src="/logo.png"
+            alt="Web-Alchemy Logo"
+            fill
+            className="object-cover logo-transparent"
+            style={{ backgroundColor: 'transparent' }}
+            priority={false}
+            loading="lazy"
+            onLoad={(e) => {
+              // Плавно показываем логотип после загрузки
+              e.currentTarget.classList.add('loaded');
+            }}
+            onError={() => {
+              // Скрываем изображение при ошибке загрузки через CSS
+              // Обработка через onError может быть ограничена для next/image
+            }}
+          />
+        </div>
         <div className="mist-effect relative w-full">
           <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 leading-[0.7] sm:leading-[0.6] text-center mx-auto relative z-10 break-words">
           <span className="inline-flex flex-wrap justify-center perspective-1000 relative z-10 gap-0 sm:gap-0">
@@ -471,7 +525,10 @@ export function CompanyContent() {
               )}
 
               <div>
-                <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="contact-name" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
                   {t('contact.form.name') || 'Ваше имя'}
                 </label>
                 <input 
@@ -481,23 +538,29 @@ export function CompanyContent() {
                   autoComplete="name"
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     errors.name
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
-                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
+                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
                   placeholder={t('contact.form.namePlaceholder') || 'Введите ваше имя'}
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? 'contact-name-error' : undefined}
                 />
                 {errors.name && (
-                  <p id="contact-name-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  <p id="contact-name-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1" role="alert">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     {errors.name}
                   </p>
                 )}
               </div>
               <div>
-                <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="contact-email" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
                   {t('contact.form.email') || 'Email'}
                 </label>
                 <input 
@@ -507,23 +570,69 @@ export function CompanyContent() {
                   autoComplete="email"
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     errors.email
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
-                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
+                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
                   placeholder={t('contact.form.emailPlaceholder') || 'your@email.com'}
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? 'contact-email-error' : undefined}
                 />
                 {errors.email && (
-                  <p id="contact-email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  <p id="contact-email-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1" role="alert">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     {errors.email}
                   </p>
                 )}
               </div>
               <div>
-                <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="contact-service" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  {t('contact.form.service') || 'Услуга'}
+                </label>
+                <select 
+                  id="contact-service"
+                  name="service"
+                  required
+                  disabled={status === 'loading'}
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ${
+                    errors.service
+                      ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
+                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
+                  } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  aria-invalid={!!errors.service}
+                  aria-describedby={errors.service ? 'contact-service-error' : undefined}
+                >
+                  <option value="">{t('contact.form.servicePlaceholder') || 'Выберите услугу'}</option>
+                  <option value="webapp">{t('services.webapp.title') || 'Веб-приложения'}</option>
+                  <option value="businesscard">{t('services.businesscard.title') || 'Сайты-визитки'}</option>
+                  <option value="landing">{t('services.landing.title') || 'Landing-страницы'}</option>
+                  <option value="corporate">{t('services.corporate.title') || 'Корпоративные сайты'}</option>
+                  <option value="support">{t('services.support.title') || 'Техническая поддержка'}</option>
+                  <option value="specification">{t('services.specification.title') || 'Разработка технического задания'}</option>
+                  <option value="onlineStore">{t('services.onlineStore.title') || 'Онлайн магазин'}</option>
+                  <option value="bot">{t('services.bot.title') || 'Разработка ботов'}</option>
+                  <option value="other">{t('contact.form.serviceOther') || 'Другое'}</option>
+                </select>
+                {errors.service && (
+                  <p id="contact-service-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1" role="alert">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    {errors.service}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="contact-message" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
                   {t('contact.form.message') || 'Сообщение'}
                 </label>
                 <textarea 
@@ -533,42 +642,141 @@ export function CompanyContent() {
                   rows={6}
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none ${
+                  className={`w-full px-5 py-4 pt-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     errors.message
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
-                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
+                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
                   placeholder={t('contact.form.messagePlaceholder') || 'Опишите ваш проект или задайте вопрос...'}
                   aria-invalid={!!errors.message}
                   aria-describedby={errors.message ? 'contact-message-error' : undefined}
                 ></textarea>
                 {errors.message && (
-                  <p id="contact-message-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  <p id="contact-message-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1" role="alert">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     {errors.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="contact-captcha" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  {t('contact.form.captcha') || 'Проверка:'} <span className="font-mono font-bold text-gray-900 dark:text-gray-100">{captchaNum1} + {captchaNum2} = ?</span>
+                </label>
+                <input 
+                  type="number" 
+                  id="contact-captcha"
+                  name="captcha"
+                  value={captchaInput}
+                  onChange={(e) => setCaptchaInput(e.target.value)}
+                  required
+                  disabled={status === 'loading'}
+                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                    errors.captcha
+                      ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
+                      : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
+                  } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  placeholder={t('contact.form.captchaPlaceholder') || 'Введите ответ'}
+                  aria-invalid={!!errors.captcha}
+                  aria-describedby={errors.captcha ? 'contact-captcha-error' : undefined}
+                />
+                {errors.captcha && (
+                  <p id="contact-captcha-error" className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1" role="alert">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    {errors.captcha}
                   </p>
                 )}
               </div>
               <button 
                 type="submit"
                 disabled={status === 'loading'}
-                className={`w-full sm:w-auto px-8 py-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl ${
+                className={`w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-100 dark:to-gray-200 text-white dark:text-gray-900 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
                   status === 'loading'
                     ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-gray-800 dark:hover:bg-gray-200 hover:scale-[1.02] active:scale-[0.98]'
+                    : 'hover:from-gray-800 hover:to-gray-700 dark:hover:from-gray-200 dark:hover:to-gray-300 hover:scale-[1.02] active:scale-[0.98]'
                 }`}
               >
                 {status === 'loading' ? (
-                  <span className="flex items-center justify-center gap-2">
+                  <>
                     <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     {t('form.submitting') || 'Отправка...'}
-                  </span>
+                  </>
                 ) : (
-                  t('contact.form.submit') || 'Отправить сообщение'
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                    {t('contact.form.submit') || 'Отправить сообщение'}
+                  </>
                 )}
               </button>
+              <div className="relative mt-4 contact-dropdown">
+                <button
+                  type="button"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="w-full sm:w-auto px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl transition-all duration-200 font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  {t('contact.form.write') || 'Написать'}
+                  <svg 
+                    className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-full sm:w-auto bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden z-50">
+                    <a
+                      href="https://wa.me/34624682795"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-6 py-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                      </svg>
+                      {t('contact.whatsapp') || 'WhatsApp'}
+                    </a>
+                    <a
+                      href="https://t.me/ppmtrue"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-6 py-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                      </svg>
+                      {t('contact.telegram') || 'Telegram'}
+                    </a>
+                    <a
+                      href="mailto:alekseevpo@gmail.com"
+                      className="flex items-center gap-3 px-6 py-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      {t('contact.email') || 'Email'}
+                    </a>
+                  </div>
+                )}
+              </div>
             </form>
           </div>
         </div>

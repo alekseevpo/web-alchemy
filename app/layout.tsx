@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     description: 'Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django. От идеи до запуска — быстро, качественно, профессионально.',
     images: [
       {
-        url: '/og-image.jpg', // Нужно будет добавить изображение
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Web-Alchemy - Разработка веб-приложений',
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Web-Alchemy - Разработка Веб-приложений и сайтов любой сложности',
     description: 'Создаем современные веб-приложения под ключ с использованием TypeScript, Vue.js и Django.',
-    images: ['/og-image.jpg'],
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,

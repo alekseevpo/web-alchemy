@@ -74,7 +74,7 @@ export function ContactPage() {
   return (
     <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300">
       <div>
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-12 xl:px-16">
+        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-12 xl:px-16">
           <header className="mb-16 sm:mb-20 lg:mb-24 max-w-4xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-6 leading-[1.1]">
               {t('contact.title') || 'Давайте обсудим ваш проект'}

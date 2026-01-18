@@ -11,7 +11,7 @@ export function DevelopersButton() {
       href="/developers"
       className="ui-glass-btn h-10 px-3 rounded-lg flex items-center justify-center text-sm font-medium"
     >
-      {t('nav.developers')}
+      {t('nav.team')}
     </Link>
   );
 }

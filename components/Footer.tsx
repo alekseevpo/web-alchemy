@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export function Footer() {
@@ -13,15 +14,30 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <img 
-                src="/logo.png" 
-                alt="Web-Alchemy Logo" 
-                className="h-12 w-12 object-contain"
-              />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100" style={{ marginTop: '-20px' }}>
-                {t('footer.company.title') || 'Web-Alchemy'}
-              </h3>
+            <div className="mb-4">
+              <div className="flex items-center gap-3">
+                <Image 
+                  src="/logo.png" 
+                  alt="Web-Alchemy Logo" 
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 object-contain"
+                  priority={false}
+                />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100" style={{ marginTop: '-20px' }}>
+                    {t('footer.company.title') || 'Web-Alchemy'}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 -mt-1 leading-tight">
+                    {(t('header.taglineFooter') || 'От идеи до запуска\nбыстро, качественно, профессионально').split('\n').map((line, index) => (
+                      <span key={index}>
+                        {line}
+                        {index === 0 && <br />}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              </div>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
               {t('footer.company.description') || 'Разработка веб-приложений и сайтов любой сложности под ключ. Быстро, качественно с применением современных технологий.'}

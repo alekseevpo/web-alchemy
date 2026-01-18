@@ -1,12 +1,15 @@
 {
-  "name": "espana-best",
-  "version": "0.1.0",
+  "name": "web-alchemy",
+  "version": "1.0.0",
+  "description": "Web-Alchemy - Разработка веб-приложений и сайтов любой сложности",
+  "author": "Web-Alchemy",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:og": "node scripts/generate-og-image.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
@@ -23,6 +26,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
+    "puppeteer": "^24.35.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

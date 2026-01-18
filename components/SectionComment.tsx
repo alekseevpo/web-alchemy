@@ -29,7 +29,8 @@ export default function SectionComment({
     }
 
     // Очищаем контейнер перед добавлением нового виджета
-    containerRef.current.innerHTML = '';
+    // Используем replaceChildren() вместо innerHTML для безопасности
+    containerRef.current.replaceChildren();
 
     // Создаем div для виджета Giscus (Giscus создаст содержимое внутри)
     const giscusDiv = document.createElement('div');

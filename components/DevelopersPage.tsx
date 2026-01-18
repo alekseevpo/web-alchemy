@@ -194,7 +194,7 @@ const teamByRole: Record<TeamRole['key'], TeamMember[]> = {
         es: 'Instituto de Comercio y Economía de Uzhhorod',
       },
       // Put Otto photo here: public/team/otto-harahonych.jpeg
-      photoSrc: '/team/otto-harahonych.jpeg',
+      // photoSrc: '/team/otto-harahonych.jpeg', // File doesn't exist yet
       bullets: {
         ru: ['Тест‑планы и чек‑листы', 'Регресс', 'Приёмка фич'],
         en: ['Test plans and checklists', 'Regression', 'Feature acceptance'],
@@ -273,6 +273,7 @@ function Avatar({
         src={imgSrc}
         alt={alt}
         fill
+        sizes={size === 'xl' ? '192px' : size === 'lg' ? '96px' : size === 'md' ? '160px' : '48px'}
         className="object-cover"
         style={photoPosition ? { objectPosition: photoPosition } : undefined}
         onError={() => setImgSrc('/team-placeholder.svg')}
@@ -489,9 +490,9 @@ export function DevelopersPage() {
   const note = teamIntro.note;
 
   return (
-    <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300">
-      <div>
-        <main className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-8">
+    <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300 overflow-x-hidden">
+      <div className="overflow-x-hidden">
+        <main id="main-content" className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-8" style={{ animation: 'none' }}>
           <header className="mb-10">
             <h1 className="text-3xl sm:text-4xl font-light text-gray-900 dark:text-gray-100">
               {title}

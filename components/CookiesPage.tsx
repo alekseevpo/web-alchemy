@@ -9,7 +9,7 @@ export function CookiesPage() {
   return (
     <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300">
       <div>
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-12 xl:px-16">
+        <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-12 xl:px-16">
           <header className="mb-12 sm:mb-16">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-4">
               {t('cookies.title') || 'Политика cookies'}
