@@ -192,19 +192,35 @@ export function CompanyContent() {
         </div>
         <div className="mist-effect relative w-full">
           <h2 className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 text-center mx-auto relative z-10 break-words whitespace-nowrap">
-          <span className="inline-flex flex-wrap justify-center perspective-1000 relative z-10 gap-0 sm:gap-0">
-            {t('hero.companyName').split('').map((char, index) => (
-              <span
-                key={index}
-                className="inline-block letter-3d"
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                {char === ' ' ? '\u00A0' : char}
-              </span>
-            ))}
+          <span className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0">
+            {/* Web - анимация падения мячика */}
+            <span className="inline-flex">
+              {'Web'.split('').map((char, index) => (
+                <span
+                  key={`web-${index}`}
+                  className="inline-block ball-drop"
+                  style={{
+                    animationDelay: `${index * 0.15}s`,
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+            </span>
+            {/* Alchemy - анимация печатной машинки */}
+            <span className="inline-flex">
+              {'Alchemy'.split('').map((char, index) => (
+                <span
+                  key={`alchemy-${index}`}
+                  className="inline-block typewriter-char"
+                  style={{
+                    animationDelay: `${0.6 + index * 0.1}s`,
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+            </span>
           </span>
         </h2>
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 md:mb-6 leading-[1.2] sm:leading-[1.1] subtitle-fade-in px-2 subtitle-shadow">

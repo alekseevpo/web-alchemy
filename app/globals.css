@@ -330,45 +330,79 @@ main {
   }
 }
 
-/* 3D анимация разворота букв */
-.perspective-1000 {
-  perspective: 1000px;
+/* Анимация падения мячика для "Web" */
+.ball-drop {
   display: inline-block;
-}
-
-.letter-3d {
-  display: inline-block;
-  transform-style: preserve-3d;
-  animation: letterFlip 1s ease-in-out forwards;
+  animation: ballDrop 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
   opacity: 0;
+  transform: translateY(-100vh) scale(0);
   will-change: transform, opacity;
 }
 
-/* Отключаем анимацию букв на мобильных устройствах */
-@media (max-width: 1023px) {
-  .letter-3d {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-  
-  .perspective-1000 {
-    perspective: none;
-  }
-}
-
-@keyframes letterFlip {
+@keyframes ballDrop {
   0% {
     opacity: 0;
-    transform: rotateY(-90deg) scale(0.8);
+    transform: translateY(-100vh) scale(0) rotate(0deg);
   }
   50% {
     opacity: 1;
-    transform: rotateY(0deg) scale(1.1);
+    transform: translateY(20px) scale(1.2) rotate(180deg);
+  }
+  70% {
+    transform: translateY(-10px) scale(0.9) rotate(360deg);
+  }
+  85% {
+    transform: translateY(5px) scale(1.05) rotate(380deg);
   }
   100% {
     opacity: 1;
-    transform: rotateY(0deg) scale(1);
+    transform: translateY(4px) scale(1) rotate(360deg);
+  }
+}
+
+/* Анимация печатной машинки для "Alchemy" */
+.typewriter-char {
+  display: inline-block;
+  animation: typewriter 0.4s steps(1) forwards;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.typewriter-char::after {
+  content: '|';
+  animation: blink 1s infinite;
+  opacity: 0;
+}
+
+@keyframes typewriter {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Отключаем анимацию на мобильных устройствах */
+@media (max-width: 1023px) {
+  .ball-drop,
+  .typewriter-char {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    width: auto;
   }
 }
 
