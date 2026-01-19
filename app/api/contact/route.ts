@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY || '');
+// Ленивая инициализация Resend - создаем только когда нужен и есть API ключ
+function getResend() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+  return new Resend(apiKey);
+}
 
 export async function POST(request: Request) {
   try {
@@ -53,8 +60,9 @@ export async function POST(request: Request) {
       }
     }
 
-    // Если RESEND_API_KEY не настроен, логируем данные (для разработки)
-    if (!process.env.RESEND_API_KEY) {
+    // Проверяем наличие Resend API ключа
+    const resend = getResend();
+    if (!resend) {
       console.log('📧 Контактная форма (RESEND_API_KEY не настроен):');
       console.log('Имя:', name);
       console.log('Email:', email);
@@ -154,7 +162,7 @@ ${message}
     `;
 
     // Отправка email через Resend
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await resend!.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Web-Alchemy <onboarding@resend.dev>',
       to: 'alekseevpo@gmail.com',
       replyTo: email,
