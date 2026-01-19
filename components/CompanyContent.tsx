@@ -242,9 +242,12 @@ export function CompanyContent() {
         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif">
           {t('hero.subtitle')}
         </p>
-        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 mt-4 sm:mt-6 md:mt-8 px-2 tagline-text">
+        <a 
+          href="#process"
+          className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 mt-4 sm:mt-6 md:mt-8 px-2 tagline-text inline-block hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200"
+        >
           {t('header.tagline')}
-        </p>
+        </a>
         
         {/* Контейнер для кнопок */}
         <div className="flex flex-col items-center gap-6 mt-12 sm:mt-16 md:mt-20 lg:mt-16 xl:mt-12">
@@ -264,7 +267,49 @@ export function CompanyContent() {
         </div>
       </header>
 
-      {/* Разделитель между Hero и About секциями */}
+      {/* Разделитель между Hero и Process секциями */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
+        <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+      </div>
+
+      {/* Process Section - От идеи до запуска */}
+      <section id="process" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-12 sm:mb-16 text-center">
+            {t('process.title')}
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+            {[
+              { key: 'step1', number: 1 },
+              { key: 'step2', number: 2 },
+              { key: 'step3', number: 3 },
+              { key: 'step4', number: 4 },
+            ].map(({ key, number }) => (
+              <div
+                key={key}
+                className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-800 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                    {number}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                      {t(`process.${key}.title`)}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                      {t(`process.${key}.desc`)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Разделитель между Process и About секциями */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
         <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
       </div>

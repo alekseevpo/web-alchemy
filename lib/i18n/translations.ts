@@ -8,6 +8,17 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.tagline': 'От идеи до запуска',
     'header.taglineFooter': 'От идеи до запуска\nбыстро, качественно, профессионально',
     
+    // Process Section
+    'process.title': 'От идеи до запуска',
+    'process.step1.title': 'Знакомство с идеей клиента',
+    'process.step1.desc': 'Мы внимательно изучаем вашу идею, цели и требования. Проводим консультацию, анализируем рынок и конкурентов, чтобы понять, как лучше реализовать ваш проект.',
+    'process.step2.title': 'Написание ТЗ',
+    'process.step2.desc': 'Разрабатываем детальное техническое задание с описанием функционала, дизайна, технологий и сроков реализации. ТЗ согласовывается с вами перед началом разработки.',
+    'process.step3.title': 'Исполнение',
+    'process.step3.desc': 'Создаём ваш проект по согласованному ТЗ. Используем современные технологии, пишем чистый и поддерживаемый код. Регулярно предоставляем отчёты о прогрессе.',
+    'process.step4.title': 'Развёртывание проекта',
+    'process.step4.desc': 'Разворачиваем готовый проект на боевом сервере, настраиваем домен, SSL-сертификаты и мониторинг. Обеспечиваем стабильную работу и производительность.',
+    
     // Hero Section
     'hero.companyName': 'WebAlchemy',
     'hero.title': 'Разработка Веб-приложений и сайтов',
@@ -274,6 +285,17 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.tagline': 'From idea to launch',
     'header.taglineFooter': 'From idea to launch\nfast, high-quality, professional',
     
+    // Process Section
+    'process.title': 'From idea to launch',
+    'process.step1.title': 'Getting to know the client\'s idea',
+    'process.step1.desc': 'We carefully study your idea, goals, and requirements. We conduct consultations, analyze the market and competitors to understand how best to implement your project.',
+    'process.step2.title': 'Writing technical specifications',
+    'process.step2.desc': 'We develop detailed technical specifications describing functionality, design, technologies, and implementation timelines. The specifications are agreed upon with you before development begins.',
+    'process.step3.title': 'Implementation',
+    'process.step3.desc': 'We create your project according to the agreed specifications. We use modern technologies and write clean, maintainable code. We regularly provide progress reports.',
+    'process.step4.title': 'Project deployment',
+    'process.step4.desc': 'We deploy the finished project on a production server, configure the domain, SSL certificates, and monitoring. We ensure stable operation and performance.',
+    
     // Hero Section
     'hero.companyName': 'WebAlchemy',
     'hero.title': 'Web App and Website Development',
@@ -539,6 +561,17 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.subtitle': 'Desarrollo web de cualquier complejidad llave en mano',
     'header.tagline': 'De la idea al lanzamiento',
     'header.taglineFooter': 'De la idea al lanzamiento\nrápido, de calidad, profesional',
+    
+    // Process Section
+    'process.title': 'De la idea al lanzamiento',
+    'process.step1.title': 'Conocer la idea del cliente',
+    'process.step1.desc': 'Estudiamos cuidadosamente su idea, objetivos y requisitos. Realizamos consultas, analizamos el mercado y los competidores para entender cómo implementar mejor su proyecto.',
+    'process.step2.title': 'Redacción de especificaciones técnicas',
+    'process.step2.desc': 'Desarrollamos especificaciones técnicas detalladas con descripción de funcionalidad, diseño, tecnologías y plazos de implementación. Las especificaciones se acuerdan con usted antes de comenzar el desarrollo.',
+    'process.step3.title': 'Implementación',
+    'process.step3.desc': 'Creamos su proyecto según las especificaciones acordadas. Utilizamos tecnologías modernas y escribimos código limpio y mantenible. Proporcionamos informes de progreso regularmente.',
+    'process.step4.title': 'Despliegue del proyecto',
+    'process.step4.desc': 'Desplegamos el proyecto terminado en un servidor de producción, configuramos el dominio, certificados SSL y monitoreo. Garantizamos operación estable y rendimiento.',
     
     // Hero Section
     'hero.companyName': 'WebAlchemy',
