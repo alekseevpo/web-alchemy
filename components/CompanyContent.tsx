@@ -222,7 +222,7 @@ export function CompanyContent() {
         </p>
         
         {/* Контейнер для кнопок */}
-        <div className="flex flex-col items-center gap-6 mt-12 sm:mt-16 md:mt-20 lg:mt-24">
+        <div className="flex flex-col items-center gap-6 mt-12 sm:mt-16 md:mt-20 lg:mt-16 xl:mt-12">
           {/* Круглая анимированная кнопка "Let's talk!" */}
           <div className="relative">
             <ScrollAnimatedButton />
