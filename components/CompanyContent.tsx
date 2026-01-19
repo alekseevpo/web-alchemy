@@ -4,6 +4,7 @@ import { useState, FormEvent, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
+import { ScrollAnimatedButton } from '@/components/ScrollAnimatedButton';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -221,18 +222,15 @@ export function CompanyContent() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a 
-            href="#contact" 
-            className="inline-flex items-center justify-center px-6 sm:px-8 py-3.5 min-w-[180px] min-h-[44px] bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-          >
-            {t('hero.cta.primary')}
-          </a>
-          <a 
             href="/services" 
             className="inline-flex items-center justify-center px-6 sm:px-8 py-3.5 min-w-[180px] min-h-[44px] border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:border-gray-900 dark:hover:border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-200 font-medium hover:scale-[1.02] active:scale-[0.98]"
           >
             {t('hero.cta.secondary')}
           </a>
         </div>
+        
+        {/* Круглая анимированная кнопка "Let's talk!" */}
+        <ScrollAnimatedButton />
         </div>
       </header>
 
