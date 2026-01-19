@@ -220,7 +220,15 @@ export function CompanyContent() {
         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 mt-4 sm:mt-6 md:mt-8 px-2 tagline-text">
           {t('header.tagline')}
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        
+        {/* Контейнер для кнопок */}
+        <div className="flex flex-col items-center gap-6 mt-8 sm:mt-12 md:mt-16">
+          {/* Круглая анимированная кнопка "Let's talk!" */}
+          <div className="relative">
+            <ScrollAnimatedButton />
+          </div>
+          
+          {/* Кнопка "Наши услуги" */}
           <a 
             href="/services" 
             className="inline-flex items-center justify-center px-6 sm:px-8 py-3.5 min-w-[180px] min-h-[44px] border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:border-gray-900 dark:hover:border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-200 font-medium hover:scale-[1.02] active:scale-[0.98]"
@@ -228,9 +236,6 @@ export function CompanyContent() {
             {t('hero.cta.secondary')}
           </a>
         </div>
-        
-        {/* Круглая анимированная кнопка "Let's talk!" */}
-        <ScrollAnimatedButton />
         </div>
       </header>
 

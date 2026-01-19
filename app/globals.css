@@ -618,7 +618,7 @@ main {
 
 /* Круглая анимированная кнопка "Let's talk!" */
 .scroll-animated-button {
-  @apply fixed bottom-32 right-6 z-40;
+  @apply relative z-40;
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -737,8 +737,6 @@ main {
   .scroll-animated-button {
     width: 75px;
     height: 75px;
-    bottom: 7.5rem;
-    right: 1rem;
   }
 
   .scroll-animated-button-text {
