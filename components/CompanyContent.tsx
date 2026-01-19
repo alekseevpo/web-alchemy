@@ -101,26 +101,54 @@ export function CompanyContent() {
     const updateProcessCards = (scrollY: number) => {
       if (!processSectionRef.current) return;
 
-      const sectionRect = processSectionRef.current.getBoundingClientRect();
-      const sectionTop = sectionRect.top + scrollY;
-      const sectionHeight = sectionRect.height;
       const windowHeight = window.innerHeight;
-
-      const startScroll = sectionTop - windowHeight * 0.2;
-      const endScroll = sectionTop + sectionHeight * 0.5;
-      const range = Math.max(1, endScroll - startScroll);
-      const progress = clamp((scrollY - startScroll) / range, 0, 1);
+      const screenMiddle = windowHeight * 0.5; // Середина экрана
 
       processCardRefs.current.forEach((cardRef, index) => {
         if (!cardRef) return;
 
-        const stackOffset = 26;
-        const scaleStep = 0.03;
-        const translateY = -progress * stackOffset * index;
-        const scale = 1 - progress * scaleStep * index;
+        if (index === 0) {
+          // Первый блок остается на месте
+          cardRef.style.transform = `translate3d(0, 0, 0) scale(1)`;
+          cardRef.style.zIndex = `${100 + index}`;
+          return;
+        }
 
-        cardRef.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
-        cardRef.style.zIndex = `${100 - index}`;
+        // Получаем позицию предыдущего блока (на который наезжает текущий)
+        const prevCardRef = processCardRefs.current[index - 1];
+        if (!prevCardRef) return;
+
+        const prevCardRect = prevCardRef.getBoundingClientRect();
+        
+        // Высота карточки для расчета наезда
+        const cardHeight = cardRef.offsetHeight || 200;
+        // Увеличиваем перекрытие для третьего и четвертого блоков, чтобы они заезжали выше
+        const baseOverlap = cardHeight * 0.85; // Базовое перекрытие 85%
+        const overlapMultiplier = index === 2 ? 1.8 : (index === 3 ? 2.4 : 1.0); // Третий заезжает выше (1.8x), четвертый еще выше (2.4x)
+        const overlapDistance = baseOverlap * overlapMultiplier;
+        
+        // Когда предыдущий блок достигает середины экрана, текущий начинает на него наезжать
+        // Расстояние от верха предыдущего блока до середины экрана
+        const distanceFromMiddle = prevCardRect.top - screenMiddle;
+        
+        // Прогресс наезда:
+        // - Когда предыдущий блок выше середины (distanceFromMiddle < 0) - текущий наезжает
+        // - Когда предыдущий блок ниже середины (distanceFromMiddle > 0) - текущий раскрыт
+        // Используем overlapDistance как диапазон для плавного перехода
+        const progress = clamp(-distanceFromMiddle / overlapDistance, 0, 1);
+        
+        // Используем easing для более плавной анимации
+        const easedProgress = progress * progress * (3 - 2 * progress); // smoothstep
+        
+        // Блок наезжает на предыдущий (отрицательный translateY - вверх, наезжая на предыдущий)
+        // При progress = 0: блок полностью раскрыт (translateY = 0, блок на своем месте)
+        // При progress = 1: блок полностью наехал (translateY = -overlapDistance, блок наехал на предыдущий)
+        const translateY = -easedProgress * overlapDistance;
+        
+        cardRef.style.transform = `translate3d(0, ${translateY}px, 0)`;
+        cardRef.style.width = '100%'; // Фиксируем ширину
+        // Более высокий индекс = выше в стеке, поэтому второй блок (index 1) должен быть выше первого (index 0)
+        cardRef.style.zIndex = `${100 + index}`;
       });
     };
 
