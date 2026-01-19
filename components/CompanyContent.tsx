@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent, useEffect, useRef } from 'react';
+import { useState, FormEvent, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
@@ -20,10 +20,106 @@ export function CompanyContent() {
   const { isReady, isAvailable, executeRecaptcha } = useRecaptcha();
   const serviceDropdownRef = useRef<HTMLDivElement>(null);
   const techCardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const titleCharRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const rawTitle = t('hero.companyName') || 'WebAlchemy';
+  const titleText = rawTitle.replace(/([a-z])([A-Z])/g, '$1 $2');
+  const titleChars = titleText.split('');
+  // Находим индекс, где заканчивается "Web " (включая пробел после "Web")
+  const spaceIndex = titleText.indexOf(' ');
+  const webEnd = spaceIndex !== -1 ? spaceIndex + 1 : titleText.toLowerCase().indexOf('web') + 3;
+  
+  // Генерируем случайные направления для каждой буквы (взрыв эффект)
+  // Используем useMemo чтобы направления не менялись при каждом рендере
+  const explosionDirections = useMemo(() => {
+    return titleChars.map(() => {
+      const angle = Math.random() * Math.PI * 2; // Случайный угол 0-360 градусов
+      const distance = 200 + Math.random() * 300; // Расстояние 200-500px
+      const scale = 1.5 + Math.random() * 1.5; // Масштаб 1.5-3
+      return {
+        x: Math.cos(angle) * distance,
+        y: Math.sin(angle) * distance,
+        scale: scale,
+      };
+    });
+  }, [titleChars.length]);
 
   const toggleApproachItem = (index: number) => {
     setOpenApproachIndex(openApproachIndex === index ? null : index);
   };
+
+  // Анимация букв при скролле (эффект взрыва)
+  useEffect(() => {
+    // Сохраняем начальную позицию заголовка при загрузке
+    let initialTitleTop = 0;
+    if (titleRef.current) {
+      const rect = titleRef.current.getBoundingClientRect();
+      initialTitleTop = rect.top + window.scrollY;
+    }
+
+    const handleScroll = () => {
+      if (!titleRef.current) return;
+
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      
+      // Вычисляем прогресс на основе того, насколько прокручена страница
+      // Анимация начинается только когда пользователь начинает прокручивать
+      
+      // Начало анимации: когда прокрутили 4px от начала
+      // Конец анимации: когда прокрутили 600px
+      const startScroll = 4; // Начинаем анимацию после 4px прокрутки
+      const endScroll = 600; // Заканчиваем анимацию после 600px прокрутки
+      const scrollRange = endScroll - startScroll;
+      
+      // Вычисляем прогресс от 0 до 1
+      let scrollProgress = 0;
+      
+      if (scrollTop >= startScroll) {
+        // Анимация началась - буквы разлетаются
+        scrollProgress = Math.min(1, (scrollTop - startScroll) / scrollRange);
+      } else {
+        // Страница в начальном положении, буквы на месте (читаемый вид)
+        scrollProgress = 0;
+      }
+      
+      // Применяем трансформацию к каждой букве
+      titleCharRefs.current.forEach((charRef, index) => {
+        if (!charRef) return;
+        
+        const direction = explosionDirections[index];
+        const progress = scrollProgress;
+        
+        // При скролле вниз (progress увеличивается) буквы разлетаются в разные стороны
+        // При скролле вверх (progress уменьшается) буквы собираются обратно
+        const translateX = direction.x * progress;
+        const translateY = direction.y * progress;
+        const scale = 1 + (direction.scale - 1) * progress;
+        const opacity = Math.max(0.1, 1 - progress * 0.9);
+        
+        charRef.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
+        charRef.style.opacity = `${opacity}`;
+      });
+    };
+
+    // Используем requestAnimationFrame для плавности
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    handleScroll(); // Вызываем сразу для начального состояния
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [explosionDirections]);
 
   // Intersection Observer для анимации блоков Technology Stack
   useEffect(() => {
@@ -49,49 +145,6 @@ export function CompanyContent() {
     };
   }, []);
 
-  // Fallback для видимости букв заголовка на мобильных устройствах
-  // Проверяем только если анимация действительно не сработала
-  useEffect(() => {
-    // Даем время анимации запуститься и завершиться
-    // Web: 0.8s + задержки до 0.45s = ~1.25s
-    // Alchemy: начинается через 0.6s, последняя буква через 0.6 + 0.6 = 1.2s + 0.4s анимация = ~1.6s
-    // Итого нужно ~2.5-3 секунды для полного завершения всех анимаций
-    const timeout = setTimeout(() => {
-      if (titleRef.current) {
-        const ballDrops = titleRef.current.querySelectorAll('.ball-drop');
-        const typewriterChars = titleRef.current.querySelectorAll('.typewriter-char');
-        
-        // Проверяем видимость букв только если они действительно не видны
-        const checkVisibility = (elements: NodeListOf<Element>) => {
-          elements.forEach((el) => {
-            const htmlEl = el as HTMLElement;
-            const computedStyle = window.getComputedStyle(htmlEl);
-            const opacity = parseFloat(computedStyle.opacity);
-            
-            // Проверяем состояние анимации
-            const animationPlayState = computedStyle.animationPlayState;
-            const animationName = computedStyle.animationName;
-            
-            // Если буква не видна И анимация завершилась или не запустилась, принудительно показываем
-            // Не трогаем элементы, если анимация еще работает
-            if (opacity < 0.1) {
-              // Проверяем, что анимация действительно не работает
-              // Если animation-play-state = running, значит анимация еще идет
-              if (animationPlayState === 'paused' || animationName === 'none' || !animationName) {
-                htmlEl.style.opacity = '1';
-                htmlEl.style.transform = 'none';
-              }
-            }
-          });
-        };
-        
-        checkVisibility(ballDrops);
-        checkVisibility(typewriterChars);
-      }
-    }, 3500); // Проверяем через 3.5 секунды после загрузки страницы
-    
-    return () => clearTimeout(timeout);
-  }, []);
 
   // Закрываем выпадающее меню услуг при клике вне его
   useEffect(() => {
@@ -236,56 +289,42 @@ export function CompanyContent() {
           />
         </div>
         <div className="mist-effect relative w-full">
-          <h2 ref={titleRef} className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 text-center mx-auto relative z-10 break-words whitespace-nowrap">
-          <span className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0" style={{ minHeight: '1.2em', letterSpacing: '-0.02em' }}>
-            {/* Web - анимация падения мячика */}
-            <span className="inline-flex" style={{ letterSpacing: 'inherit' }}>
-              {'Web'.split('').map((char, index) => (
+          <h2 ref={titleRef} className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-8 sm:mb-10 md:mb-12 lg:mb-14 text-center mx-auto relative z-10 break-words whitespace-nowrap">
+          <span
+            className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0"
+            style={{
+              minHeight: '1.2em',
+              letterSpacing: '-0.02em',
+              wordSpacing: 0,
+              fontKerning: 'none',
+              fontVariantLigatures: 'none',
+            }}
+          >
+            {titleChars.map((char, index) => {
+              return (
                 <span
-                  key={`web-${index}`}
-                  className="inline-block ball-drop"
-                  style={{
-                    animationDelay: `${index * 0.15}s`,
-                    letterSpacing: 'inherit',
-                    marginRight: index < 'Web'.length - 1 ? '0' : '0.05em',
+                  key={`title-${index}-${char === ' ' ? 'space' : char}`}
+                  ref={(el) => {
+                    titleCharRefs.current[index] = el;
                   }}
-                >
-                  {char}
-                </span>
-              ))}
-            </span>
-            {/* Alchemy - анимация печатной машинки */}
-            <span className="inline-flex items-baseline" style={{ letterSpacing: '-0.02em', wordSpacing: 0, gap: 0 }}>
-              {'Alchemy'.split('').map((char, index) => (
-                <span
-                  key={`alchemy-${index}`}
-                  className="inline-block typewriter-char"
+                  className="inline-block title-char-explosion"
                   style={{
-                    animationDelay: `${0.6 + index * 0.1}s`,
                     letterSpacing: '-0.02em',
                     margin: 0,
                     padding: 0,
                     fontSize: 'inherit',
                     wordSpacing: 0,
+                    whiteSpace: 'pre',
+                    transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+                    willChange: 'transform, opacity',
+                    transform: 'translate3d(0, 0, 0) scale(1)',
+                    opacity: '1',
                   }}
                 >
-                  {char}
+                  {char === ' ' ? '\u00A0' : char}
                 </span>
-              ))}
-              {/* Мигающий курсор только в конце */}
-              <span 
-                className="inline-block typewriter-cursor"
-                style={{
-                  animationDelay: `${0.6 + 'Alchemy'.length * 0.1 + 0.1}s`,
-                  letterSpacing: '-0.02em',
-                  marginLeft: '2px',
-                  fontSize: 'inherit',
-                  wordSpacing: 0,
-                }}
-              >
-                |
-              </span>
-            </span>
+              );
+            })}
           </span>
         </h2>
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 md:mb-6 leading-[1.2] sm:leading-[1.1] subtitle-fade-in px-2 subtitle-shadow">
