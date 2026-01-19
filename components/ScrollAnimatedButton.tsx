@@ -7,8 +7,15 @@ export function ScrollAnimatedButton() {
   const [rotation, setRotation] = useState(0);
   const lastScrollYRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
+    // Инициализируем начальную позицию скролла
+    if (!isInitializedRef.current) {
+      lastScrollYRef.current = window.scrollY;
+      isInitializedRef.current = true;
+    }
+
     const handleScroll = () => {
       // Отменяем предыдущий запрос анимации, если он есть
       if (rafIdRef.current !== null) {
@@ -16,7 +23,7 @@ export function ScrollAnimatedButton() {
       }
 
       rafIdRef.current = requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY;
+        const currentScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
         const scrollDelta = currentScrollY - lastScrollYRef.current;
 
         // Вращение зависит от направления скролла
@@ -28,7 +35,8 @@ export function ScrollAnimatedButton() {
             // Ограничиваем максимальную скорость вращения
             const rotationSpeed = Math.min(Math.abs(scrollDelta) * 0.3, 8);
             const direction = scrollDelta > 0 ? 1 : -1;
-            return prev + rotationSpeed * direction;
+            const newRotation = prev + rotationSpeed * direction;
+            return newRotation;
           });
         }
 
@@ -36,9 +44,15 @@ export function ScrollAnimatedButton() {
       });
     };
 
+    // Добавляем обработчик скролла
     window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Также слушаем события на document для совместимости
+    document.addEventListener('scroll', handleScroll, { passive: true });
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('scroll', handleScroll);
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
       }
@@ -51,14 +65,16 @@ export function ScrollAnimatedButton() {
       className="scroll-animated-button group"
       style={{
         transform: `rotate(${rotation}deg)`,
-        transition: 'none', // Убираем transition для синхронного вращения со скроллом
+        transition: 'none',
+        willChange: 'transform',
       }}
     >
       <span 
         className="scroll-animated-button-text"
         style={{
           transform: `rotate(${-rotation}deg)`,
-          transition: 'none', // Убираем transition для синхронного вращения текста
+          transition: 'none',
+          willChange: 'transform',
         }}
       >
         Let&apos;s talk!
