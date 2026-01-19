@@ -367,9 +367,11 @@ main {
   display: inline-block;
   animation: typewriterChar 0.4s ease-in forwards;
   opacity: 0;
-  will-change: opacity;
+  will-change: opacity, transform;
   animation-fill-mode: forwards;
   letter-spacing: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 @keyframes typewriterChar {

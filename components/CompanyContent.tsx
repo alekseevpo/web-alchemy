@@ -255,7 +255,7 @@ export function CompanyContent() {
               ))}
             </span>
             {/* Alchemy - анимация печатной машинки */}
-            <span className="inline-flex items-baseline" style={{ letterSpacing: 'inherit' }}>
+            <span className="inline-block" style={{ letterSpacing: 'inherit' }}>
               {'Alchemy'.split('').map((char, index) => (
                 <span
                   key={`alchemy-${index}`}
@@ -263,7 +263,6 @@ export function CompanyContent() {
                   style={{
                     animationDelay: `${0.6 + index * 0.1}s`,
                     letterSpacing: 'inherit',
-                    marginRight: index < 'Alchemy'.length - 1 ? '0' : '0',
                   }}
                 >
                   {char}
