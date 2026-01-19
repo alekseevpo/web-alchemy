@@ -50,24 +50,37 @@ export function CompanyContent() {
   }, []);
 
   // Fallback для видимости букв заголовка на мобильных устройствах
+  // Проверяем только если анимация действительно не сработала
   useEffect(() => {
+    // Даем время анимации запуститься и завершиться
+    // Web: 0.8s + задержки до 0.45s = ~1.25s
+    // Alchemy: начинается через 0.6s, последняя буква через 0.6 + 0.6 = 1.2s + 0.4s анимация = ~1.6s
+    // Итого нужно ~2.5-3 секунды для полного завершения всех анимаций
     const timeout = setTimeout(() => {
       if (titleRef.current) {
         const ballDrops = titleRef.current.querySelectorAll('.ball-drop');
         const typewriterChars = titleRef.current.querySelectorAll('.typewriter-char');
         
-        // Проверяем видимость букв
+        // Проверяем видимость букв только если они действительно не видны
         const checkVisibility = (elements: NodeListOf<Element>) => {
           elements.forEach((el) => {
             const htmlEl = el as HTMLElement;
             const computedStyle = window.getComputedStyle(htmlEl);
             const opacity = parseFloat(computedStyle.opacity);
             
-            // Если буква не видна через 4 секунды, принудительно показываем
+            // Проверяем состояние анимации
+            const animationPlayState = computedStyle.animationPlayState;
+            const animationName = computedStyle.animationName;
+            
+            // Если буква не видна И анимация завершилась или не запустилась, принудительно показываем
+            // Не трогаем элементы, если анимация еще работает
             if (opacity < 0.1) {
-              htmlEl.style.opacity = '1';
-              htmlEl.style.transform = 'none';
-              htmlEl.style.animation = 'none';
+              // Проверяем, что анимация действительно не работает
+              // Если animation-play-state = running, значит анимация еще идет
+              if (animationPlayState === 'paused' || animationName === 'none' || !animationName) {
+                htmlEl.style.opacity = '1';
+                htmlEl.style.transform = 'none';
+              }
             }
           });
         };
@@ -75,7 +88,7 @@ export function CompanyContent() {
         checkVisibility(ballDrops);
         checkVisibility(typewriterChars);
       }
-    }, 4000); // Проверяем через 4 секунды
+    }, 3500); // Проверяем через 3.5 секунды после загрузки страницы
     
     return () => clearTimeout(timeout);
   }, []);
