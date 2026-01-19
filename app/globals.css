@@ -369,9 +369,12 @@ main {
   opacity: 0;
   will-change: opacity, transform;
   animation-fill-mode: forwards;
-  letter-spacing: inherit;
+  letter-spacing: -0.02em;
   margin: 0;
   padding: 0;
+  word-spacing: 0;
+  font-size: inherit;
+  vertical-align: baseline;
 }
 
 @keyframes typewriterChar {

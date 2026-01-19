@@ -255,14 +255,18 @@ export function CompanyContent() {
               ))}
             </span>
             {/* Alchemy - анимация печатной машинки */}
-            <span className="inline-block" style={{ letterSpacing: 'inherit' }}>
+            <span className="inline-block" style={{ fontSize: 0, letterSpacing: 0, wordSpacing: 0 }}>
               {'Alchemy'.split('').map((char, index) => (
                 <span
                   key={`alchemy-${index}`}
                   className="inline-block typewriter-char"
                   style={{
                     animationDelay: `${0.6 + index * 0.1}s`,
-                    letterSpacing: 'inherit',
+                    letterSpacing: '-0.02em',
+                    margin: 0,
+                    padding: 0,
+                    fontSize: 'inherit',
+                    wordSpacing: 0,
                   }}
                 >
                   {char}
@@ -273,8 +277,10 @@ export function CompanyContent() {
                 className="inline-block typewriter-cursor"
                 style={{
                   animationDelay: `${0.6 + 'Alchemy'.length * 0.1 + 0.1}s`,
-                  letterSpacing: 'inherit',
+                  letterSpacing: '-0.02em',
                   marginLeft: '2px',
+                  fontSize: 'inherit',
+                  wordSpacing: 0,
                 }}
               >
                 |
