@@ -399,21 +399,7 @@ main {
   }
 }
 
-/* Отключаем анимацию на мобильных устройствах */
-@media (max-width: 1023px) {
-  .ball-drop,
-  .typewriter-char,
-  .typewriter-cursor {
-    animation: none;
-    opacity: 1;
-    transform: none;
-    width: auto;
-  }
-  
-  .typewriter-cursor {
-    display: none; /* Скрываем курсор на мобильных */
-  }
-}
+/* Анимации работают на всех устройствах, включая мобильные */
 
 /* Анимация появления подзаголовка после основного заголовка */
 .subtitle-fade-in {
