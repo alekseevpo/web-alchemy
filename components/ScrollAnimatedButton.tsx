@@ -22,7 +22,7 @@ export function ScrollAnimatedButton() {
         // Вращение зависит от направления скролла
         // Вниз → вращение вправо (положительное)
         // Вверх → вращение влево (отрицательное)
-        if (Math.abs(scrollDelta) > 0.5) {
+        if (Math.abs(scrollDelta) > 0.1) {
           setRotation((prev) => {
             // Скорость вращения зависит от скорости скролла
             // Ограничиваем максимальную скорость вращения
@@ -51,12 +51,14 @@ export function ScrollAnimatedButton() {
       className="scroll-animated-button group"
       style={{
         transform: `rotate(${rotation}deg)`,
+        transition: 'none', // Убираем transition для синхронного вращения со скроллом
       }}
     >
       <span 
         className="scroll-animated-button-text"
         style={{
           transform: `rotate(${-rotation}deg)`,
+          transition: 'none', // Убираем transition для синхронного вращения текста
         }}
       >
         Let&apos;s talk!
