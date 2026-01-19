@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/components/Providers";
@@ -110,6 +111,44 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          id="scroll-to-top"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window !== 'undefined') {
+                  // Отключаем восстановление позиции скролла
+                  if ('scrollRestoration' in window.history) {
+                    window.history.scrollRestoration = 'manual';
+                  }
+                  
+                  // Прокручиваем наверх сразу
+                  window.scrollTo(0, 0);
+                  
+                  // Убираем hash из URL если он есть
+                  if (window.location.hash) {
+                    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                  }
+                  
+                  // Дополнительная прокрутка после загрузки DOM
+                  if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', function() {
+                      window.scrollTo(0, 0);
+                    });
+                  } else {
+                    window.scrollTo(0, 0);
+                  }
+                  
+                  // Прокрутка после полной загрузки страницы
+                  window.addEventListener('load', function() {
+                    window.scrollTo(0, 0);
+                  });
+                }
+              })();
+            `,
+          }}
+        />
         <Providers>
           <AppChrome />
           {children}

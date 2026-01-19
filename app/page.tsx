@@ -9,19 +9,37 @@ export default function Home() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Прокручиваем наверх при загрузке страницы, если нет якоря в URL
+    // Отключаем автоматическое восстановление позиции скролла браузером
+    if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    
+    // Прокручиваем наверх сразу при монтировании компонента
     if (typeof window !== 'undefined') {
-      // Если нет hash в URL, прокручиваем наверх
-      if (!window.location.hash) {
+      // Прокручиваем наверх немедленно
+      window.scrollTo(0, 0);
+      
+      // Также прокручиваем через небольшую задержку на случай, если браузер попытается восстановить позицию
+      const timeout1 = setTimeout(() => {
         window.scrollTo(0, 0);
+      }, 0);
+      
+      const timeout2 = setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 100);
+      
+      // Убираем hash из URL если он есть
+      const hash = window.location.hash;
+      if (hash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
       
-      // Отключаем автоматическое восстановление позиции скролла браузером
-      if ('scrollRestoration' in window.history) {
-        window.history.scrollRestoration = 'manual';
-      }
+      return () => {
+        clearTimeout(timeout1);
+        clearTimeout(timeout2);
+      };
     }
-  }, [pathname]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300">
