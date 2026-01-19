@@ -363,7 +363,7 @@ main {
 /* Анимация печатной машинки для "Alchemy" */
 .typewriter-char {
   display: inline-block;
-  animation: typewriterChar 0.3s steps(1) forwards;
+  animation: typewriterChar 0.4s ease-in forwards;
   opacity: 0;
   will-change: opacity;
 }
@@ -371,12 +371,15 @@ main {
 @keyframes typewriterChar {
   0% {
     opacity: 0;
+    transform: scale(0.8);
   }
   50% {
-    opacity: 0;
+    opacity: 0.5;
+    transform: scale(0.9);
   }
   100% {
     opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -399,7 +402,39 @@ main {
   }
 }
 
-/* Анимации работают на всех устройствах, включая мобильные */
+/* Fallback для мобильных устройств - буквы должны быть видны */
+@media (max-width: 768px) {
+  .ball-drop,
+  .typewriter-char {
+    animation-fill-mode: both;
+    min-width: 0.5em;
+    min-height: 1em;
+  }
+  
+  /* Увеличиваем время анимации для мобильных для лучшей видимости */
+  .ball-drop {
+    animation-duration: 1.2s;
+  }
+  
+  .typewriter-char {
+    animation-duration: 0.6s;
+  }
+}
+
+/* Поддержка prefers-reduced-motion - отключаем анимации для пользователей с ограниченными возможностями */
+@media (prefers-reduced-motion: reduce) {
+  .ball-drop,
+  .typewriter-char,
+  .typewriter-cursor {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .typewriter-cursor {
+    display: none;
+  }
+}
 
 /* Анимация появления подзаголовка после основного заголовка */
 .subtitle-fade-in {

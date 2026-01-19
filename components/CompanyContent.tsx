@@ -11,6 +11,7 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 export function CompanyContent() {
   const { t } = useLanguage();
   const [status, setStatus] = useState<FormStatus>('idle');
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState<boolean>(false);
   const [selectedService, setSelectedService] = useState<string>('');
@@ -46,6 +47,37 @@ export function CompanyContent() {
     return () => {
       observers.forEach((observer) => observer.disconnect());
     };
+  }, []);
+
+  // Fallback для видимости букв заголовка на мобильных устройствах
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (titleRef.current) {
+        const ballDrops = titleRef.current.querySelectorAll('.ball-drop');
+        const typewriterChars = titleRef.current.querySelectorAll('.typewriter-char');
+        
+        // Проверяем видимость букв
+        const checkVisibility = (elements: NodeListOf<Element>) => {
+          elements.forEach((el) => {
+            const htmlEl = el as HTMLElement;
+            const computedStyle = window.getComputedStyle(htmlEl);
+            const opacity = parseFloat(computedStyle.opacity);
+            
+            // Если буква не видна через 4 секунды, принудительно показываем
+            if (opacity < 0.1) {
+              htmlEl.style.opacity = '1';
+              htmlEl.style.transform = 'none';
+              htmlEl.style.animation = 'none';
+            }
+          });
+        };
+        
+        checkVisibility(ballDrops);
+        checkVisibility(typewriterChars);
+      }
+    }, 4000); // Проверяем через 4 секунды
+    
+    return () => clearTimeout(timeout);
   }, []);
 
   // Закрываем выпадающее меню услуг при клике вне его
@@ -191,8 +223,8 @@ export function CompanyContent() {
           />
         </div>
         <div className="mist-effect relative w-full">
-          <h2 className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 text-center mx-auto relative z-10 break-words whitespace-nowrap">
-          <span className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0">
+          <h2 ref={titleRef} className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 text-center mx-auto relative z-10 break-words whitespace-nowrap">
+          <span className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0" style={{ minHeight: '1.2em' }}>
             {/* Web - анимация падения мячика */}
             <span className="inline-flex">
               {'Web'.split('').map((char, index) => (
