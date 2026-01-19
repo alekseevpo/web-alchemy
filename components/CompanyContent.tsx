@@ -20,7 +20,14 @@ export function CompanyContent() {
   const { isReady, isAvailable, executeRecaptcha } = useRecaptcha();
   const serviceDropdownRef = useRef<HTMLDivElement>(null);
   const techCardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const visibleTechCardsRef = useRef<Set<number>>(new Set());
   const titleCharRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const processSectionRef = useRef<HTMLElement | null>(null);
+  const processCardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const heroTitleRef = useRef<HTMLHeadingElement | null>(null);
+  const heroSubtitleRef = useRef<HTMLParagraphElement | null>(null);
+  const techLogosRef = useRef<HTMLDivElement | null>(null);
+  const separatorRefs = useRef<(HTMLDivElement | null)[]>([]);
   const rawTitle = t('hero.companyName') || 'WebAlchemy';
   const titleText = rawTitle.replace(/([a-z])([A-Z])/g, '$1 $2');
   const titleChars = titleText.split('');
@@ -47,101 +54,200 @@ export function CompanyContent() {
     setOpenApproachIndex(openApproachIndex === index ? null : index);
   };
 
-  // Анимация букв при скролле (эффект взрыва)
+  // Скролл-анимации через Locomotive Scroll
   useEffect(() => {
-    // Сохраняем начальную позицию заголовка при загрузке
-    let initialTitleTop = 0;
-    if (titleRef.current) {
-      const rect = titleRef.current.getBoundingClientRect();
-      initialTitleTop = rect.top + window.scrollY;
-    }
+    let scrollInstance: any = null;
+    let destroyed = false;
 
-    const handleScroll = () => {
-      if (!titleRef.current) return;
+    const clamp = (value: number, min: number, max: number) =>
+      Math.min(max, Math.max(min, value));
 
-      const scrollTop = window.scrollY || window.pageYOffset;
-      const windowHeight = window.innerHeight;
-      
-      // Вычисляем прогресс на основе того, насколько прокручена страница
-      // Анимация начинается только когда пользователь начинает прокручивать
-      
-      // Начало анимации: когда прокрутили 4px от начала
-      // Конец анимации: когда прокрутили 600px
-      const startScroll = 4; // Начинаем анимацию после 4px прокрутки
-      const endScroll = 600; // Заканчиваем анимацию после 600px прокрутки
+    const updateTitleExplosion = (scrollY: number) => {
+      const startScroll = 4;
+      const endScroll = 600;
       const scrollRange = endScroll - startScroll;
-      
-      // Вычисляем прогресс от 0 до 1
-      let scrollProgress = 0;
-      
-      if (scrollTop >= startScroll) {
-        // Анимация началась - буквы разлетаются
-        scrollProgress = Math.min(1, (scrollTop - startScroll) / scrollRange);
-      } else {
-        // Страница в начальном положении, буквы на месте (читаемый вид)
-        scrollProgress = 0;
-      }
-      
-      // Применяем трансформацию к каждой букве
+      const progress = scrollY >= startScroll ? clamp((scrollY - startScroll) / scrollRange, 0, 1) : 0;
+
       titleCharRefs.current.forEach((charRef, index) => {
         if (!charRef) return;
-        
+
         const direction = explosionDirections[index];
-        const progress = scrollProgress;
-        
-        // При скролле вниз (progress увеличивается) буквы разлетаются в разные стороны
-        // При скролле вверх (progress уменьшается) буквы собираются обратно
         const translateX = direction.x * progress;
         const translateY = direction.y * progress;
         const scale = 1 + (direction.scale - 1) * progress;
         const opacity = Math.max(0.1, 1 - progress * 0.9);
-        
+
         charRef.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
         charRef.style.opacity = `${opacity}`;
       });
     };
 
-    // Используем requestAnimationFrame для плавности
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
+    const updateHeroText = (scrollY: number) => {
+      const progress = clamp(scrollY / 240, 0, 1);
+      const translateY = -progress * 12;
+      const opacity = 1 - progress * 0.2;
+
+      if (heroTitleRef.current) {
+        heroTitleRef.current.style.transform = `translate3d(0, ${translateY}px, 0)`;
+        heroTitleRef.current.style.opacity = `${opacity}`;
+      }
+
+      if (heroSubtitleRef.current) {
+        heroSubtitleRef.current.style.transform = `translate3d(0, ${translateY * 1.2}px, 0)`;
+        heroSubtitleRef.current.style.opacity = `${opacity}`;
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    handleScroll(); // Вызываем сразу для начального состояния
+    const updateProcessCards = (scrollY: number) => {
+      if (!processSectionRef.current) return;
 
-    return () => {
-      window.removeEventListener('scroll', onScroll);
+      const sectionRect = processSectionRef.current.getBoundingClientRect();
+      const sectionTop = sectionRect.top + scrollY;
+      const sectionHeight = sectionRect.height;
+      const windowHeight = window.innerHeight;
+
+      const startScroll = sectionTop - windowHeight * 0.2;
+      const endScroll = sectionTop + sectionHeight * 0.5;
+      const range = Math.max(1, endScroll - startScroll);
+      const progress = clamp((scrollY - startScroll) / range, 0, 1);
+
+      processCardRefs.current.forEach((cardRef, index) => {
+        if (!cardRef) return;
+
+        const stackOffset = 26;
+        const scaleStep = 0.03;
+        const translateY = -progress * stackOffset * index;
+        const scale = 1 - progress * scaleStep * index;
+
+        cardRef.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
+        cardRef.style.zIndex = `${100 - index}`;
+      });
     };
-  }, [explosionDirections]);
 
-  // Intersection Observer для анимации блоков Technology Stack
-  useEffect(() => {
-    const observers = techCardsRef.current
-      .filter((ref): ref is HTMLDivElement => ref !== null)
-      .map((element, index) => {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                setVisibleTechCards((prev) => new Set([...prev, index]));
-              }
-            });
-          },
-          { threshold: 0.1 }
-        );
-        observer.observe(element);
-        return observer;
+    const updateTechCards = () => {
+      const windowHeight = window.innerHeight;
+      const nextVisible = new Set<number>();
+
+      techCardsRef.current.forEach((cardRef, index) => {
+        if (!cardRef) return;
+        const rect = cardRef.getBoundingClientRect();
+        if (rect.top < windowHeight * 0.85) {
+          nextVisible.add(index);
+        }
       });
 
+      const prevVisible = visibleTechCardsRef.current;
+      let changed = nextVisible.size !== prevVisible.size;
+      if (!changed) {
+        nextVisible.forEach((value) => {
+          if (!prevVisible.has(value)) {
+            changed = true;
+          }
+        });
+      }
+
+      if (changed) {
+        visibleTechCardsRef.current = nextVisible;
+        setVisibleTechCards(new Set(nextVisible));
+      }
+    };
+
+    const updateTechLogos = () => {
+      if (!techLogosRef.current) return;
+      const rect = techLogosRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const progress = clamp((windowHeight - rect.top) / (windowHeight + rect.height), 0, 1);
+      const translateY = -progress * 18;
+      const opacity = 0.75 + progress * 0.25;
+
+      techLogosRef.current.style.transform = `translate3d(0, ${translateY}px, 0)`;
+      techLogosRef.current.style.opacity = `${opacity}`;
+    };
+
+    const updateSeparators = () => {
+      const windowHeight = window.innerHeight;
+      separatorRefs.current.forEach((separator) => {
+        if (!separator) return;
+        const rect = separator.getBoundingClientRect();
+        const progress = clamp((windowHeight - rect.top) / windowHeight, 0, 1);
+        const scaleX = 0.7 + progress * 0.3;
+        const opacity = 0.5 + progress * 0.5;
+
+        separator.style.transform = `scaleX(${scaleX})`;
+        separator.style.opacity = `${opacity}`;
+      });
+    };
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      updateTitleExplosion(scrollY);
+      updateHeroText(scrollY);
+      updateProcessCards(scrollY);
+      updateTechCards();
+      updateTechLogos();
+      updateSeparators();
+    };
+
+    const initScroll = async () => {
+      try {
+        const { default: LocomotiveScroll } = await import('locomotive-scroll');
+        if (destroyed) return;
+
+        // Используем body как контейнер для Locomotive Scroll
+        const scrollContainer = document.body;
+        
+        scrollInstance = new LocomotiveScroll({
+          el: scrollContainer,
+          smooth: false,
+          getDirection: true,
+        });
+
+        // Проверяем наличие метода on перед использованием
+        if (scrollInstance && typeof scrollInstance.on === 'function') {
+          scrollInstance.on('scroll', (obj: any) => {
+            const scrollY = obj?.scroll?.y ?? obj?.scroll?.scroll?.y ?? window.scrollY ?? 0;
+            updateTitleExplosion(scrollY);
+            updateHeroText(scrollY);
+            updateProcessCards(scrollY);
+            updateTechCards();
+            updateTechLogos();
+            updateSeparators();
+          });
+        } else {
+          // Fallback на обычный scroll listener
+          window.addEventListener('scroll', handleScroll, { passive: true });
+        }
+
+        // Инициализация
+        handleScroll();
+        if (scrollInstance && typeof scrollInstance.update === 'function') {
+          scrollInstance.update();
+        }
+      } catch (error) {
+        console.warn('Locomotive Scroll initialization failed, using native scroll:', error);
+        // Fallback на обычный scroll listener
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+      }
+    };
+
+    const handleResize = () => {
+      handleScroll();
+      if (scrollInstance && typeof scrollInstance.update === 'function') {
+        scrollInstance.update();
+      }
+    };
+
+    initScroll();
+    window.addEventListener('resize', handleResize);
+
     return () => {
-      observers.forEach((observer) => observer.disconnect());
+      destroyed = true;
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollInstance && typeof scrollInstance.destroy === 'function') {
+        scrollInstance.destroy();
+      }
     };
   }, []);
 
@@ -327,14 +433,28 @@ export function CompanyContent() {
             })}
           </span>
         </h2>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 md:mb-6 leading-[1.2] sm:leading-[1.1] subtitle-fade-in px-2 subtitle-shadow">
+        <h1
+          ref={heroTitleRef}
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 md:mb-6 leading-[1.2] sm:leading-[1.1] subtitle-fade-in px-2 subtitle-shadow"
+          style={{
+            transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+            willChange: 'transform, opacity',
+          }}
+        >
           {t('hero.titlePart1')}<br />
           {t('hero.titlePart2')}{' '}
           <span className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-gray-100 dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent">
             {t('hero.titleHighlight')}
           </span>
         </h1>
-        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif">
+        <p
+          ref={heroSubtitleRef}
+          className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif"
+          style={{
+            transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+            willChange: 'transform, opacity',
+          }}
+        >
           {t('hero.subtitle')}
         </p>
         <a 
@@ -364,11 +484,26 @@ export function CompanyContent() {
 
       {/* Разделитель между Hero и Process секциями */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+        <div
+          ref={(el) => {
+            separatorRefs.current[0] = el;
+          }}
+          className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"
+          style={{
+            transform: 'scaleX(0.7)',
+            transformOrigin: 'center',
+            transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+            opacity: 0.6,
+          }}
+        ></div>
       </div>
 
       {/* Process Section - От идеи до запуска */}
-      <section id="process" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
+      <section
+        id="process"
+        ref={processSectionRef}
+        className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24"
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-12 sm:mb-16 text-center">
             {t('process.title')}
@@ -383,7 +518,15 @@ export function CompanyContent() {
             ].map(({ key, number }) => (
               <div
                 key={key}
+                ref={(el) => {
+                  processCardRefs.current[number - 1] = el;
+                }}
                 className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-800 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300"
+                style={{
+                  transition:
+                    'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease',
+                  willChange: 'transform',
+                }}
               >
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 flex items-center justify-center text-white font-bold text-lg sm:text-xl">
@@ -406,7 +549,18 @@ export function CompanyContent() {
 
       {/* Разделитель между Process и About секциями */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+        <div
+          ref={(el) => {
+            separatorRefs.current[1] = el;
+          }}
+          className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"
+          style={{
+            transform: 'scaleX(0.7)',
+            transformOrigin: 'center',
+            transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+            opacity: 0.6,
+          }}
+        ></div>
       </div>
 
       {/* About Section */}
@@ -430,7 +584,14 @@ export function CompanyContent() {
             
             {/* Technology Logos - Infinite Scroll Animation */}
             <div className="relative overflow-hidden mb-12 px-4 w-full">
-              <div className="flex items-center gap-6 sm:gap-8 tech-logos-scroll w-fit">
+              <div
+                ref={techLogosRef}
+                className="flex items-center gap-6 sm:gap-8 tech-logos-scroll w-fit"
+                style={{
+                  transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+                  willChange: 'transform, opacity',
+                }}
+              >
                 {/* First set of logos */}
                 {/* Python */}
                 <img 
