@@ -208,7 +208,7 @@ export function CompanyContent() {
               ))}
             </span>
             {/* Alchemy - анимация печатной машинки */}
-            <span className="inline-flex">
+            <span className="inline-flex items-baseline">
               {'Alchemy'.split('').map((char, index) => (
                 <span
                   key={`alchemy-${index}`}
@@ -220,6 +220,15 @@ export function CompanyContent() {
                   {char}
                 </span>
               ))}
+              {/* Мигающий курсор только в конце */}
+              <span 
+                className="inline-block typewriter-cursor"
+                style={{
+                  animationDelay: `${0.6 + 'Alchemy'.length * 0.1 + 0.1}s`,
+                }}
+              >
+                |
+              </span>
             </span>
           </span>
         </h2>

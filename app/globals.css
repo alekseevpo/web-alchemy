@@ -363,30 +363,34 @@ main {
 /* Анимация печатной машинки для "Alchemy" */
 .typewriter-char {
   display: inline-block;
-  animation: typewriter 0.4s steps(1) forwards;
+  animation: typewriterChar 0.3s steps(1) forwards;
   opacity: 0;
   will-change: opacity;
 }
 
-.typewriter-char::after {
-  content: '|';
-  animation: blink 1s infinite;
-  opacity: 0;
-}
-
-@keyframes typewriter {
+@keyframes typewriterChar {
   0% {
     opacity: 0;
   }
-  1% {
-    opacity: 1;
+  50% {
+    opacity: 0;
   }
   100% {
     opacity: 1;
   }
 }
 
-@keyframes blink {
+/* Мигающий курсор только в конце слова */
+.typewriter-cursor {
+  display: inline-block;
+  animation: cursorBlink 1s infinite;
+  opacity: 0;
+  will-change: opacity;
+  margin-left: 2px;
+  font-weight: normal;
+}
+
+@keyframes cursorBlink {
   0%, 50% {
     opacity: 1;
   }
@@ -398,11 +402,16 @@ main {
 /* Отключаем анимацию на мобильных устройствах */
 @media (max-width: 1023px) {
   .ball-drop,
-  .typewriter-char {
+  .typewriter-char,
+  .typewriter-cursor {
     animation: none;
     opacity: 1;
     transform: none;
     width: auto;
+  }
+  
+  .typewriter-cursor {
+    display: none; /* Скрываем курсор на мобильных */
   }
 }
 
