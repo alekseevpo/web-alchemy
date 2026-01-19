@@ -255,7 +255,7 @@ export function CompanyContent() {
               ))}
             </span>
             {/* Alchemy - анимация печатной машинки */}
-            <span className="inline-block" style={{ fontSize: 0, letterSpacing: 0, wordSpacing: 0 }}>
+            <span className="inline-flex items-baseline" style={{ letterSpacing: '-0.02em', wordSpacing: 0, gap: 0 }}>
               {'Alchemy'.split('').map((char, index) => (
                 <span
                   key={`alchemy-${index}`}
@@ -755,7 +755,7 @@ export function CompanyContent() {
                 )}
               </div>
               <div className="relative service-dropdown" ref={serviceDropdownRef}>
-                <label htmlFor="contact-service" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="contact-service-hidden" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
@@ -763,6 +763,7 @@ export function CompanyContent() {
                 </label>
                 <button
                   type="button"
+                  id="contact-service-button"
                   onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
                   disabled={status === 'loading'}
                   className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-left bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-base text-gray-900 dark:text-gray-100 flex items-center justify-between ${
@@ -773,6 +774,7 @@ export function CompanyContent() {
                   aria-invalid={!!errors.service}
                   aria-describedby={errors.service ? 'contact-service-error' : undefined}
                   aria-expanded={isServiceDropdownOpen}
+                  aria-labelledby="contact-service-label"
                 >
                   <span className={selectedService ? '' : 'text-gray-400 dark:text-gray-500'}>
                     {selectedService ? services.find(s => s.value === selectedService)?.label : (t('contact.form.servicePlaceholder') || 'Выберите услугу')}
@@ -787,7 +789,7 @@ export function CompanyContent() {
                   </svg>
                 </button>
                 {/* Скрытое поле для формы */}
-                <input type="hidden" name="service" value={selectedService} required />
+                <input type="hidden" id="contact-service-hidden" name="service" value={selectedService} required />
                 {isServiceDropdownOpen && (
                   <div className="dropdown-menu ui-glass-menu absolute left-0 right-0 mt-2 rounded-xl overflow-hidden z-50 shadow-xl max-h-[300px] overflow-y-auto">
                     {services.map((service) => (
