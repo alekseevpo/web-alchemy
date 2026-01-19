@@ -237,15 +237,17 @@ export function CompanyContent() {
         </div>
         <div className="mist-effect relative w-full">
           <h2 ref={titleRef} className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-10 sm:mb-12 md:mb-14 lg:mb-16 text-center mx-auto relative z-10 break-words whitespace-nowrap">
-          <span className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0" style={{ minHeight: '1.2em' }}>
+          <span className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0" style={{ minHeight: '1.2em', letterSpacing: '-0.02em' }}>
             {/* Web - анимация падения мячика */}
-            <span className="inline-flex">
+            <span className="inline-flex" style={{ letterSpacing: 'inherit' }}>
               {'Web'.split('').map((char, index) => (
                 <span
                   key={`web-${index}`}
                   className="inline-block ball-drop"
                   style={{
                     animationDelay: `${index * 0.15}s`,
+                    letterSpacing: 'inherit',
+                    marginRight: index < 'Web'.length - 1 ? '0' : '0.05em',
                   }}
                 >
                   {char}
@@ -253,13 +255,15 @@ export function CompanyContent() {
               ))}
             </span>
             {/* Alchemy - анимация печатной машинки */}
-            <span className="inline-flex items-baseline">
+            <span className="inline-flex items-baseline" style={{ letterSpacing: 'inherit' }}>
               {'Alchemy'.split('').map((char, index) => (
                 <span
                   key={`alchemy-${index}`}
                   className="inline-block typewriter-char"
                   style={{
                     animationDelay: `${0.6 + index * 0.1}s`,
+                    letterSpacing: 'inherit',
+                    marginRight: index < 'Alchemy'.length - 1 ? '0' : '0',
                   }}
                 >
                   {char}
@@ -270,6 +274,8 @@ export function CompanyContent() {
                 className="inline-block typewriter-cursor"
                 style={{
                   animationDelay: `${0.6 + 'Alchemy'.length * 0.1 + 0.1}s`,
+                  letterSpacing: 'inherit',
+                  marginLeft: '2px',
                 }}
               >
                 |

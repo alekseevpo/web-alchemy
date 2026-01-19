@@ -338,6 +338,7 @@ main {
   transform: translateY(-100vh) scale(0);
   will-change: transform, opacity;
   animation-fill-mode: forwards;
+  letter-spacing: inherit;
 }
 
 @keyframes ballDrop {
@@ -368,6 +369,7 @@ main {
   opacity: 0;
   will-change: opacity;
   animation-fill-mode: forwards;
+  letter-spacing: inherit;
 }
 
 @keyframes typewriterChar {
@@ -404,32 +406,35 @@ main {
   }
 }
 
-/* Оптимизация для мобильных устройств */
+/* Оптимизация для мобильных устройств - ВКЛЮЧАЕМ анимации */
 @media (max-width: 768px) {
-  .ball-drop,
-  .typewriter-char {
+  .ball-drop {
+    animation: ballDrop 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
     animation-fill-mode: both;
+    animation-play-state: running;
+    -webkit-animation: ballDrop 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    -webkit-animation-fill-mode: both;
+    -webkit-animation-play-state: running;
     min-width: 0.5em;
     min-height: 1em;
-    /* Гарантируем, что анимация запустится */
+  }
+  
+  .typewriter-char {
+    animation: typewriterChar 0.5s ease-in forwards;
+    animation-fill-mode: both;
     animation-play-state: running;
-  }
-  
-  /* Увеличиваем время анимации для мобильных для лучшей видимости */
-  .ball-drop {
-    animation-duration: 1s;
-  }
-  
-  .typewriter-char {
-    animation-duration: 0.5s;
-  }
-  
-  /* Убеждаемся, что анимации не блокируются */
-  .ball-drop,
-  .typewriter-char {
+    -webkit-animation: typewriterChar 0.5s ease-in forwards;
     -webkit-animation-fill-mode: both;
-    -moz-animation-fill-mode: both;
-    -o-animation-fill-mode: both;
+    -webkit-animation-play-state: running;
+    min-width: 0.5em;
+    min-height: 1em;
+  }
+  
+  .typewriter-cursor {
+    animation: cursorBlink 1s infinite;
+    animation-play-state: running;
+    -webkit-animation: cursorBlink 1s infinite;
+    -webkit-animation-play-state: running;
   }
 }
 
