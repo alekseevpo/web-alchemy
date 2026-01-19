@@ -72,7 +72,6 @@ export function ScrollAnimatedButton() {
       <span 
         className="scroll-animated-button-text"
         style={{
-          transform: `rotate(${-rotation}deg)`,
           transition: 'none',
           willChange: 'transform',
         }}
