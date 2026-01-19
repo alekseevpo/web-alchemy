@@ -168,7 +168,7 @@ export function CompanyContent() {
   return (
     <>
       {/* Hero Section */}
-      <header className="min-h-screen flex items-start justify-center max-w-6xl mx-auto text-center pt-8 sm:pt-12 md:pt-16 lg:pt-20 px-4 relative">
+      <header className="min-h-screen flex items-start justify-center max-w-6xl mx-auto text-center pt-4 sm:pt-6 md:pt-8 lg:pt-12 px-4 relative">
         {/* Background Logo - вынесен из h2 для правильной загрузки */}
         <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
           <Image

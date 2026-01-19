@@ -9,7 +9,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.taglineFooter': 'От идеи до запуска\nбыстро, качественно, профессионально',
     
     // Hero Section
-    'hero.companyName': 'Web-Alchemy',
+    'hero.companyName': 'WebAlchemy',
     'hero.title': 'Разработка Веб-приложений и сайтов',
     'hero.titleHighlight': 'любой сложности',
     'hero.titlePart1': 'Разработка Веб-приложений',
@@ -275,7 +275,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.taglineFooter': 'From idea to launch\nfast, high-quality, professional',
     
     // Hero Section
-    'hero.companyName': 'Web-Alchemy',
+    'hero.companyName': 'WebAlchemy',
     'hero.title': 'Web App and Website Development',
     'hero.titleHighlight': 'of any complexity',
     'hero.titlePart1': 'Web App and Website',
@@ -541,7 +541,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.taglineFooter': 'De la idea al lanzamiento\nrápido, de calidad, profesional',
     
     // Hero Section
-    'hero.companyName': 'Web-Alchemy',
+    'hero.companyName': 'WebAlchemy',
     'hero.title': 'Desarrollo de Aplicaciones Web y Sitios',
     'hero.titleHighlight': 'de cualquier complejidad',
     'hero.titlePart1': 'Desarrollo de Aplicaciones Web',
