@@ -18,20 +18,38 @@ export async function POST(request: Request) {
 
     // Проверка reCAPTCHA (если токен предоставлен)
     if (recaptchaToken) {
-      const verifyResponse = await fetch(`${request.headers.get('origin') || 'http://localhost:3000'}/api/verify-recaptcha`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: recaptchaToken }),
-      });
-
-      const verifyData = await verifyResponse.json();
-      if (!verifyData.success) {
-        return NextResponse.json(
-          { success: false, message: 'Проверка reCAPTCHA не пройдена' },
-          { status: 401 }
-        );
+      const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+      
+      if (!secretKey) {
+        console.warn('RECAPTCHA_SECRET_KEY не настроен на сервере. Проверка reCAPTCHA пропущена.');
+      } else {
+        // Проверка токена напрямую через Google API
+        const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
+        
+        try {
+          const verifyResponse = await fetch(verifyUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          });
+          
+          const verifyData = await verifyResponse.json();
+          
+          if (!verifyData.success || verifyData.score < 0.5) {
+            console.error('reCAPTCHA verification failed:', verifyData);
+            return NextResponse.json(
+              { success: false, message: 'Проверка reCAPTCHA не пройдена' },
+              { status: 401 }
+            );
+          }
+        } catch (error) {
+          console.error('Error verifying reCAPTCHA token:', error);
+          return NextResponse.json(
+            { success: false, message: 'Ошибка проверки reCAPTCHA' },
+            { status: 500 }
+          );
+        }
       }
     }
 
