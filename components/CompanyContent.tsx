@@ -222,7 +222,7 @@ export function CompanyContent() {
         </p>
         
         {/* Контейнер для кнопок */}
-        <div className="flex flex-col items-center gap-6 mt-8 sm:mt-12 md:mt-16">
+        <div className="flex flex-col items-center gap-6 mt-12 sm:mt-16 md:mt-20 lg:mt-24">
           {/* Круглая анимированная кнопка "Let's talk!" */}
           <div className="relative">
             <ScrollAnimatedButton />
@@ -238,6 +238,11 @@ export function CompanyContent() {
         </div>
         </div>
       </header>
+
+      {/* Разделитель между Hero и About секциями */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
+        <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+      </div>
 
       {/* About Section */}
       <section id="about" className="-mt-40 sm:-mt-32 md:-mt-16 lg:mt-0 mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
