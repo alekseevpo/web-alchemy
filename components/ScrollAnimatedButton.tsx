@@ -26,6 +26,13 @@ export function ScrollAnimatedButton() {
         const currentScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
         const scrollDelta = currentScrollY - lastScrollYRef.current;
 
+        // Если вернулись на самый верх страницы, сбрасываем угол поворота
+        if (currentScrollY <= 0) {
+          setRotation(0);
+          lastScrollYRef.current = 0;
+          return;
+        }
+
         // Вращение зависит от направления скролла
         // Вниз → вращение вправо (положительное)
         // Вверх → вращение влево (отрицательное)
