@@ -193,14 +193,11 @@ export function CompanyContent() {
         const { default: LocomotiveScroll } = await import('locomotive-scroll');
         if (destroyed) return;
 
-        // Используем body как контейнер для Locomotive Scroll
-        const scrollContainer = document.body;
-        
+        // Используем document как контейнер для Locomotive Scroll (по умолчанию)
         scrollInstance = new LocomotiveScroll({
-          el: scrollContainer,
           smooth: false,
           getDirection: true,
-        });
+        } as any);
 
         // Проверяем наличие метода on перед использованием
         if (scrollInstance && typeof scrollInstance.on === 'function') {
