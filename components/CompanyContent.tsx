@@ -174,6 +174,7 @@ export function CompanyContent() {
             src="/logo.png"
             alt="Web-Alchemy Logo"
             fill
+            sizes="100vw"
             className="object-cover logo-transparent"
             style={{ backgroundColor: 'transparent' }}
             priority={false}

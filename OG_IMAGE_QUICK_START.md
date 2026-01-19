@@ -67,6 +67,3 @@ npm run generate:og
 - macOS: ImageOptim
 - Windows: TinyPNG
 
----
-
-**Нужна помощь?** Смотрите подробное руководство в `OG_IMAGE_GUIDE.md`
