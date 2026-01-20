@@ -104,12 +104,16 @@ export function CompanyContent() {
       const windowHeight = window.innerHeight;
       const screenMiddle = windowHeight * 0.5; // Середина экрана
 
+      // Получаем позицию разделителя
+      const separatorRef = separatorRefs.current[1];
+      const separatorTop = separatorRef?.getBoundingClientRect().top ?? Infinity;
+
       processCardRefs.current.forEach((cardRef, index) => {
         if (!cardRef) return;
 
         if (index === 0) {
-          // Первый блок остается на месте
-          cardRef.style.transform = `translate3d(0, 0, 0) scale(1)`;
+          // Первая карточка остается на месте под заголовком
+          cardRef.style.transform = `translate3d(0, 0, 0)`;
           cardRef.style.zIndex = `${100 + index}`;
           return;
         }
@@ -124,7 +128,7 @@ export function CompanyContent() {
         const cardHeight = cardRef.offsetHeight || 200;
         // Увеличиваем перекрытие для третьего и четвертого блоков, чтобы они заезжали выше
         const baseOverlap = cardHeight * 0.85; // Базовое перекрытие 85%
-        const overlapMultiplier = index === 2 ? 1.8 : (index === 3 ? 2.4 : 1.0); // Третий заезжает выше (1.8x), четвертый еще выше (2.4x)
+        const overlapMultiplier = index === 2 ? 1.8 : (index === 3 ? 2.6 : 1.0); // Третий заезжает выше (1.8x), четвертый еще выше (2.6x)
         const overlapDistance = baseOverlap * overlapMultiplier;
         
         // Когда предыдущий блок достигает середины экрана, текущий начинает на него наезжать
@@ -143,7 +147,17 @@ export function CompanyContent() {
         // Блок наезжает на предыдущий (отрицательный translateY - вверх, наезжая на предыдущий)
         // При progress = 0: блок полностью раскрыт (translateY = 0, блок на своем месте)
         // При progress = 1: блок полностью наехал (translateY = -overlapDistance, блок наехал на предыдущий)
-        const translateY = -easedProgress * overlapDistance;
+        let translateY = -easedProgress * overlapDistance;
+
+        // Проверяем, не достигла ли текущая карточка разделителя
+        const cardRect = cardRef.getBoundingClientRect();
+        const cardBottomAfterTransform = cardRect.bottom + translateY;
+        
+        // Если нижняя часть карточки достигла или прошла разделитель, ограничиваем движение
+        if (cardBottomAfterTransform >= separatorTop) {
+          // Останавливаем карточку на уровне разделителя
+          translateY = separatorTop - cardRect.bottom;
+        }
         
         cardRef.style.transform = `translate3d(0, ${translateY}px, 0)`;
         cardRef.style.width = '100%'; // Фиксируем ширину
@@ -508,7 +522,7 @@ export function CompanyContent() {
       </header>
 
       {/* Разделитель между Hero и Process секциями */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 mt-6 sm:mt-8 md:mt-10 lg:mt-12 mb-12 sm:mb-16 md:mb-20 lg:mb-24">
         <div
           ref={(el) => {
             separatorRefs.current[0] = el;
@@ -553,18 +567,19 @@ export function CompanyContent() {
                   willChange: 'transform',
                 }}
               >
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 flex items-center justify-center text-white font-bold text-lg sm:text-xl">
-                    {number}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                      {number}
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                       {t(`process.${key}.title`)}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                      {t(`process.${key}.desc`)}
-                    </p>
                   </div>
+                  <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent mb-3"></div>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {t(`process.${key}.desc`)}
+                  </p>
                 </div>
               </div>
             ))}
@@ -589,7 +604,7 @@ export function CompanyContent() {
       </div>
 
       {/* About Section */}
-      <section id="about" className="-mt-40 sm:-mt-32 md:-mt-16 lg:mt-0 mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
+      <section id="about" className="-mt-60 sm:-mt-48 md:-mt-32 lg:-mt-20 mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-12 sm:mb-16 text-center">
           {t('about.title')}
         </h2>
