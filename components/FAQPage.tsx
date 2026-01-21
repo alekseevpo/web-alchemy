@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Footer } from '@/components/Footer';
 
@@ -85,12 +86,12 @@ export function FAQPage() {
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
               {t('faq.cta.desc') || 'Свяжитесь с нами, и мы ответим на все ваши вопросы'}
             </p>
-            <a 
+            <Link 
               href="/#contact" 
               className="inline-flex items-center justify-center px-8 py-3.5 min-w-[180px] bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
             >
               {t('faq.cta.button') || 'Связаться с нами'}
-            </a>
+            </Link>
           </section>
         </main>
 

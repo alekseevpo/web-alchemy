@@ -8,11 +8,10 @@ import { loadRecaptchaScript, getRecaptchaToken, RECAPTCHA_SITE_KEY } from '@/li
  */
 export function useRecaptcha() {
   const [isReady, setIsReady] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(!!RECAPTCHA_SITE_KEY);
+  const [isAvailable] = useState(!!RECAPTCHA_SITE_KEY);
 
   useEffect(() => {
     if (!RECAPTCHA_SITE_KEY) {
-      setIsAvailable(false);
       return;
     }
 

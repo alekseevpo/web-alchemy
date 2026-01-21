@@ -42,6 +42,120 @@
     font-size: clamp(2.5rem, 7vw, 3rem);
   }
 }
+
+/* ===== Kinetic Typography Animation ===== */
+.kinetic-title {
+  perspective: 1000px;
+}
+
+.kinetic-line {
+  display: block;
+  overflow: hidden;
+}
+
+/* Базовое состояние слова - скрыто */
+.kinetic-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%) rotateX(-90deg);
+  transform-origin: center bottom;
+  animation: kineticReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Анимация появления слова */
+@keyframes kineticReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(100%) rotateX(-90deg) scale(0.8);
+    filter: blur(10px);
+  }
+  40% {
+    opacity: 0.7;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Highlight слова с особым эффектом */
+.kinetic-highlight {
+  animation: kineticHighlight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-weight: 800;
+}
+
+@keyframes kineticHighlight {
+  0% {
+    opacity: 0;
+    transform: translateY(120%) rotateX(-90deg) scale(0.5);
+    filter: blur(15px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-10%) rotateX(10deg) scale(1.05);
+    filter: blur(0);
+  }
+  70% {
+    transform: translateY(5%) rotateX(-5deg) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Hover эффект для интерактивности */
+.kinetic-word:hover {
+  animation: kineticBounce 0.4s ease-out;
+}
+
+@keyframes kineticBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.05);
+  }
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .kinetic-word {
+    animation-duration: 0.6s;
+  }
+  
+  .kinetic-highlight {
+    animation-duration: 0.8s;
+  }
+  
+  @keyframes kineticReveal {
+    0% {
+      opacity: 0;
+      transform: translateY(80%) rotateX(-60deg) scale(0.9);
+      filter: blur(5px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) rotateX(0deg) scale(1);
+      filter: blur(0);
+    }
+  }
+}
+
+/* Отключение анимаций при prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-word,
+  .kinetic-highlight {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    filter: none;
+  }
+}
 }
 
 :root {
@@ -687,6 +801,65 @@ main {
 .tech-card.visible {
   opacity: 1;
   transform: translateX(0);
+}
+
+/* ===== GSAP ScrollTrigger - Layered Pinning ===== */
+/* Структура согласно документации GSAP: https://gsap.com/docs/v3/ */
+/* Стили для секций заданы inline в компоненте для гарантированного применения */
+
+/* Контент внутри панели */
+.panel-content {
+  max-width: 800px;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+}
+
+/* Номер шага */
+.panel-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Заголовок панели */
+.panel-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Описание */
+.panel-desc {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.8;
+  opacity: 0.95;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .panel-number {
+    width: 60px;
+    height: 60px;
+    font-size: 1.75rem;
+  }
+  
+  .panel-content {
+    padding: 1rem;
+  }
 }
 
 /* Круглая анимированная кнопка "Let's talk!" */

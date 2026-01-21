@@ -7,6 +7,7 @@ import { translations } from '@/lib/i18n/translations';
 import { LanguageSetter } from './LanguageSetter';
 import { CookieConsent } from './CookieConsent';
 import { StructuredData } from './StructuredData';
+import { LocomotiveScrollProvider } from './LocomotiveScrollProvider';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -24,7 +25,9 @@ export function Providers({ children }: ProvidersProps) {
       <LanguageProvider translations={translations}>
         <LanguageSetter />
         <StructuredData />
-        {children}
+        <LocomotiveScrollProvider>
+          {children}
+        </LocomotiveScrollProvider>
         <CookieConsent />
       </LanguageProvider>
     </NextThemesProvider>

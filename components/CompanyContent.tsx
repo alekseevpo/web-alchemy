@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, FormEvent, useEffect, useRef, useMemo } from 'react';
+import { useState, FormEvent, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { ScrollAnimatedButton } from '@/components/ScrollAnimatedButton';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -22,8 +24,7 @@ export function CompanyContent() {
   const techCardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const visibleTechCardsRef = useRef<Set<number>>(new Set());
   const titleCharRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const processSectionRef = useRef<HTMLElement | null>(null);
-  const processCardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const processSectionRef = useRef<HTMLDivElement | null>(null);
   const heroTitleRef = useRef<HTMLHeadingElement | null>(null);
   const heroSubtitleRef = useRef<HTMLParagraphElement | null>(null);
   const techLogosRef = useRef<HTMLDivElement | null>(null);
@@ -53,6 +54,35 @@ export function CompanyContent() {
   const toggleApproachItem = (index: number) => {
     setOpenApproachIndex(openApproachIndex === index ? null : index);
   };
+
+  // GSAP ScrollTrigger для layered pinning карточек
+  // Согласно документации GSAP: https://gsap.com/docs/v3/
+  useLayoutEffect(() => {
+    // Регистрируем плагин ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Получаем все панели с помощью gsap.utils.toArray (рекомендуемый способ)
+    const panels = gsap.utils.toArray<HTMLElement>('.panel');
+    
+    if (panels.length === 0) return;
+
+    // Создаем ScrollTrigger для каждой панели согласно примеру из GSAP
+    // Layered pinning: каждая панель прилипает к верху и остаётся там,
+    // пока следующая панель не наедет сверху
+    panels.forEach((panel) => {
+      ScrollTrigger.create({
+        trigger: panel,
+        start: 'top top', // Начинаем pin когда верх панели достигает верха viewport
+        pin: true,
+        pinSpacing: false, // Не добавляем пространство после pin - карточки накладываются
+      });
+    });
+
+    // Cleanup при размонтировании
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   // Скролл-анимации через Locomotive Scroll
   useEffect(() => {
@@ -96,74 +126,6 @@ export function CompanyContent() {
         heroSubtitleRef.current.style.transform = `translate3d(0, ${translateY * 1.2}px, 0)`;
         heroSubtitleRef.current.style.opacity = `${opacity}`;
       }
-    };
-
-    const updateProcessCards = (scrollY: number) => {
-      if (!processSectionRef.current) return;
-
-      const windowHeight = window.innerHeight;
-      const screenMiddle = windowHeight * 0.5; // Середина экрана
-
-      // Получаем позицию разделителя
-      const separatorRef = separatorRefs.current[1];
-      const separatorTop = separatorRef?.getBoundingClientRect().top ?? Infinity;
-
-      processCardRefs.current.forEach((cardRef, index) => {
-        if (!cardRef) return;
-
-        if (index === 0) {
-          // Первая карточка остается на месте под заголовком
-          cardRef.style.transform = `translate3d(0, 0, 0)`;
-          cardRef.style.zIndex = `${100 + index}`;
-          return;
-        }
-
-        // Получаем позицию предыдущего блока (на который наезжает текущий)
-        const prevCardRef = processCardRefs.current[index - 1];
-        if (!prevCardRef) return;
-
-        const prevCardRect = prevCardRef.getBoundingClientRect();
-        
-        // Высота карточки для расчета наезда
-        const cardHeight = cardRef.offsetHeight || 200;
-        // Увеличиваем перекрытие для третьего и четвертого блоков, чтобы они заезжали выше
-        const baseOverlap = cardHeight * 0.85; // Базовое перекрытие 85%
-        const overlapMultiplier = index === 2 ? 1.8 : (index === 3 ? 2.6 : 1.0); // Третий заезжает выше (1.8x), четвертый еще выше (2.6x)
-        const overlapDistance = baseOverlap * overlapMultiplier;
-        
-        // Когда предыдущий блок достигает середины экрана, текущий начинает на него наезжать
-        // Расстояние от верха предыдущего блока до середины экрана
-        const distanceFromMiddle = prevCardRect.top - screenMiddle;
-        
-        // Прогресс наезда:
-        // - Когда предыдущий блок выше середины (distanceFromMiddle < 0) - текущий наезжает
-        // - Когда предыдущий блок ниже середины (distanceFromMiddle > 0) - текущий раскрыт
-        // Используем overlapDistance как диапазон для плавного перехода
-        const progress = clamp(-distanceFromMiddle / overlapDistance, 0, 1);
-        
-        // Используем easing для более плавной анимации
-        const easedProgress = progress * progress * (3 - 2 * progress); // smoothstep
-        
-        // Блок наезжает на предыдущий (отрицательный translateY - вверх, наезжая на предыдущий)
-        // При progress = 0: блок полностью раскрыт (translateY = 0, блок на своем месте)
-        // При progress = 1: блок полностью наехал (translateY = -overlapDistance, блок наехал на предыдущий)
-        let translateY = -easedProgress * overlapDistance;
-
-        // Проверяем, не достигла ли текущая карточка разделителя
-        const cardRect = cardRef.getBoundingClientRect();
-        const cardBottomAfterTransform = cardRect.bottom + translateY;
-        
-        // Если нижняя часть карточки достигла или прошла разделитель, ограничиваем движение
-        if (cardBottomAfterTransform >= separatorTop) {
-          // Останавливаем карточку на уровне разделителя
-          translateY = separatorTop - cardRect.bottom;
-        }
-        
-        cardRef.style.transform = `translate3d(0, ${translateY}px, 0)`;
-        cardRef.style.width = '100%'; // Фиксируем ширину
-        // Более высокий индекс = выше в стеке, поэтому второй блок (index 1) должен быть выше первого (index 0)
-        cardRef.style.zIndex = `${100 + index}`;
-      });
     };
 
     const updateTechCards = () => {
@@ -224,7 +186,6 @@ export function CompanyContent() {
       const scrollY = window.scrollY || window.pageYOffset || 0;
       updateTitleExplosion(scrollY);
       updateHeroText(scrollY);
-      updateProcessCards(scrollY);
       updateTechCards();
       updateTechLogos();
       updateSeparators();
@@ -247,7 +208,6 @@ export function CompanyContent() {
             const scrollY = obj?.scroll?.y ?? obj?.scroll?.scroll?.y ?? window.scrollY ?? 0;
             updateTitleExplosion(scrollY);
             updateHeroText(scrollY);
-            updateProcessCards(scrollY);
             updateTechCards();
             updateTechLogos();
             updateSeparators();
@@ -434,6 +394,54 @@ export function CompanyContent() {
           />
         </div>
         <div className="mist-effect relative w-full">
+          <h1
+            ref={heroTitleRef}
+            className="kinetic-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-8 sm:mb-10 md:mb-12 lg:mb-16 leading-[1.15] sm:leading-[1.1] px-2 text-center"
+          >
+            {/* Kinetic Typography - Line 1 */}
+            <span className="kinetic-line block overflow-hidden">
+              {(t('hero.titlePart1') || 'Разработка Веб-приложений').split(' ').map((word, wordIndex) => (
+                <span
+                  key={`line1-word-${wordIndex}`}
+                  className="kinetic-word inline-block"
+                  style={{
+                    animationDelay: `${wordIndex * 0.15}s`,
+                  }}
+                >
+                  {word}
+                  {wordIndex < (t('hero.titlePart1') || 'Разработка Веб-приложений').split(' ').length - 1 && '\u00A0'}
+                </span>
+              ))}
+            </span>
+            {/* Kinetic Typography - Line 2 */}
+            <span className="kinetic-line block overflow-hidden">
+              {(t('hero.titlePart2') || 'и сайтов').split(' ').map((word, wordIndex) => (
+                <span
+                  key={`line2-word-${wordIndex}`}
+                  className="kinetic-word inline-block"
+                  style={{
+                    animationDelay: `${0.3 + wordIndex * 0.15}s`,
+                  }}
+                >
+                  {word}
+                  {'\u00A0'}
+                </span>
+              ))}
+              {/* Highlight с особой анимацией */}
+              {(t('hero.titleHighlight') || 'любой сложности').split(' ').map((word, wordIndex) => (
+                <span
+                  key={`highlight-word-${wordIndex}`}
+                  className="kinetic-word kinetic-highlight inline-block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent"
+                  style={{
+                    animationDelay: `${0.6 + wordIndex * 0.2}s`,
+                  }}
+                >
+                  {word}
+                  {wordIndex < (t('hero.titleHighlight') || 'любой сложности').split(' ').length - 1 && '\u00A0'}
+                </span>
+              ))}
+            </span>
+          </h1>
           <h2 ref={titleRef} className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-8 sm:mb-10 md:mb-12 lg:mb-14 text-center mx-auto relative z-10 break-words whitespace-nowrap">
           <span
             className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0"
@@ -472,20 +480,6 @@ export function CompanyContent() {
             })}
           </span>
         </h2>
-        <h1
-          ref={heroTitleRef}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 md:mb-6 leading-[1.2] sm:leading-[1.1] subtitle-fade-in px-2 subtitle-shadow"
-          style={{
-            transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
-            willChange: 'transform, opacity',
-          }}
-        >
-          {t('hero.titlePart1')}<br />
-          {t('hero.titlePart2')}{' '}
-          <span className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-gray-100 dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent">
-            {t('hero.titleHighlight')}
-          </span>
-        </h1>
         <p
           ref={heroSubtitleRef}
           className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif"
@@ -537,55 +531,111 @@ export function CompanyContent() {
         ></div>
       </div>
 
-      {/* Process Section - От идеи до запуска */}
-      <section
-        id="process"
-        ref={processSectionRef}
-        className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24"
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-12 sm:mb-16 text-center">
-            {t('process.title')}
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-            {[
-              { key: 'step1', number: 1 },
-              { key: 'step2', number: 2 },
-              { key: 'step3', number: 3 },
-              { key: 'step4', number: 4 },
-            ].map(({ key, number }) => (
-              <div
-                key={key}
-                ref={(el) => {
-                  processCardRefs.current[number - 1] = el;
-                }}
-                className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-800 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300"
-                style={{
-                  transition:
-                    'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease',
-                  willChange: 'transform',
-                }}
-              >
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                      {number}
-                    </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                      {t(`process.${key}.title`)}
-                    </h3>
-                  </div>
-                  <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent mb-3"></div>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {t(`process.${key}.desc`)}
-                  </p>
-                </div>
-              </div>
-            ))}
+      {/* Process Section - От идеи до запуска (GSAP Layered Pinning) */}
+      {/* Структура согласно документации GSAP: https://gsap.com/docs/v3/ */}
+      <div id="process" ref={processSectionRef} className="scroll-mt-24">
+        {/* Заголовок секции - обычная секция */}
+        <section 
+          className="panel-intro"
+          style={{
+            position: 'relative',
+            width: '100%',
+            minHeight: '50vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100 text-center">
+              {t('process.title')}
+            </h2>
+            <p className="text-center text-gray-500 dark:text-gray-400 mt-4 text-lg">
+              Scroll down ↓
+            </p>
           </div>
-        </div>
-      </section>
+        </section>
+        
+        {/* Панель 1 - Синяя */}
+        <section 
+          className="panel"
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+          }}
+        >
+          <div className="panel-content">
+            <span className="panel-number">1</span>
+            <h3 className="panel-title">{t('process.step1.title')}</h3>
+            <p className="panel-desc">{t('process.step1.desc')}</p>
+          </div>
+        </section>
+
+        {/* Панель 2 - Фиолетовая */}
+        <section 
+          className="panel"
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+          }}
+        >
+          <div className="panel-content">
+            <span className="panel-number">2</span>
+            <h3 className="panel-title">{t('process.step2.title')}</h3>
+            <p className="panel-desc">{t('process.step2.desc')}</p>
+          </div>
+        </section>
+
+        {/* Панель 3 - Розовая */}
+        <section 
+          className="panel"
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+          }}
+        >
+          <div className="panel-content">
+            <span className="panel-number">3</span>
+            <h3 className="panel-title">{t('process.step3.title')}</h3>
+            <p className="panel-desc">{t('process.step3.desc')}</p>
+          </div>
+        </section>
+
+        {/* Панель 4 - Оранжевая */}
+        <section 
+          className="panel"
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
+          }}
+        >
+          <div className="panel-content">
+            <span className="panel-number">4</span>
+            <h3 className="panel-title">{t('process.step4.title')}</h3>
+            <p className="panel-desc">{t('process.step4.desc')}</p>
+          </div>
+        </section>
+      </div>
 
       {/* Разделитель между Process и About секциями */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">

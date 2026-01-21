@@ -49,31 +49,31 @@ export function ScrollToTop() {
 
   return (
     <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-3 items-end contact-buttons-container">
-      <button
-        onClick={scrollToTop}
-        className={`
-          ui-glass-btn rounded-full w-12 h-12 flex items-center justify-center shadow-lg
-          transition-all duration-300 ease-in-out
-          ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}
-          hover:scale-110 active:scale-95
-        `}
-        aria-label={t('nav.scrollToTop')}
+    <button
+      onClick={scrollToTop}
+      className={`
+        ui-glass-btn rounded-full w-12 h-12 flex items-center justify-center shadow-lg
+        transition-all duration-300 ease-in-out
+        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}
+        hover:scale-110 active:scale-95
+      `}
+      aria-label={t('nav.scrollToTop')}
+    >
+      <svg
+        className="w-6 h-6 text-gray-700 dark:text-gray-300"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        viewBox="0 0 24 24"
       >
-        <svg
-          className="w-6 h-6 text-gray-700 dark:text-gray-300"
-          fill="none"
-          stroke="currentColor"
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
           strokeWidth={2}
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 10l7-7m0 0l7 7m-7-7v18"
-          />
-        </svg>
-      </button>
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        />
+      </svg>
+    </button>
       
       <div className="relative">
         <button

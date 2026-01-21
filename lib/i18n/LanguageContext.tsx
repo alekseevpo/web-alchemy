@@ -28,11 +28,9 @@ interface LanguageProviderProps {
 
 export function LanguageProvider({ children, translations }: LanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>('ru');
-  const [mounted, setMounted] = useState(false);
+  const [mounted] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
-    
     // Сначала определяем язык синхронно (без задержки)
     // Приоритет: сохраненный язык > язык браузера > по умолчанию
     const savedLang = typeof window !== 'undefined' 
@@ -40,7 +38,6 @@ export function LanguageProvider({ children, translations }: LanguageProviderPro
       : null;
     
     const initialDetection = detectLanguageSync(savedLang);
-    setLanguageState(initialDetection.language);
     
     // Затем пытаемся улучшить определение через геолокацию (асинхронно)
     // Только если нет сохраненного языка И язык браузера не определен
@@ -56,6 +53,8 @@ export function LanguageProvider({ children, translations }: LanguageProviderPro
       }).catch(() => {
         // Игнорируем ошибки геолокации
       });
+    } else {
+      setLanguageState(initialDetection.language);
     }
   }, []);
 

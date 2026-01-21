@@ -16,7 +16,6 @@ const mainNavLinks = [
   { href: '/', key: 'nav.home' },
   { href: '/projects', key: 'nav.projects' },
   { href: '/services', key: 'nav.services' },
-  { href: '/support', key: 'nav.support' },
   { href: '/contact', key: 'nav.contact' },
 ];
 
@@ -62,7 +61,7 @@ export function AppChrome() {
       {/* Left top actions */}
       <div className="fixed top-4 left-4 z-50 lg:left-6 flex items-center gap-2">
         {(isDevelopers || isServicePage) && <BackButton />}
-        {!isDevelopers && !isServicePage && <DevelopersButton />}
+        {/* {!isDevelopers && !isServicePage && <DevelopersButton /> */}
       </div>
 
       {/* Center navigation - Desktop only */}
@@ -105,19 +104,6 @@ export function AppChrome() {
             {t('nav.services')}
             <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-gray-100 transition-all duration-300 ease-out ${
               pathname === '/services' ? 'h-0.5 w-3/4' : 'h-px w-0 group-hover:w-3/4'
-            }`}></span>
-          </Link>
-          <Link
-            href="/support"
-            className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-lg group ${
-              pathname === '/support'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
-            }`}
-          >
-            {t('nav.support')}
-            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-gray-100 transition-all duration-300 ease-out ${
-              pathname === '/support' ? 'h-0.5 w-3/4' : 'h-px w-0 group-hover:w-3/4'
             }`}></span>
           </Link>
           <Link

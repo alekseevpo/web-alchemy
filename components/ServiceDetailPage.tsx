@@ -47,12 +47,12 @@ export function ServiceDetailPage({ serviceKey }: ServiceDetailPageProps) {
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
               {t('services.cta.desc') || 'Свяжитесь с нами для обсуждения вашего проекта и получения персонального предложения'}
             </p>
-            <a 
+            <Link 
               href="/#contact" 
               className="inline-flex items-center justify-center px-8 py-3.5 min-w-[180px] bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
             >
               {t('services.cta.button') || 'Обсудить проект'}
-            </a>
+            </Link>
           </section>
         </main>
 
