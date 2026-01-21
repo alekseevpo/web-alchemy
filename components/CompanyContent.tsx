@@ -490,12 +490,6 @@ export function CompanyContent() {
         >
           {t('hero.subtitle')}
         </p>
-        <a 
-          href="#process"
-          className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 mt-4 sm:mt-6 md:mt-8 px-2 tagline-text inline-block hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200"
-        >
-          {t('header.tagline')}
-        </a>
         
         {/* Контейнер для кнопок */}
         <div className="flex flex-col items-center gap-6 mt-12 sm:mt-16 md:mt-20 lg:mt-16 xl:mt-12">
@@ -503,14 +497,6 @@ export function CompanyContent() {
           <div className="relative">
             <ScrollAnimatedButton />
           </div>
-          
-          {/* Кнопка "Наши услуги" */}
-          <a 
-            href="/services" 
-            className="inline-flex items-center justify-center px-6 sm:px-8 py-3.5 min-w-[180px] min-h-[44px] border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-lg hover:border-gray-900 dark:hover:border-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-200 font-medium hover:scale-[1.02] active:scale-[0.98] mt-8 sm:mt-12 md:mt-16"
-          >
-            {t('hero.cta.secondary')}
-          </a>
         </div>
         </div>
       </header>
@@ -547,97 +533,14 @@ export function CompanyContent() {
           }}
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100 text-center">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100 text-center whitespace-nowrap">
               {t('process.title')}
             </h2>
-            <p className="text-center text-gray-500 dark:text-gray-400 mt-4 text-lg">
-              Scroll down ↓
-            </p>
-          </div>
-        </section>
-        
-        {/* Панель 1 - Синяя */}
-        <section 
-          className="panel"
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-          }}
-        >
-          <div className="panel-content">
-            <span className="panel-number">1</span>
-            <h3 className="panel-title">{t('process.step1.title')}</h3>
-            <p className="panel-desc">{t('process.step1.desc')}</p>
-          </div>
-        </section>
-
-        {/* Панель 2 - Фиолетовая */}
-        <section 
-          className="panel"
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-          }}
-        >
-          <div className="panel-content">
-            <span className="panel-number">2</span>
-            <h3 className="panel-title">{t('process.step2.title')}</h3>
-            <p className="panel-desc">{t('process.step2.desc')}</p>
-          </div>
-        </section>
-
-        {/* Панель 3 - Розовая */}
-        <section 
-          className="panel"
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
-          }}
-        >
-          <div className="panel-content">
-            <span className="panel-number">3</span>
-            <h3 className="panel-title">{t('process.step3.title')}</h3>
-            <p className="panel-desc">{t('process.step3.desc')}</p>
-          </div>
-        </section>
-
-        {/* Панель 4 - Оранжевая */}
-        <section 
-          className="panel"
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
-          }}
-        >
-          <div className="panel-content">
-            <span className="panel-number">4</span>
-            <h3 className="panel-title">{t('process.step4.title')}</h3>
-            <p className="panel-desc">{t('process.step4.desc')}</p>
           </div>
         </section>
       </div>
-
-      {/* Разделитель между Process и About секциями */}
+        
+        {/* Разделитель между Process и About секциями */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
         <div
           ref={(el) => {

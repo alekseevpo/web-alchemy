@@ -1,45 +1,123 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Footer } from '@/components/Footer';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export function ProjectsPage() {
   const { t } = useLanguage();
+  const portfolioRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!portfolioRef.current) return;
+
+    const horizontalSections = gsap.utils.toArray('.horiz-gallery-wrapper');
+
+    horizontalSections.forEach(function (sec) {
+      const pinWrap = (sec as Element).querySelector('.horiz-gallery-strip');
+      
+      if (!pinWrap) return;
+
+      let pinWrapWidth: number;
+      let horizontalScrollLength: number;
+
+      function refresh() {
+        pinWrapWidth = (pinWrap as HTMLElement).scrollWidth;
+        horizontalScrollLength = pinWrapWidth - window.innerWidth;
+      }
+
+      refresh();
+      
+      // Pinning and horizontal scrolling
+      gsap.to(pinWrap, {
+        scrollTrigger: {
+          scrub: true,
+          trigger: sec as Element,
+          pin: sec as Element,
+          start: "center center",
+          end: () => `+=${pinWrapWidth}`,
+          invalidateOnRefresh: true
+        },
+        x: () => -horizontalScrollLength,
+        ease: "none"
+      });
+
+      ScrollTrigger.addEventListener("refreshInit", refresh);
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
+  const projects = [
+    { id: 1, image: "https://assets.codepen.io/16327/portrait-image-1.jpg" },
+    { id: 2, image: "https://assets.codepen.io/16327/portrait-image-2.jpg" },
+    { id: 3, image: "https://assets.codepen.io/16327/portrait-image-3.jpg" },
+    { id: 4, image: "https://assets.codepen.io/16327/portrait-image-4.jpg" },
+    { id: 5, image: "https://assets.codepen.io/16327/portrait-image-5.jpg" },
+    { id: 6, image: "https://assets.codepen.io/16327/portrait-image-6.jpg" },
+    { id: 7, image: "https://assets.codepen.io/16327/portrait-image-7.jpg" },
+    { id: 8, image: "https://assets.codepen.io/16327/portrait-image-8.jpg" },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300">
-      <div>
-        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-12 xl:px-16">
-          <header className="mb-16 sm:mb-20 lg:mb-24 max-w-4xl mx-auto text-center">
+    <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300 overflow-x-hidden">
+      <div id="smooth-content">
+        {/* Intro Panel */}
+        <section className="panel min-h-screen flex items-center justify-center">
+          <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-6 leading-[1.1]">
               {t('projects.title') || 'Готовые проекты'}
             </h1>
-            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto mb-8">
               {t('projects.subtitle') || 'Примеры наших работ и реализованных проектов'}
             </p>
-          </header>
+            <p className="text-lg text-gray-500 dark:text-gray-500">
+              Scroll down for the Gallery
+            </p>
+          </div>
+        </section>
 
-          {/* Projects Section */}
-          <section className="max-w-7xl mx-auto mb-16 sm:mb-20 lg:mb-24">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {/* Placeholder для проектов */}
-              <div className="bg-white dark:bg-gray-900/50 rounded-3xl p-8 shadow-lg border border-gray-200/50 dark:border-gray-800">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl mb-6 flex items-center justify-center">
-                  <span className="text-gray-400 dark:text-gray-600 text-sm">Изображение проекта</span>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('projects.placeholder.title') || 'Проект в разработке'}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {t('projects.placeholder.desc') || 'Скоро здесь появятся примеры наших работ'}
-                </p>
+        {/* Portfolio Gallery */}
+        <section id="portfolio" ref={portfolioRef} className="relative">
+          <div className="container-fluid w-full">
+            <div className="horiz-gallery-wrapper">
+              <div className="horiz-gallery-strip flex">
+                {projects.map((project) => (
+                  <div key={project.id} className="project-wrap">
+                    <img 
+                      src={project.image} 
+                      alt={`Project ${project.id}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-          </section>
-        </main>
+          </div>
+        </section>
 
-        <Footer />
+        {/* End Panel */}
+        <section className="panel min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100">
+              That's it!
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 mt-4">
+              Свяжитесь с нами для создания вашего проекта
+            </p>
+          </div>
+        </section>
       </div>
+
+      <Footer />
     </div>
   );
 }

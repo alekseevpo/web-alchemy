@@ -2,6 +2,35 @@
 
 @variant dark (&:is(.dark, .dark *));
 
+/* Стили для горизонтальной галереи */
+.container-fluid {
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.horiz-gallery-strip,
+.horiz-gallery-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  will-change: transform;
+  position: relative;
+}
+
+.project-wrap {
+  width: 33vw;
+  padding: 2rem;
+  box-sizing: content-box;
+}
+
+.project-wrap img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
 @layer components {
   /* Unified "glass button" style used across the UI */
   .ui-glass-btn {
