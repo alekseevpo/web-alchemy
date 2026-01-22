@@ -42,7 +42,7 @@
   .ui-glass-btn {
     background-color: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(229, 231, 235, 0.25);
+    border: none;
     color: rgb(55, 65, 81);
     transition: colors 0.2s ease;
   }
@@ -60,7 +60,7 @@
   @media (prefers-color-scheme: dark) {
     .ui-glass-btn {
       background-color: rgba(17, 24, 39, 0.2);
-      border-color: rgba(55, 65, 81, 0.25);
+      border: none;
       color: rgb(209, 213, 219);
     }
     
@@ -90,31 +90,39 @@
   .ui-glass-menu {
     background-color: rgba(255, 255, 255, 0.55);
     backdrop-filter: blur(3px);
-    border: 1px solid rgba(229, 231, 235, 0.5);
+    border: none;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
   
   @media (prefers-color-scheme: dark) {
     .ui-glass-menu {
       background-color: rgba(17, 24, 39, 0.55);
-      border-color: rgba(55, 65, 81, 0.5);
+      border: none;
     }
   }
 
 /* Адаптивный размер заголовка Web-Alchemy */
 .hero-title-responsive {
-  font-size: clamp(3rem, 8vw, 10rem);
+  font-size: clamp(4rem, 10vw, 12rem);
   line-height: 0.6;
   letter-spacing: -0.02em;
   font-kerning: none;
   font-variant-ligatures: none;
   text-rendering: geometricPrecision;
+  color: rgb(55, 65, 81);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Для темной темы */
+.dark .hero-title-responsive {
+  color: rgb(209, 213, 219);
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.12), 0 2px 8px rgba(255, 255, 255, 0.08);
 }
 
 /* Для очень маленьких экранов немного уменьшаем */
 @media (max-width: 375px) {
   .hero-title-responsive {
-    font-size: clamp(2.5rem, 7vw, 3rem);
+    font-size: clamp(3rem, 8vw, 4rem);
   }
 }
 
@@ -318,7 +326,6 @@ body {
   padding: 12px 20px;
   text-decoration: none;
   z-index: 100;
-  border-radius: 0 0 4px 0;
   font-weight: 600;
   transition: top 0.3s ease;
 }
@@ -331,7 +338,6 @@ body {
 *:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 /* Убрать стандартный outline для мыши, но оставить для клавиатуры */
@@ -665,12 +671,11 @@ main {
 
 /* Улучшенная читаемость для слогана */
 .tagline-text {
+  color: rgb(55, 65, 81);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
   letter-spacing: 0.02em;
   font-weight: 500;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
+  text-decoration: none;
 }
 
 .dark .tagline-text {
@@ -702,24 +707,14 @@ main {
   display: none !important;
 }
 
-/* Эффект рассеивающегося тумана */
+/* Эффект рассеивающегося тумана - ОТКЛЮЧЕН */
 .mist-effect {
   position: relative;
 }
 
 .mist-effect::before,
 .mist-effect::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150%;
-  height: 150%;
-  pointer-events: none;
-  z-index: -1;
-  filter: blur(60px);
-  will-change: opacity, transform;
+  display: none; /* Полностью отключаем туман */
 }
 
 /* Скрываем туман на мобильных устройствах */
@@ -728,31 +723,6 @@ main {
   .mist-effect::after {
     display: none;
   }
-}
-
-/* Светлая тема - фиолетовый туман (по умолчанию) */
-.mist-effect::before {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(139, 92, 246, 0.2) 30%, rgba(192, 132, 252, 0.15) 60%, transparent 80%);
-  animation: mist1-light 12s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  opacity: 0.5;
-}
-
-.mist-effect::after {
-  background: radial-gradient(circle, rgba(147, 51, 234, 0.22) 0%, rgba(168, 85, 247, 0.18) 40%, rgba(139, 92, 246, 0.12) 65%, transparent 85%);
-  animation: mist2-light 14s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  animation-delay: 3s;
-  opacity: 0.4;
-}
-
-/* Темная тема - синие/фиолетовые тона */
-.dark .mist-effect::before {
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(99, 102, 241, 0.2) 30%, transparent 70%);
-  animation: mist1 12s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.dark .mist-effect::after {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(59, 130, 246, 0.15) 40%, transparent 70%);
-  animation: mist2 14s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes mist1 {
@@ -899,11 +869,9 @@ main {
   height: 80px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
-  border-radius: 50%;
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Заголовок панели */
@@ -941,24 +909,20 @@ main {
 .scroll-animated-button {
   position: relative;
   z-index: 40;
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%);
+  box-shadow: 
+    0 0 0 2px rgba(139, 92, 246, 0.3),
+    0 4px 25px rgba(139, 92, 246, 0.8),
+    inset 0 2px 6px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 6px rgba(59, 130, 246, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 
-    0 0 0 2px rgba(139, 92, 246, 0.3),
-    0 4px 25px rgba(139, 92, 246, 0.7),
-    0 8px 35px rgba(139, 92, 246, 0.5),
-    0 12px 50px rgba(139, 92, 246, 0.3),
-    inset 0 2px 6px rgba(255, 255, 255, 0.2),
-    inset 0 -2px 6px rgba(59, 130, 246, 0.3);
-  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-  text-decoration: none;
-  overflow: visible;
-  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
 
@@ -1019,14 +983,14 @@ main {
   font-size: 0.75rem;
   font-weight: 700;
   color: rgb(255, 255, 255);
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  line-height: 1.3;
+  text-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.7),
+    0 0 10px rgba(139, 92, 246, 0.5);
+  z-index: 10;
+  pointer-events: none;
   white-space: nowrap;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  line-height: 1.2;
 }
 
 /* Темная тема */
@@ -1056,15 +1020,116 @@ main {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
+/* Стили для изображения луны */
+.scroll-animated-button-moon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  transition: none;
+  will-change: transform;
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.4),
+    0 0 40px rgba(255, 255, 255, 0.3),
+    0 0 60px rgba(255, 255, 255, 0.2),
+    0 0 80px rgba(255, 255, 255, 0.1);
+  animation: moonGlow 3s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.4),
+      0 0 40px rgba(255, 255, 255, 0.3),
+      0 0 60px rgba(255, 255, 255, 0.2),
+      0 0 80px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px rgba(255, 255, 255, 0.5),
+      0 0 50px rgba(255, 255, 255, 0.4),
+      0 0 75px rgba(255, 255, 255, 0.3),
+      0 0 100px rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Новая кнопка-луна без фона */
+.scroll-animated-moon-button {
+  position: relative;
+  z-index: 40;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  background: transparent;
+}
+
+/* Hover эффект для луны */
+.scroll-animated-moon-button:hover {
+  transform: scale(1.1);
+}
+
+.scroll-animated-moon-button:hover .scroll-animated-button-moon {
+  transform: scale(1.05);
+  box-shadow: 
+    0 0 30px rgba(255, 255, 255, 0.6),
+    0 0 60px rgba(255, 255, 255, 0.4),
+    0 0 90px rgba(255, 255, 255, 0.3),
+    0 0 120px rgba(255, 255, 255, 0.2);
+}
+
+.scroll-animated-moon-button:active {
+  transform: scale(0.95);
+}
+
+/* Улучшенный текст для луны */
+.scroll-animated-moon-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: rgb(255, 255, 255);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  pointer-events: none;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
 /* Адаптивность для мобильных */
 @media (max-width: 640px) {
-  .scroll-animated-button {
-    width: 75px;
-    height: 75px;
+  .scroll-animated-moon-button {
+    width: 130px;
+    height: 130px;
   }
 
-  .scroll-animated-button-text {
-    font-size: 10px;
+  .scroll-animated-button-moon {
+    box-shadow: 
+      0 0 15px rgba(255, 255, 255, 0.3),
+      0 0 30px rgba(255, 255, 255, 0.2),
+      0 0 45px rgba(255, 255, 255, 0.1),
+      0 0 60px rgba(255, 255, 255, 0.05);
+    animation: none; /* Отключаем пульсацию на мобильных для экономии батареи */
+  }
+
+  .scroll-animated-moon-button:hover .scroll-animated-button-moon {
+    box-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.5),
+      0 0 40px rgba(255, 255, 255, 0.3),
+      0 0 60px rgba(255, 255, 255, 0.15),
+      0 0 80px rgba(255, 255, 255, 0.08);
+  }
+
+  .scroll-animated-moon-text {
+    font-size: 0.95rem;
     line-height: 1.2;
   }
 }
