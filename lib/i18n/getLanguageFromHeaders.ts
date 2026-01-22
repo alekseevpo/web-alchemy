@@ -2,13 +2,21 @@
  * Серверная функция для извлечения языка из заголовков запроса
  * Используется только в Server Components (generateMetadata и т.д.)
  */
-
 import { headers } from 'next/headers';
 import type { Language } from './detectLanguage';
 
 /**
+ * Безопасная версия функции для использования в Server Components
+ * Возвращает язык по умолчанию без использования headers()
+ */
+export function getLanguageStatic(): Language {
+  return 'ru'; // По умолчанию - русский язык
+}
+
+/**
  * Извлекает язык из заголовков запроса (серверная функция)
  * Используется в generateMetadata и других server components
+ * ВНИМАНИЕ: Вызывает DYNAMIC_SERVER_USAGE ошибки при статической генерации
  */
 export async function getLanguageFromHeaders(): Promise<Language> {
   try {
@@ -32,7 +40,7 @@ export async function getLanguageFromHeaders(): Promise<Language> {
     }
   } catch (error) {
     // Если заголовки недоступны, возвращаем значение по умолчанию
-    console.debug('Failed to read headers:', error);
+    // console.debug('Failed to read headers:', error); // Убрано, так как основная проблема решена
   }
   
   // По умолчанию - русский

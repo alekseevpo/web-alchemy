@@ -16,6 +16,7 @@ const mainNavLinks = [
   { href: '/', key: 'nav.home' },
   { href: '/projects', key: 'nav.projects' },
   { href: '/services', key: 'nav.services' },
+  { href: '/#about', key: 'nav.about' },
   { href: '/contact', key: 'nav.contact' },
 ];
 
@@ -26,6 +27,20 @@ export function AppChrome() {
   const { t } = useLanguage();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [currentHash, setCurrentHash] = useState('');
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+    
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (isMobileNavOpen && !isClosing) {
@@ -104,6 +119,19 @@ export function AppChrome() {
             {t('nav.services')}
             <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-gray-100 transition-all duration-300 ease-out ${
               pathname === '/services' ? 'h-0.5 w-3/4' : 'h-px w-0 group-hover:w-3/4'
+            }`}></span>
+          </Link>
+          <Link
+            href="/#about"
+            className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-lg group ${
+              pathname === '/' && currentHash === '#about'
+                ? 'text-gray-900 dark:text-gray-100'
+                : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+            }`}
+          >
+            {t('nav.about')}
+            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-gray-100 transition-all duration-300 ease-out ${
+              pathname === '/' && currentHash === '#about' ? 'h-0.5 w-3/4' : 'h-px w-0 group-hover:w-3/4'
             }`}></span>
           </Link>
           <Link
@@ -197,21 +225,27 @@ export function AppChrome() {
               </div>
 
               <ul className="space-y-2">
-                {mainNavLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      onClick={handleCloseMenu}
-                      className={`block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
-                        pathname === link.href
-                          ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-lg'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                      }`}
-                    >
-                      {t(link.key)}
-                    </Link>
-                  </li>
-                ))}
+                {mainNavLinks.map((link) => {
+                  const isActive = link.href === '/#about' 
+                    ? pathname === '/' && currentHash === '#about'
+                    : pathname === link.href;
+                  
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        onClick={handleCloseMenu}
+                        className={`block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
+                          isActive
+                            ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-lg'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        {t(link.key)}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>

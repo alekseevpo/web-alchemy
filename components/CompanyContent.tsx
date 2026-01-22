@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, FormEvent, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
+import { useState, FormEvent, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { ScrollAnimatedButton } from '@/components/ScrollAnimatedButton';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ProcessRocket } from '@/components/ProcessRocket';
+import { ScrollTriggerManager } from '@/components/ScrollTriggerManager';
+import { AnimatedSubmitButton } from '@/components/AnimatedSubmitButton';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -54,35 +55,6 @@ export function CompanyContent() {
   const toggleApproachItem = (index: number) => {
     setOpenApproachIndex(openApproachIndex === index ? null : index);
   };
-
-  // GSAP ScrollTrigger для layered pinning карточек
-  // Согласно документации GSAP: https://gsap.com/docs/v3/
-  useLayoutEffect(() => {
-    // Регистрируем плагин ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Получаем все панели с помощью gsap.utils.toArray (рекомендуемый способ)
-    const panels = gsap.utils.toArray<HTMLElement>('.panel');
-    
-    if (panels.length === 0) return;
-
-    // Создаем ScrollTrigger для каждой панели согласно примеру из GSAP
-    // Layered pinning: каждая панель прилипает к верху и остаётся там,
-    // пока следующая панель не наедет сверху
-    panels.forEach((panel) => {
-      ScrollTrigger.create({
-        trigger: panel,
-        start: 'top top', // Начинаем pin когда верх панели достигает верха viewport
-        pin: true,
-        pinSpacing: false, // Не добавляем пространство после pin - карточки накладываются
-      });
-    });
-
-    // Cleanup при размонтировании
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
 
   // Скролл-анимации через Locomotive Scroll
   useEffect(() => {
@@ -370,6 +342,8 @@ export function CompanyContent() {
 
   return (
     <>
+      <ScrollTriggerManager />
+      
       {/* Hero Section */}
       <header className="min-h-screen flex items-start justify-center max-w-6xl mx-auto text-center pt-4 sm:pt-6 md:pt-8 lg:pt-12 px-4 relative">
         {/* Background Logo - вынесен из h2 для правильной загрузки */}
@@ -482,7 +456,7 @@ export function CompanyContent() {
         </h2>
         <p
           ref={heroSubtitleRef}
-          className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif"
+          className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-1 sm:mb-2 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif"
           style={{
             transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
             willChange: 'transform, opacity',
@@ -492,7 +466,7 @@ export function CompanyContent() {
         </p>
         
         {/* Контейнер для кнопок */}
-        <div className="flex flex-col items-center gap-6 mt-12 sm:mt-16 md:mt-20 lg:mt-16 xl:mt-12">
+        <div className="flex flex-col items-center gap-6 mt-8 sm:mt-12 md:mt-16 lg:mt-12 xl:mt-8">
           {/* Круглая анимированная кнопка "Let's talk!" */}
           <div className="relative">
             <ScrollAnimatedButton />
@@ -532,10 +506,22 @@ export function CompanyContent() {
             justifyContent: 'center',
           }}
         >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100 text-center whitespace-nowrap">
-              {t('process.title')}
-            </h2>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12">
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100 text-center whitespace-nowrap relative z-20" 
+              style={{
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.3)',
+                fontWeight: 'bold',
+                color: '#ffffff'
+              }}
+            >
+                {t('process.title')}
+              </h2>
+              {/* Ракета справа от заголовка */}
+              <div className="flex-shrink-0">
+                <ProcessRocket />
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -1062,32 +1048,12 @@ export function CompanyContent() {
                   </p>
                 </div>
               )}
-              <button 
-                type="submit"
+              <AnimatedSubmitButton
+                isLoading={status === 'loading'}
                 disabled={status === 'loading'}
-                className={`w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-100 dark:to-gray-200 text-white dark:text-gray-900 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
-                  status === 'loading'
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:from-gray-800 hover:to-gray-700 dark:hover:from-gray-200 dark:hover:to-gray-300 hover:scale-[1.02] active:scale-[0.98]'
-                }`}
               >
-                {status === 'loading' ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {t('form.submitting') || 'Отправка...'}
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
-                    {t('contact.form.submit') || 'Отправить сообщение'}
-                  </>
-                )}
-              </button>
+                {t('contact.form.submit') || 'Отправить сообщение'}
+              </AnimatedSubmitButton>
             </form>
           </div>
         </div>
