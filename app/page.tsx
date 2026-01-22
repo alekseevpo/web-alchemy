@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Footer } from '@/components/Footer';
 import { CompanyContent } from '@/components/CompanyContent';
+import OriginalLiquidGradient from '@/components/OriginalLiquidGradient';
 import SimpleLiquidGradient from '@/components/SimpleLiquidGradient';
 import LiquidGradient from '@/components/LiquidGradient';
 import TestGradient from '@/components/TestGradient';
@@ -46,8 +47,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen transition-colors duration-300">
-      {/* Simple Liquid Gradient Background */}
-      <SimpleLiquidGradient />
+      {/* Original Liquid Gradient Background */}
+      <OriginalLiquidGradient />
+      
+      {/* Simple Liquid Gradient Background - отключен */}
+      {/* <SimpleLiquidGradient /> */}
       
       {/* Liquid Gradient Background - отключен */}
       {/* <LiquidGradient colorScheme={1} intensity={1.5} speed={1.0} /> */}
