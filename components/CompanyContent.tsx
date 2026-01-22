@@ -2,6 +2,7 @@
 
 import { useState, FormEvent, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { ScrollAnimatedButton } from '@/components/ScrollAnimatedButton';
@@ -13,6 +14,8 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export function CompanyContent() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [status, setStatus] = useState<FormStatus>('idle');
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -29,13 +32,12 @@ export function CompanyContent() {
   const heroTitleRef = useRef<HTMLHeadingElement | null>(null);
   const heroSubtitleRef = useRef<HTMLParagraphElement | null>(null);
   const techLogosRef = useRef<HTMLDivElement | null>(null);
-  const separatorRefs = useRef<(HTMLDivElement | null)[]>([]);
   const rawTitle = t('hero.companyName') || 'WebAlchemy';
-  const titleText = rawTitle.replace(/([a-z])([A-Z])/g, '$1 $2');
+  // Добавляем перенос строки после Web
+  const titleText = 'Web\n\nAlchemy';
   const titleChars = titleText.split('');
-  // Находим индекс, где заканчивается "Web " (включая пробел после "Web")
-  const spaceIndex = titleText.indexOf(' ');
-  const webEnd = spaceIndex !== -1 ? spaceIndex + 1 : titleText.toLowerCase().indexOf('web') + 3;
+  // Находим индекс, где заканчивается "Web" (включая перенос строки)
+  const webEnd = titleText.indexOf('\n\n') + 1;
   
   // Генерируем случайные направления для каждой буквы (взрыв эффект)
   // Используем useMemo чтобы направления не менялись при каждом рендере
@@ -140,27 +142,12 @@ export function CompanyContent() {
       techLogosRef.current.style.opacity = `${opacity}`;
     };
 
-    const updateSeparators = () => {
-      const windowHeight = window.innerHeight;
-      separatorRefs.current.forEach((separator) => {
-        if (!separator) return;
-        const rect = separator.getBoundingClientRect();
-        const progress = clamp((windowHeight - rect.top) / windowHeight, 0, 1);
-        const scaleX = 0.7 + progress * 0.3;
-        const opacity = 0.5 + progress * 0.5;
-
-        separator.style.transform = `scaleX(${scaleX})`;
-        separator.style.opacity = `${opacity}`;
-      });
-    };
-
     const handleScroll = () => {
       const scrollY = window.scrollY || window.pageYOffset || 0;
       updateTitleExplosion(scrollY);
       updateHeroText(scrollY);
       updateTechCards();
       updateTechLogos();
-      updateSeparators();
     };
 
     const initScroll = async () => {
@@ -182,7 +169,6 @@ export function CompanyContent() {
             updateHeroText(scrollY);
             updateTechCards();
             updateTechLogos();
-            updateSeparators();
           });
         } else {
           // Fallback на обычный scroll listener
@@ -371,6 +357,9 @@ export function CompanyContent() {
           <h1
             ref={heroTitleRef}
             className="kinetic-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-8 sm:mb-10 md:mb-12 lg:mb-16 leading-[1.15] sm:leading-[1.1] px-2 text-center"
+            style={{
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 0, 0, 0.1)'
+            }}
           >
             {/* Kinetic Typography - Line 1 */}
             <span className="kinetic-line block overflow-hidden">
@@ -408,6 +397,7 @@ export function CompanyContent() {
                   className="kinetic-word kinetic-highlight inline-block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent"
                   style={{
                     animationDelay: `${0.6 + wordIndex * 0.2}s`,
+                    textShadow: 'none'
                   }}
                 >
                   {word}
@@ -416,7 +406,11 @@ export function CompanyContent() {
               ))}
             </span>
           </h1>
-          <h2 ref={titleRef} className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-8 sm:mb-10 md:mb-12 lg:mb-14 text-center mx-auto relative z-10 break-words whitespace-nowrap">
+          <h2 ref={titleRef} className="hero-title-responsive font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-8 sm:mb-10 md:mb-12 lg:mb-14 text-center mx-auto relative z-10 break-words whitespace-nowrap"
+            style={{
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 0, 0, 0.1)'
+            }}
+          >
           <span
             className="inline-flex flex-wrap justify-center items-baseline relative z-10 gap-0 sm:gap-0"
             style={{
@@ -456,7 +450,7 @@ export function CompanyContent() {
         </h2>
         <p
           ref={heroSubtitleRef}
-          className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-1 sm:mb-2 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif"
+          className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 mb-1 sm:mb-2 leading-relaxed max-w-3xl mx-auto px-2 description-text italic font-serif"
           style={{
             transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
             willChange: 'transform, opacity',
@@ -475,22 +469,6 @@ export function CompanyContent() {
         </div>
       </header>
 
-      {/* Разделитель между Hero и Process секциями */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 mt-6 sm:mt-8 md:mt-10 lg:mt-12 mb-12 sm:mb-16 md:mb-20 lg:mb-24">
-        <div
-          ref={(el) => {
-            separatorRefs.current[0] = el;
-          }}
-          className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"
-          style={{
-            transform: 'scaleX(0.7)',
-            transformOrigin: 'center',
-            transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
-            opacity: 0.6,
-          }}
-        ></div>
-      </div>
-
       {/* Process Section - От идеи до запуска (GSAP Layered Pinning) */}
       {/* Структура согласно документации GSAP: https://gsap.com/docs/v3/ */}
       <div id="process" ref={processSectionRef} className="scroll-mt-24">
@@ -508,17 +486,11 @@ export function CompanyContent() {
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12">
             <div className="flex items-center justify-center gap-2 sm:gap-3">
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100 text-center whitespace-nowrap relative z-20" 
-              style={{
-                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.3)',
-                fontWeight: 'bold',
-                color: '#ffffff'
-              }}
-            >
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 text-center whitespace-nowrap relative z-20">
                 {t('process.title')}
               </h2>
               {/* Ракета справа от заголовка */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0" style={{ transform: 'translateY(-32px)' }}>
                 <ProcessRocket />
               </div>
             </div>
@@ -526,38 +498,22 @@ export function CompanyContent() {
         </section>
       </div>
         
-        {/* Разделитель между Process и About секциями */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 my-12 sm:my-16 md:my-20 lg:my-24">
-        <div
-          ref={(el) => {
-            separatorRefs.current[1] = el;
-          }}
-          className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"
-          style={{
-            transform: 'scaleX(0.7)',
-            transformOrigin: 'center',
-            transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
-            opacity: 0.6,
-          }}
-        ></div>
-      </div>
-
       {/* About Section */}
       <section id="about" className="-mt-60 sm:-mt-48 md:-mt-32 lg:-mt-20 mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-12 sm:mb-16 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-800 dark:text-gray-100 mb-12 sm:mb-16 text-center">
           {t('about.title')}
         </h2>
         <div className="prose prose-lg dark:prose-invert max-w-none">
-          <p className="text-center text-xl mb-16 text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-center text-xl mb-16 text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
             {t('about.desc')}
           </p>
           
           {/* Our Stack Section */}
           <div className="max-w-4xl mx-auto mb-16">
-            <h3 className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-gray-100 mb-4 text-center">
+            <h3 className="text-2xl sm:text-3xl font-light text-gray-800 dark:text-gray-100 mb-4 text-center">
               {t('about.tech.title')}
             </h3>
-            <p className="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+            <p className="text-center text-gray-900 dark:text-white mb-8 max-w-2xl mx-auto">
               {t('about.tech.desc')}
             </p>
             
@@ -576,14 +532,14 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" 
                   alt="Python" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Python"
                 />
                 {/* Django */}
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" 
                   alt="Django" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Django"
                 />
                 {/* Django REST Framework */}
@@ -607,7 +563,7 @@ export function CompanyContent() {
                 <img 
                   src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" 
                   alt="FastAPI" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="FastAPI"
                   onError={(e) => {
                     const img = e.currentTarget;
@@ -621,14 +577,14 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" 
                   alt="TypeScript" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="TypeScript"
                 />
                 {/* Tailwind CSS */}
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" 
                   alt="Tailwind CSS" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Tailwind CSS"
                   onError={(e) => {
                     const img = e.currentTarget;
@@ -646,14 +602,14 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" 
                   alt="Vue.js" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Vue.js"
                 />
                 {/* Vite */}
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" 
                   alt="Vite" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Vite"
                 />
                 
@@ -662,7 +618,7 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" 
                   alt="Python" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Python"
                   aria-hidden="true"
                 />
@@ -670,7 +626,7 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" 
                   alt="Django" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Django"
                   aria-hidden="true"
                 />
@@ -693,7 +649,7 @@ export function CompanyContent() {
                 <img 
                   src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" 
                   alt="FastAPI" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="FastAPI"
                   aria-hidden="true"
                   onError={(e) => {
@@ -708,7 +664,7 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" 
                   alt="TypeScript" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="TypeScript"
                   aria-hidden="true"
                 />
@@ -716,7 +672,7 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" 
                   alt="Tailwind CSS" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Tailwind CSS"
                   aria-hidden="true"
                 />
@@ -732,7 +688,7 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" 
                   alt="Vue.js" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Vue.js"
                   aria-hidden="true"
                 />
@@ -740,7 +696,7 @@ export function CompanyContent() {
                 <img 
                   src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" 
                   alt="Vite" 
-                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 flex-shrink-0"
+                  className="h-12 sm:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity hover:scale-110 dark:invert flex-shrink-0"
                   title="Vite"
                   aria-hidden="true"
                 />
@@ -767,12 +723,18 @@ export function CompanyContent() {
                     ref={(el) => {
                       techCardsRef.current[index] = el;
                     }}
-                    className={`tech-card bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200/50 dark:border-gray-800 ${
+                    className={`tech-card p-6 rounded-2xl ${
                       isVisible ? 'visible' : isLeft ? 'animate-left' : 'animate-right'
                     }`}
-                    style={{ transitionDelay: `${index * 0.1}s` }}
+                    style={{ 
+                      transitionDelay: `${index * 0.1}s`,
+                      backgroundColor: isDark ? 'rgba(17, 24, 39, 0.85)' : 'rgba(255, 255, 255, 0.7)',
+                      backdropFilter: 'blur(10px)',
+                      WebkitBackdropFilter: 'blur(10px)',
+                      border: isDark ? '1px solid rgba(55, 65, 81, 0.5)' : '1px solid rgba(0, 0, 0, 0.1)'
+                    }}
                   >
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <p className="text-gray-900 dark:text-gray-300 leading-relaxed">
                       {t(`about.tech.${key}`)}
                     </p>
                   </div>
@@ -783,10 +745,10 @@ export function CompanyContent() {
 
           {/* Our Approach Section */}
           <div className="max-w-4xl mx-auto -mt-8 sm:-mt-6 md:mt-0">
-            <h3 className="text-2xl sm:text-3xl font-light text-gray-900 dark:text-gray-100 mb-2 text-center">
+            <h3 className="text-2xl sm:text-3xl font-light text-gray-800 dark:text-gray-100 mb-2 text-center">
               {t('about.approach.title')}
             </h3>
-            <p className="text-center text-gray-600 dark:text-gray-400 mb-3 max-w-2xl mx-auto">
+            <p className="text-center text-gray-900 dark:text-white mb-3 max-w-2xl mx-auto">
               {t('about.approach.desc')}
             </p>
             <div className="space-y-3">
@@ -800,7 +762,13 @@ export function CompanyContent() {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-800 overflow-hidden transition-all duration-300 hover:shadow-lg"
+                  className="rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg"
+                  style={{
+                    backgroundColor: isDark ? 'rgba(17, 24, 39, 0.85)' : 'rgba(255, 255, 255, 0.5)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: isDark ? '1px solid rgba(55, 65, 81, 0.5)' : '1px solid rgba(0, 0, 0, 0.1)'
+                  }}
                 >
                   <button
                     onClick={() => toggleApproachItem(index)}
@@ -828,7 +796,7 @@ export function CompanyContent() {
                     }`}
                   >
                     <div className="px-4 sm:px-6 pb-2 sm:pb-3">
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
+                      <p className="text-gray-900 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
                         {t(item.desc)}
                       </p>
                     </div>
@@ -843,13 +811,21 @@ export function CompanyContent() {
       {/* Contact Section */}
       <section id="contact" className="mb-16 sm:mb-20 lg:mb-24 scroll-mt-24">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-800 dark:text-gray-100 mb-6 sm:mb-8">
             {t('contact.title')}
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-10 sm:mb-14 leading-relaxed">
+          <p className="text-xl text-gray-900 dark:text-white mb-10 sm:mb-14 leading-relaxed">
             {t('contact.subtitle')}
           </p>
-          <div className="bg-white dark:bg-gray-900 p-8 sm:p-12 rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-800">
+          <div 
+            className="p-8 sm:p-12 rounded-3xl shadow-xl"
+            style={{
+              backgroundColor: isDark ? 'rgba(17, 24, 39, 0.85)' : 'rgba(255, 255, 255, 0.5)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: isDark ? '1px solid rgba(55, 65, 81, 0.5)' : '1px solid rgba(0, 0, 0, 0.2)'
+            }}
+          >
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Success Message */}
               {status === 'success' && (
@@ -883,11 +859,17 @@ export function CompanyContent() {
                   autoComplete="name"
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                  className={`w-full px-5 py-4 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     errors.name
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  style={{
+                    backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    border: isDark ? '1px solid rgba(55, 65, 81, 0.6)' : '1px solid rgba(0, 0, 0, 0.2)'
+                  }}
                   placeholder={t('contact.form.namePlaceholder') || 'Введите ваше имя'}
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? 'contact-name-error' : undefined}
@@ -915,11 +897,17 @@ export function CompanyContent() {
                   autoComplete="email"
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                  className={`w-full px-5 py-4 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     errors.email
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  style={{
+                    backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    border: isDark ? '1px solid rgba(55, 65, 81, 0.6)' : '1px solid rgba(0, 0, 0, 0.2)'
+                  }}
                   placeholder={t('contact.form.emailPlaceholder') || 'your@email.com'}
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? 'contact-email-error' : undefined}
@@ -945,11 +933,17 @@ export function CompanyContent() {
                   id="contact-service-button"
                   onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-left bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-base text-gray-900 dark:text-gray-100 flex items-center justify-between ${
+                  className={`w-full px-5 py-4 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-left text-base text-gray-900 dark:text-gray-100 flex items-center justify-between ${
                     errors.service
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                  style={{
+                    backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    border: isDark ? '1px solid rgba(55, 65, 81, 0.6)' : '1px solid rgba(0, 0, 0, 0.2)'
+                  }}
                   aria-invalid={!!errors.service}
                   aria-describedby={errors.service ? 'contact-service-error' : undefined}
                   aria-expanded={isServiceDropdownOpen}
@@ -1020,11 +1014,17 @@ export function CompanyContent() {
                   rows={6}
                   required
                   disabled={status === 'loading'}
-                  className={`w-full px-5 py-4 pt-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                  className={`w-full px-5 py-4 pt-4 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-gray-900 dark:text-gray-100 resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     errors.message
                       ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                       : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  style={{
+                    backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    border: isDark ? '1px solid rgba(55, 65, 81, 0.6)' : '1px solid rgba(0, 0, 0, 0.2)'
+                  }}
                   placeholder={t('contact.form.messagePlaceholder') || 'Опишите ваш проект или задайте вопрос...'}
                   aria-invalid={!!errors.message}
                   aria-describedby={errors.message ? 'contact-message-error' : undefined}

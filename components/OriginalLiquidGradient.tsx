@@ -396,7 +396,7 @@ class App {
     this.camera.position.z = 50;
     
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x0a0e27); // Dark navy
+    this.scene.background = new THREE.Color(0x050711); // Much darker navy
     
     this.clock = new THREE.Clock();
     this.touchTexture = new TouchTexture();
@@ -453,8 +453,8 @@ class App {
     
     // Update background color and base color
     if (isDark) {
-      this.scene.background = new THREE.Color(0x0a0e27); // Navy blue
-      uniforms.uDarkNavy.value.set(0.039, 0.055, 0.153); // #0a0e27 - Navy blue base color
+      this.scene.background = new THREE.Color(0x050711); // Much darker navy
+      uniforms.uDarkNavy.value.set(0.02, 0.027, 0.067); // Much darker base color
       uniforms.uGradientSize.value = 0.45; // Smaller gradient radius for more defined gradients
       uniforms.uGradientCount.value = 12.0; // More gradient centers
       uniforms.uSpeed.value = 1.5; // Slightly faster for more movement

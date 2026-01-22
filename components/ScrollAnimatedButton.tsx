@@ -69,22 +69,29 @@ export function ScrollAnimatedButton() {
   return (
     <Link
       href="#contact"
-      className="scroll-animated-button group"
-      style={{
-        transform: `rotate(${rotation}deg)`,
-        transition: 'none',
-        willChange: 'transform',
-      }}
+      className="scroll-animated-moon-button group"
     >
-      <span 
-        className="scroll-animated-button-text"
-        style={{
-          transition: 'none',
-          willChange: 'transform',
-        }}
-      >
-        Let&apos;s talk!
-      </span>
+      <div className="relative w-full h-full">
+        <img 
+          src="/moon.png"
+          alt="Let's talk!"
+          className="scroll-animated-button-moon"
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            transition: 'none',
+            willChange: 'transform',
+          }}
+        />
+        <span 
+          className="scroll-animated-moon-text absolute inset-0 flex items-center justify-center"
+          style={{
+            transition: 'none',
+            willChange: 'transform',
+          }}
+        >
+          Let&apos;s talk!
+        </span>
+      </div>
     </Link>
   );
 }

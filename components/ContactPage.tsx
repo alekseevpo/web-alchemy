@@ -5,6 +5,7 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Footer } from '@/components/Footer';
 import { ContactButtons } from '@/components/ContactButtons';
 import { AnimatedSubmitButton } from '@/components/AnimatedSubmitButton';
+import OriginalLiquidGradient from '@/components/OriginalLiquidGradient';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -74,20 +75,29 @@ export function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#fefbf6] dark:bg-transparent transition-colors duration-300">
+      <OriginalLiquidGradient />
       <div>
         <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-12 sm:pt-28 sm:pb-16 md:px-8 lg:pt-28 lg:px-12 xl:px-16">
           <header className="mb-16 sm:mb-20 lg:mb-24 max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight text-gray-900 dark:text-gray-100 mb-6 leading-[1.1]">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight text-white mb-6 leading-[1.1]" style={{ color: '#ffffff' }}>
               {t('contact.title') || 'Давайте обсудим ваш проект'}
             </h1>
-            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl sm:text-2xl text-white leading-relaxed max-w-3xl mx-auto">
               {t('contact.subtitle') || 'Готовы создать для вас современное веб-приложение. Напишите нам, и мы обсудим детали.'}
             </p>
           </header>
 
           {/* Contact Form Section */}
           <section className="max-w-4xl mx-auto mb-16 sm:mb-20 lg:mb-24">
-            <div className="bg-white dark:bg-gray-900 p-8 sm:p-12 lg:p-16 rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-800">
+            <div 
+              className="p-8 sm:p-12 lg:p-16 rounded-3xl shadow-xl"
+              style={{
+                backgroundColor: 'rgba(17, 24, 39, 0.85)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(55, 65, 81, 0.5)'
+              }}
+            >
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Success Message */}
                 {status === 'success' && (
@@ -118,11 +128,17 @@ export function ContactPage() {
                     autoComplete="name"
                     required
                     disabled={status === 'loading'}
-                    className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
+                    className={`w-full px-5 py-4 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
                       errors.name
                         ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                         : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
                     } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    style={{
+                      backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(55, 65, 81, 0.6)'
+                    }}
                     placeholder={t('contact.form.namePlaceholder') || 'Введите ваше имя'}
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? 'contact-name-error' : undefined}
@@ -144,11 +160,17 @@ export function ContactPage() {
                     autoComplete="email"
                     required
                     disabled={status === 'loading'}
-                    className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
+                    className={`w-full px-5 py-4 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${
                       errors.email
                         ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                         : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
                     } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    style={{
+                      backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(55, 65, 81, 0.6)'
+                    }}
                     placeholder={t('contact.form.emailPlaceholder') || 'your@email.com'}
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? 'contact-email-error' : undefined}
@@ -170,11 +192,17 @@ export function ContactPage() {
                     rows={6}
                     required
                     disabled={status === 'loading'}
-                    className={`w-full px-5 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none placeholder-gray-400 dark:placeholder-gray-500 ${
+                    className={`w-full px-5 py-4 rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 text-gray-900 dark:text-gray-100 resize-none placeholder-gray-400 dark:placeholder-gray-500 ${
                       errors.message
                         ? 'border-red-300 dark:border-red-700 focus:border-red-500 dark:focus:border-red-400 focus:ring-red-200 dark:focus:ring-red-900/30'
                         : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/30'
                     } ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    style={{
+                      backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(55, 65, 81, 0.6)'
+                    }}
                     placeholder={t('contact.form.messagePlaceholder') || 'Опишите ваш проект или задайте вопрос...'}
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? 'contact-message-error' : undefined}

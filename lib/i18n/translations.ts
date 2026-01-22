@@ -6,7 +6,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.title': 'Web Alchemy',
     'header.subtitle': 'Разработка веб-проектов любой сложности под ключ',
     'header.tagline': 'От идеи до запуска',
-    'header.taglineFooter': 'От идеи до запуска\nбыстро, качественно, профессионально',
+    'header.taglineFooter': 'От идеи до запуска!',
     
     // Process Section
     'process.title': 'От идеи до запуска',
@@ -25,7 +25,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.titleHighlight': 'любой сложности',
     'hero.titlePart1': 'Разработка Веб-приложений',
     'hero.titlePart2': 'и сайтов',
-    'hero.subtitle': 'Сайты-визитки, веб-приложения, landing-страницы, боты для чатов поддержки, большие корпоративные проекты В2B и B2C. Для бизнеса и для клиентов. Быстро, качественно с применением современных технологий и богатого практического опыта в разработке сильных, поддерживаемых и масштабируемых проектов.',
+    'hero.subtitle': 'Создаем сайты-визитки, веб-приложения, landing-страницы и чат-ботов. Разрабатываем крупные корпоративные проекты B2B и B2C. Для бизнеса и для клиентов. Быстро, качественно — с применением современных технологий и богатого опыта в создании сильных, поддерживаемых и масштабируемых решений.',
     'hero.cta.primary': 'Обсудить проект',
     'hero.cta.secondary': 'Наши услуги',
     
@@ -62,7 +62,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'about.tech.vite': 'Vite — быстрый сборщик для современной фронтенд-разработки',
     'about.tech.nextjs': 'Next.js — React фреймворк для production-ready приложений с SSR и SSG',
     'about.approach.title': 'Наш подход',
-    'about.approach.desc': 'Следуем лучшим практикам и принципам для создания качественных решений:',
+    'about.approach.desc': 'Создаем качественные решения, следуя лучшим практикам и современным принципам разработки:',
     'about.approach.clean': 'Чистый, поддерживаемый код',
     'about.approach.cleanDesc': 'Пишем код, который легко читать, понимать и поддерживать. Соблюдаем стандарты кодирования и используем ESLint, Prettier для качества.',
     'about.approach.fast': 'Быстрая разработка',
@@ -125,10 +125,10 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Footer
     'footer.company.title': 'Web-Alchemy',
-    'footer.company.description': 'Разработка веб-приложений и сайтов любой сложности под ключ. Быстро, качественно с применением современных технологий.',
+    'footer.company.description': 'Создаем сайты-визитки, веб-приложения, landing-страницы и чат-ботов. Разрабатываем крупные корпоративные проекты B2B и B2C.',
     'footer.links.title': 'Быстрые ссылки',
     'footer.legal.title': 'Правовая информация',
-    'footer.copyright': '© 2024 Web-Alchemy. Разработка веб-приложений под ключ.',
+    'footer.copyright': '© 2026 Web-Alchemy. Разработка веб-приложений под ключ.',
     'footer.allRightsReserved': 'Все права защищены.',
     'footer.privacy': 'Политика конфиденциальности',
     'footer.terms': 'Условия использования',
@@ -284,7 +284,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.title': 'Web Alchemy',
     'header.subtitle': 'Full-stack web development of any complexity',
     'header.tagline': 'From idea to launch',
-    'header.taglineFooter': 'From idea to launch\nfast, high-quality, professional',
+    'header.taglineFooter': 'From idea to launch. Fast, high-quality, professional.',
     
     // Process Section
     'process.title': 'From idea to launch',
@@ -403,7 +403,7 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Footer
     'footer.company.title': 'Web-Alchemy',
-    'footer.company.description': 'Turnkey web application and website development of any complexity. Fast, high-quality with modern technologies.',
+    'footer.company.description': 'We develop web applications and websites of any complexity turnkey. We work fast, with high quality — using modern technologies.',
     'footer.links.title': 'Quick Links',
     'footer.legal.title': 'Legal Information',
     'footer.copyright': '© 2024 Web-Alchemy. Turnkey web application development.',
@@ -562,7 +562,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.title': 'Web Alchemy',
     'header.subtitle': 'Desarrollo web de cualquier complejidad llave en mano',
     'header.tagline': 'De la idea al lanzamiento',
-    'header.taglineFooter': 'De la idea al lanzamiento\nrápido, de calidad, profesional',
+    'header.taglineFooter': 'De la idea al lanzamiento. Rápido, de calidad, profesional.',
     
     // Process Section
     'process.title': 'De la idea al lanzamiento',
@@ -680,7 +680,7 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Footer
     'footer.company.title': 'Web-Alchemy',
-    'footer.company.description': 'Desarrollo de aplicaciones web y sitios web de cualquier complejidad llave en mano. Rápido, de calidad con tecnologías modernas.',
+    'footer.company.description': 'Desarrollamos aplicaciones web y sitios web de cualquier complejidad llave en mano. Trabajamos rápido, con calidad — usando tecnologías modernas.',
     'footer.links.title': 'Enlaces rápidos',
     'footer.legal.title': 'Información legal',
     'footer.copyright': '© 2024 Web-Alchemy. Desarrollo de aplicaciones web llave en mano.',

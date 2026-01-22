@@ -17,8 +17,8 @@ export function Footer() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100" style={{ marginTop: '-20px' }}>
                 {t('footer.company.title') || 'Web-Alchemy'}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-500 -mt-1 leading-tight">
-                {(t('header.taglineFooter') || 'От идеи до запуска\nбыстро, качественно, профессионально').split('\n').map((line, index) => (
+              <p className="text-xs text-gray-900 dark:text-white -mt-1 leading-tight">
+                {(t('header.taglineFooter') || 'От идеи до запуска!').split('\n').map((line, index) => (
                   <span key={index}>
                     {line}
                     {index === 0 && <br />}
@@ -26,10 +26,10 @@ export function Footer() {
                 ))}
               </p>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-              {t('footer.company.description') || 'Разработка веб-приложений и сайтов любой сложности под ключ. Быстро, качественно с применением современных технологий.'}
+            <p className="text-sm text-gray-900 dark:text-white leading-relaxed mb-2 -mt-2">
+              {t('footer.company.description') || 'Создаем сайты-визитки, веб-приложения, landing-страницы и чат-ботов. Разрабатываем крупные корпоративные проекты B2B и B2C.'}
             </p>
-            <div className="flex flex-wrap gap-4 mt-6">
+            <div className="flex flex-wrap gap-4 mt-16">
               {/* WhatsApp */}
               <a
                 href="https://wa.me/34624682795"
@@ -150,10 +150,10 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-200 dark:border-gray-800">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-gray-500 dark:text-gray-500 text-center sm:text-left">
+            <p className="text-xs text-gray-900 dark:text-white text-center sm:text-left">
               {t('footer.copyright').replace('2024', String(currentYear))} {t('footer.allRightsReserved')}
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-500">
+            <p className="text-xs text-gray-900 dark:text-white">
               {t('footer.madeWith') || 'Сделано с'} <span className="text-red-500">♥</span> {t('footer.byWebAlchemy') || 'Web-Alchemy'}
             </p>
           </div>
