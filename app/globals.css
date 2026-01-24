@@ -40,15 +40,27 @@
 @layer components {
   /* Unified "glass button" style used across the UI */
   .ui-glass-btn {
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(16px);
-    border: none;
-    color: rgb(55, 65, 81);
-    transition: colors 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgb(30, 30, 30);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
   }
   
   .ui-glass-btn:hover {
-    background-color: rgba(255, 255, 255, 0.35);
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+  
+  .ui-glass-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   }
   
   .ui-glass-btn:focus-visible {
@@ -56,21 +68,54 @@
     outline-offset: 2px;
   }
   
-  /* Dark mode styles */
-  @media (prefers-color-scheme: dark) {
-    .ui-glass-btn {
-      background-color: rgba(17, 24, 39, 0.2);
-      border: none;
-      color: rgb(209, 213, 219);
-    }
-    
-    .ui-glass-btn:hover {
-      background-color: rgba(31, 41, 55, 0.35);
-    }
-    
-    .ui-glass-btn:focus-visible {
-      outline-color: rgb(96, 165, 250);
-    }
+  /* Dark theme styles - darker */
+  .dark .ui-glass-btn {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgb(240, 240, 240);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+  
+  .dark .ui-glass-btn:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  }
+  
+  .dark .ui-glass-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+  
+  .dark .ui-glass-btn:focus-visible {
+    outline-color: rgb(96, 165, 250);
+  }
+  
+  /* Light theme styles - lighter */
+  .light .ui-glass-btn {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(200, 200, 200, 0.3);
+    color: rgb(20, 20, 20);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  
+  .light .ui-glass-btn:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .light .ui-glass-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   }
   
   /* Улучшенная видимость на мобильных устройствах */
@@ -80,25 +125,37 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
     
-    @media (prefers-color-scheme: dark) {
-      .ui-glass-btn {
-        background-color: rgba(17, 24, 39, 0.4) !important;
-      }
+    .dark .ui-glass-btn {
+      background-color: rgba(17, 24, 39, 0.4) !important;
+    }
+    
+    .light .ui-glass-btn {
+      background-color: rgba(255, 255, 255, 0.5) !important;
     }
   }
 
   .ui-glass-menu {
     background-color: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(3px);
-    border: none;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
   
-  @media (prefers-color-scheme: dark) {
-    .ui-glass-menu {
-      background-color: rgba(17, 24, 39, 0.55);
-      border: none;
-    }
+  .dark .ui-glass-menu {
+    background-color: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(55, 65, 81, 0.3);
+    box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.3), 0 4px 8px -2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .light .ui-glass-menu {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(229, 231, 235, 0.4);
+    box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.15), 0 4px 8px -2px rgba(0, 0, 0, 0.1);
   }
 
 /* Адаптивный размер заголовка Web-Alchemy */
@@ -113,10 +170,16 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Для темной темы */
+/* Dark theme */
 .dark .hero-title-responsive {
   color: rgb(209, 213, 219);
   text-shadow: 0 1px 4px rgba(255, 255, 255, 0.12), 0 2px 8px rgba(255, 255, 255, 0.08);
+}
+
+/* Light theme */
+.light .hero-title-responsive {
+  color: rgb(26, 26, 26);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Для очень маленьких экранов немного уменьшаем */
@@ -261,6 +324,7 @@
   --accent-dark: #1e40af;
 }
 
+/* Dark theme - темная тема */
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
@@ -268,6 +332,27 @@
   --accent-hover: #3b82f6;
   --accent-light: #1e3a8a;
   --accent-dark: #3b82f6;
+}
+
+/* Light theme - светлая тема */
+.light {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --gray-50: #ffffff;
+  --gray-100: #f9fafb;
+  --gray-200: #f3f4f6;
+  --gray-300: #e5e7eb;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  /* Яркие акцентные цвета для светлой темы */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: #dbeafe;
+  --accent-dark: #1e40af;
 }
 
 @theme inline {
@@ -366,6 +451,13 @@ body {
 /* Тёмная тема - простой фон */
 .dark body {
   background-color: #0a0a0a;
+  position: relative;
+}
+
+/* Light theme - clean solid background */
+.light body {
+  background-color: #ffffff;
+  background-image: none;
   position: relative;
 }
 

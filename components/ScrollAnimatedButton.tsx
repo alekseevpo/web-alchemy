@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function ScrollAnimatedButton() {
   const [rotation, setRotation] = useState(0);
@@ -72,9 +73,11 @@ export function ScrollAnimatedButton() {
       className="scroll-animated-moon-button group"
     >
       <div className="relative w-full h-full">
-        <img 
+        <Image
           src="/moon.png"
           alt="Let's talk!"
+          width={160}
+          height={160}
           className="scroll-animated-button-moon"
           style={{
             transform: `rotate(${rotation}deg)`,

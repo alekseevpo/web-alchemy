@@ -78,19 +78,19 @@ export function ScrollToTop() {
       <div className="relative">
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="ui-glass-btn rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
+          className="ui-glass-btn rounded-full w-14 h-14 flex items-center justify-center shadow-lg"
           aria-label={t('contact.form.write') || 'Написать'}
         >
           <svg
-            className="w-7 h-7 text-gray-700 dark:text-gray-300"
+            className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            strokeWidth={2}
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
               d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
             />
           </svg>

@@ -60,7 +60,21 @@ export function CompanyContent() {
 
   // Скролл-анимации через Locomotive Scroll
   useEffect(() => {
-    let scrollInstance: any = null;
+    type ScrollEventPayload = {
+      scroll?: { y?: number; scroll?: { y?: number } };
+    };
+    type LocomotiveScrollOptions = {
+      smooth?: boolean;
+      getDirection?: boolean;
+    };
+    type LocomotiveScrollInstance = {
+      on: (event: 'scroll', callback: (payload: ScrollEventPayload) => void) => void;
+      off: (event: 'scroll', callback: (payload: ScrollEventPayload) => void) => void;
+      update: () => void;
+      destroy: () => void;
+    };
+
+    let scrollInstance: LocomotiveScrollInstance | null = null;
     let destroyed = false;
 
     const clamp = (value: number, min: number, max: number) =>
@@ -156,14 +170,17 @@ export function CompanyContent() {
         if (destroyed) return;
 
         // Используем document как контейнер для Locomotive Scroll (по умолчанию)
-        scrollInstance = new LocomotiveScroll({
+        const LocoCtor = LocomotiveScroll as unknown as new (
+          options: LocomotiveScrollOptions
+        ) => LocomotiveScrollInstance;
+        scrollInstance = new LocoCtor({
           smooth: false,
           getDirection: true,
-        } as any);
+        });
 
         // Проверяем наличие метода on перед использованием
         if (scrollInstance && typeof scrollInstance.on === 'function') {
-          scrollInstance.on('scroll', (obj: any) => {
+          scrollInstance.on('scroll', (obj: ScrollEventPayload) => {
             const scrollY = obj?.scroll?.y ?? obj?.scroll?.scroll?.y ?? window.scrollY ?? 0;
             updateTitleExplosion(scrollY);
             updateHeroText(scrollY);

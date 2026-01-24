@@ -6,14 +6,21 @@ interface LocomotiveScrollProviderProps {
   children: ReactNode;
 }
 
+interface LocomotiveScrollInstance {
+  resize: () => void;
+  destroy: () => void;
+}
+
 export function LocomotiveScrollProvider({ children }: LocomotiveScrollProviderProps) {
-  const scrollRef = useRef<any>(null);
+  const scrollRef = useRef<LocomotiveScrollInstance | null>(null);
 
   useEffect(() => {
     // Динамический импорт для SSR совместимости
     const initLocomotiveScroll = async () => {
       try {
-        const LocomotiveScroll = (await import('locomotive-scroll')).default;
+        const LocomotiveScroll = (await import('locomotive-scroll')).default as unknown as new (
+          options: Record<string, unknown>
+        ) => LocomotiveScrollInstance;
         
         scrollRef.current = new LocomotiveScroll({
           // Используем window как контейнер (по умолчанию)

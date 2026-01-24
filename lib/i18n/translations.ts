@@ -116,6 +116,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Контакты',
     'nav.feedback': 'Обратная связь и отзывы',
     'nav.faq': 'FAQ',
+    'nav.theme.simplified': 'Упрощённая тема',
+    'nav.theme.dark': 'Тёмная тема',
+    'nav.theme.light': 'Светлая тема',
+    'nav.theme.disable': 'Отключить тему',
     
     // Table of Contents
     'toc.title': 'Навигация',
@@ -394,6 +398,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     'nav.feedback': 'Feedback & Reviews',
     'nav.faq': 'FAQ',
+    'nav.theme.simplified': 'Simplified theme',
+    'nav.theme.dark': 'Dark theme',
+    'nav.theme.light': 'Light theme',
+    'nav.theme.disable': 'Disable theme',
     
     // Table of Contents
     'toc.title': 'Navigation',
@@ -671,6 +679,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contacto',
     'nav.feedback': 'Comentarios y reseñas',
     'nav.faq': 'Preguntas frecuentes',
+    'nav.theme.simplified': 'Tema simplificado',
+    'nav.theme.dark': 'Tema oscuro',
+    'nav.theme.light': 'Tema claro',
+    'nav.theme.disable': 'Desactivar tema',
     
     // Table of Contents
     'toc.title': 'Navegación',

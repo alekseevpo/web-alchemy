@@ -4,6 +4,43 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useTheme } from 'next-themes';
 
+interface SceneManager {
+  scene: THREE.Scene;
+  getViewSize: () => { width: number; height: number };
+}
+
+interface Uniform<T> {
+  value: T;
+}
+
+type GradientUniforms = {
+  [key: string]: THREE.IUniform<unknown>;
+  uTime: Uniform<number>;
+  uResolution: Uniform<THREE.Vector2>;
+  uColor1: Uniform<THREE.Vector3>;
+  uColor2: Uniform<THREE.Vector3>;
+  uColor3: Uniform<THREE.Vector3>;
+  uColor4: Uniform<THREE.Vector3>;
+  uColor5: Uniform<THREE.Vector3>;
+  uColor6: Uniform<THREE.Vector3>;
+  uSpeed: Uniform<number>;
+  uIntensity: Uniform<number>;
+  uTouchTexture: Uniform<THREE.Texture | null>;
+  uGrainIntensity: Uniform<number>;
+  uZoom: Uniform<number>;
+  uDarkNavy: Uniform<THREE.Vector3>;
+  uGradientSize: Uniform<number>;
+  uGradientCount: Uniform<number>;
+  uColor1Weight: Uniform<number>;
+  uColor2Weight: Uniform<number>;
+};
+
+interface ColorScheme {
+  color1: THREE.Vector3;
+  color2: THREE.Vector3;
+  color3?: THREE.Vector3;
+}
+
 // TouchTexture class
 class TouchTexture {
   canvas!: HTMLCanvasElement;
@@ -15,8 +52,15 @@ class TouchTexture {
   maxAge = 64;
   radius = 0.25 * this.size; // Much larger touch radius for more obvious effect
   speed = 1 / this.maxAge;
-  trail: any[] = [];
-  last: any = null;
+  trail: Array<{
+    x: number;
+    y: number;
+    age: number;
+    force: number;
+    vx: number;
+    vy: number;
+  }> = [];
+  last: { x: number; y: number } | null = null;
 
   constructor() {
     this.initTexture();
@@ -34,11 +78,11 @@ class TouchTexture {
 
   update() {
     this.clear();
-    let speed = this.speed;
+    const speed = this.speed;
     // Use reverse iteration to safely remove items
     for (let i = this.trail.length - 1; i >= 0; i--) {
       const point = this.trail[i];
-      let f = point.force * speed * (1 - point.age / this.maxAge);
+      const f = point.force * speed * (1 - point.age / this.maxAge);
       point.x += point.vx * f;
       point.y += point.vy * f;
       point.age++;
@@ -66,7 +110,7 @@ class TouchTexture {
       const dy = point.y - last.y;
       if (dx === 0 && dy === 0) return;
       const dd = dx * dx + dy * dy;
-      let d = Math.sqrt(dd);
+      const d = Math.sqrt(dd);
       vx = dx / d;
       vy = dy / d;
       force = Math.min(dd * 20000, 2.0); // Much stronger force for very noticeable effect
@@ -75,7 +119,7 @@ class TouchTexture {
     this.trail.push({ x: point.x, y: point.y, age: 0, force, vx, vy });
   }
 
-  drawPoint(point: any) {
+  drawPoint(point: { x: number; y: number; age: number; force: number; vx: number; vy: number }) {
     const pos = { x: point.x * this.width, y: (1 - point.y) * this.height };
     let intensity = 1;
     if (point.age < this.maxAge * 0.3) {
@@ -86,8 +130,8 @@ class TouchTexture {
     }
     intensity *= point.force;
     const radius = this.radius;
-    let color = `${((point.vx + 1) / 2) * 255}, ${((point.vy + 1) / 2) * 255}, ${intensity * 255}`;
-    let offset = this.size * 5;
+    const color = `${((point.vx + 1) / 2) * 255}, ${((point.vy + 1) / 2) * 255}, ${intensity * 255}`;
+    const offset = this.size * 5;
     this.ctx.shadowOffsetX = offset;
     this.ctx.shadowOffsetY = offset;
     this.ctx.shadowBlur = radius * 1;
@@ -101,11 +145,11 @@ class TouchTexture {
 
 // GradientBackground class
 class GradientBackground {
-  sceneManager: any;
+  sceneManager: SceneManager;
   mesh: THREE.Mesh | null = null;
-  uniforms: any;
+  uniforms: GradientUniforms;
 
-  constructor(sceneManager: any) {
+  constructor(sceneManager: SceneManager) {
     this.sceneManager = sceneManager;
     this.mesh = null;
     this.uniforms = {
@@ -376,7 +420,7 @@ class App {
   clock: THREE.Clock;
   touchTexture: TouchTexture;
   gradientBackground: GradientBackground;
-  colorSchemes: any;
+  colorSchemes: Record<number, ColorScheme>;
   currentScheme = 1;
   mouse: { x: number; y: number } | null = null;
 
@@ -428,7 +472,7 @@ class App {
     this.currentScheme = scheme;
     
     // Adapt colors for theme
-    let colors = { ...this.colorSchemes[scheme] };
+    const colors = { ...this.colorSchemes[scheme] };
     
     if (!isDark) {
       // Light theme adaptations
@@ -453,16 +497,16 @@ class App {
     
     // Update background color and base color
     if (isDark) {
-      this.scene.background = new THREE.Color(0x050711); // Much darker navy
-      uniforms.uDarkNavy.value.set(0.02, 0.027, 0.067); // Much darker base color
+      this.scene.background = new THREE.Color(0x000000); // Pure black for darker theme
+      uniforms.uDarkNavy.value.set(0.0, 0.0, 0.0); // Pure black base color
       uniforms.uGradientSize.value = 0.45; // Smaller gradient radius for more defined gradients
       uniforms.uGradientCount.value = 12.0; // More gradient centers
       uniforms.uSpeed.value = 1.5; // Slightly faster for more movement
       uniforms.uColor1Weight.value = 0.5; // Reduce orange intensity
       uniforms.uColor2Weight.value = 1.8; // Increase navy intensity
     } else {
-      this.scene.background = new THREE.Color(0xF3F2ED); // Cream
-      uniforms.uDarkNavy.value.set(0.953, 0.949, 0.933); // Cream base color
+      this.scene.background = new THREE.Color(0xFFFBF6); // Lighter cream/off-white
+      uniforms.uDarkNavy.value.set(1.0, 0.984, 0.965); // Lighter cream base color
       uniforms.uGradientSize.value = 0.6; // Slightly larger for light theme
       uniforms.uGradientCount.value = 8.0; // Fewer centers for cleaner look
       uniforms.uSpeed.value = 1.0; // Slower for light theme
@@ -538,16 +582,17 @@ class App {
 export default function OriginalLiquidGradient() {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<App | null>(null);
-  const { theme, resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || appRef.current) return;
 
     const app = new App();
     appRef.current = app;
+    const container = containerRef.current;
     
     // Append renderer to container
-    containerRef.current.appendChild(app.renderer.domElement);
+    container.appendChild(app.renderer.domElement);
     
     // Initialize with theme-appropriate colors
     const isDark = resolvedTheme === 'dark';
@@ -559,11 +604,11 @@ export default function OriginalLiquidGradient() {
         appRef.current.dispose();
         appRef.current = null;
       }
-      if (containerRef.current && app.renderer.domElement) {
-        containerRef.current.removeChild(app.renderer.domElement);
+      if (container && app.renderer.domElement) {
+        container.removeChild(app.renderer.domElement);
       }
     };
-  }, []);
+  }, [resolvedTheme]);
 
   useEffect(() => {
     if (appRef.current) {
@@ -573,8 +618,8 @@ export default function OriginalLiquidGradient() {
   }, [resolvedTheme]);
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className="fixed inset-0 w-full h-full pointer-events-none"
       style={{ zIndex: -1 }}
     />

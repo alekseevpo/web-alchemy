@@ -58,7 +58,8 @@ const countryToLanguage: Record<string, Language> = {
 function getBrowserLanguage(): Language | null {
   if (typeof window === 'undefined') return null;
   
-  const browserLang = navigator.language || (navigator as any).userLanguage;
+  const navigatorWithUserLanguage = navigator as Navigator & { userLanguage?: string };
+  const browserLang = navigator.language || navigatorWithUserLanguage.userLanguage;
   
   if (!browserLang) return null;
   

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Footer } from '@/components/Footer';
 import { gsap } from 'gsap';
@@ -92,9 +93,11 @@ export function ProjectsPage() {
               <div className="horiz-gallery-strip flex">
                 {projects.map((project) => (
                   <div key={project.id} className="project-wrap">
-                    <img 
-                      src={project.image} 
+                    <Image
+                      src={project.image}
                       alt={`Project ${project.id}`}
+                      width={600}
+                      height={600}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -108,7 +111,7 @@ export function ProjectsPage() {
         <section className="panel min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100">
-              That's it!
+              That&apos;s it!
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 mt-4">
               Свяжитесь с нами для создания вашего проекта

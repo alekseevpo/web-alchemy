@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useTheme } from 'next-themes';
 
@@ -9,6 +9,32 @@ interface ColorScheme {
   color2: THREE.Vector3;
   color3?: THREE.Vector3;
 }
+
+interface Uniform<T> {
+  value: T;
+}
+
+type GradientUniforms = {
+  [key: string]: THREE.IUniform<unknown>;
+  uTime: Uniform<number>;
+  uResolution: Uniform<THREE.Vector2>;
+  uColor1: Uniform<THREE.Vector3>;
+  uColor2: Uniform<THREE.Vector3>;
+  uColor3: Uniform<THREE.Vector3>;
+  uColor4: Uniform<THREE.Vector3>;
+  uColor5: Uniform<THREE.Vector3>;
+  uColor6: Uniform<THREE.Vector3>;
+  uSpeed: Uniform<number>;
+  uIntensity: Uniform<number>;
+  uTouchTexture: Uniform<THREE.Texture | null>;
+  uGrainIntensity: Uniform<number>;
+  uZoom: Uniform<number>;
+  uDarkNavy: Uniform<THREE.Vector3>;
+  uGradientSize: Uniform<number>;
+  uGradientCount: Uniform<number>;
+  uColor1Weight: Uniform<number>;
+  uColor2Weight: Uniform<number>;
+};
 
 interface LiquidGradientProps {
   className?: string;
@@ -25,8 +51,15 @@ class TouchTexture {
   maxAge: number;
   radius: number;
   speed: number;
-  trail: any[];
-  last: any;
+  trail: Array<{
+    x: number;
+    y: number;
+    age: number;
+    force: number;
+    vx: number;
+    vy: number;
+  }>;
+  last: { x: number; y: number } | null;
   canvas!: HTMLCanvasElement;
   ctx!: CanvasRenderingContext2D;
   texture!: THREE.Texture;
@@ -54,11 +87,11 @@ class TouchTexture {
 
   update() {
     this.clear();
-    let speed = this.speed;
+    const speed = this.speed;
     
     for (let i = this.trail.length - 1; i >= 0; i--) {
       const point = this.trail[i];
-      let f = point.force * speed * (1 - point.age / this.maxAge);
+      const f = point.force * speed * (1 - point.age / this.maxAge);
       point.x += point.vx * f;
       point.y += point.vy * f;
       point.age++;
@@ -77,7 +110,7 @@ class TouchTexture {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  addTouch(point: any) {
+  addTouch(point: { x: number; y: number }) {
     let force = 0;
     let vx = 0;
     let vy = 0;
@@ -88,7 +121,7 @@ class TouchTexture {
       const dy = point.y - last.y;
       if (dx === 0 && dy === 0) return;
       const dd = dx * dx + dy * dy;
-      let d = Math.sqrt(dd);
+      const d = Math.sqrt(dd);
       vx = dx / d;
       vy = dy / d;
       force = Math.min(dd * 20000, 2.0);
@@ -98,7 +131,7 @@ class TouchTexture {
     this.trail.push({ x: point.x, y: point.y, age: 0, force, vx, vy });
   }
 
-  drawPoint(point: any) {
+  drawPoint(point: { x: number; y: number; age: number; force: number; vx: number; vy: number }) {
     const pos = { x: point.x * this.width, y: (1 - point.y) * this.height };
     let intensity = 1;
     
@@ -111,8 +144,8 @@ class TouchTexture {
     
     intensity *= point.force;
     const radius = this.radius;
-    let color = `${((point.vx + 1) / 2) * 255}, ${((point.vy + 1) / 2) * 255}, ${intensity * 255}`;
-    let offset = this.size * 5;
+    const color = `${((point.vx + 1) / 2) * 255}, ${((point.vy + 1) / 2) * 255}, ${intensity * 255}`;
+    const offset = this.size * 5;
     
     this.ctx.shadowOffsetX = offset;
     this.ctx.shadowOffsetY = offset;
@@ -128,7 +161,7 @@ class TouchTexture {
 // GradientBackground class
 class GradientBackground {
   mesh: THREE.Mesh | null = null;
-  uniforms: any;
+  uniforms: GradientUniforms;
   scene: THREE.Scene;
 
   constructor(scene: THREE.Scene) {
@@ -323,7 +356,6 @@ export default function LiquidGradient({ className, colorScheme = 1, intensity =
   const touchTextureRef = useRef<TouchTexture | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const clockRef = useRef<THREE.Clock | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
   const { theme, systemTheme, resolvedTheme } = useTheme();
 
   console.log('LiquidGradient: Theme info', { theme, systemTheme, resolvedTheme });
@@ -439,7 +471,6 @@ export default function LiquidGradient({ className, colorScheme = 1, intensity =
 
       animate();
       console.log('LiquidGradient: Animation started');
-      setIsInitialized(true);
 
       // Event listeners
       const handleMouseMove = (ev: MouseEvent) => {
@@ -498,7 +529,7 @@ export default function LiquidGradient({ className, colorScheme = 1, intensity =
       className={`fixed inset-0 w-full h-full pointer-events-none ${className || ''}`}
       style={{ 
         zIndex: -1, // Настоящий фон, ниже всех интерактивных элементов
-        background: isInitialized ? 'transparent' : (theme === 'dark' ? '#0a0e27' : '#F3F2ED') // Fallback color
+        background: theme === 'dark' ? '#0a0e27' : '#F3F2ED' // Fallback color
       }}
     />
   );

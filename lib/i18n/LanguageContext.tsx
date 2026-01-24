@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { detectLanguage, detectLanguageSync, Language } from './detectLanguage';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { detectLanguageSync, Language } from './detectLanguage';
 
 export type { Language };
 
@@ -27,36 +27,13 @@ interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children, translations }: LanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>('ru');
-  const [mounted] = useState(true);
-
-  useEffect(() => {
-    // Сначала определяем язык синхронно (без задержки)
-    // Приоритет: сохраненный язык > язык браузера > по умолчанию
-    const savedLang = typeof window !== 'undefined' 
+  const [language, setLanguageState] = useState<Language>(() => {
+    const savedLang = typeof window !== 'undefined'
       ? (localStorage.getItem('language') as Language | null)
       : null;
-    
-    const initialDetection = detectLanguageSync(savedLang);
-    
-    // Затем пытаемся улучшить определение через геолокацию (асинхронно)
-    // Только если нет сохраненного языка И язык браузера не определен
-    // Логика: язык браузера имеет приоритет над геолокацией
-    // (если пользователь из Испании, но браузер на русском - выбираем русский)
-    if (!savedLang && initialDetection.source === 'default') {
-      detectLanguage(savedLang).then((result) => {
-        // Используем результат геолокации только если язык браузера не был определен
-        // И геолокация дала другой язык (не русский по умолчанию)
-        if (result.language !== initialDetection.language) {
-          setLanguageState(result.language);
-        }
-      }).catch(() => {
-        // Игнорируем ошибки геолокации
-      });
-    } else {
-      setLanguageState(initialDetection.language);
-    }
-  }, []);
+    return detectLanguageSync(savedLang).language;
+  });
+  const [mounted] = useState(() => typeof window !== 'undefined');
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

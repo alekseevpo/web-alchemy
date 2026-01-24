@@ -9,9 +9,9 @@
  * node scripts/generate-og-image.js
  */
 
-const puppeteer = require('puppeteer');
-const path = require('path');
-const fs = require('fs');
+import puppeteer from 'puppeteer';
+import path from 'path';
+import fs from 'fs';
 
 async function generateOGImage() {
   const browser = await puppeteer.launch({
